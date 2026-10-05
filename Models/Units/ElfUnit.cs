@@ -11,8 +11,8 @@ namespace PaterniLab2.Models.Units
     {
         private const int AVOID_CHANCE = 20;
         public override Race race => Race.Elf;
-        public ElfUnit(int health, int avaidChance, int armor, MoveType moveType, List<BaseWeapon> weapons)
-            : base(health, avaidChance, armor, moveType, weapons)
+        public ElfUnit(int health, int avaidChance, int armor, MoveType moveType, BaseWeapon weapon)
+            : base(health, avaidChance, armor, moveType, weapon)
         {
             this.avaidChance += AVOID_CHANCE;
         }

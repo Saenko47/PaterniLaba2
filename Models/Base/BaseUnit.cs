@@ -8,6 +8,8 @@ namespace PaterniLab2.Models.Base
 {
     internal abstract class BaseUnit:IClone<BaseUnit>
     {
+
+
         public abstract Race race { get; }
 
         public int health { get; protected set; }
@@ -16,15 +18,15 @@ namespace PaterniLab2.Models.Base
         public MoveType moveType { get; protected set; }
 
         
-        public List<BaseWeapon> weapons { get; protected set; } = new List<BaseWeapon>();
+        public BaseWeapon weapon { get; protected set; } 
 
-        public BaseUnit(int health, int avaidChance, int armor, MoveType moveType, List<BaseWeapon> weapons)
+        public BaseUnit(int health, int avaidChance, int armor, MoveType moveType, BaseWeapon weapons)
         {
             this.health = health;
             this.avaidChance = avaidChance;
             this.armor = armor;
             this.moveType = moveType;
-            this.weapons = weapons;
+            this.weapon = weapons;
         }
 
         public virtual BaseUnit Clone()
@@ -32,10 +34,23 @@ namespace PaterniLab2.Models.Base
            
             BaseUnit clone = (BaseUnit)this.MemberwiseClone();
 
-          
-            clone.weapons = this.weapons.Select(w => w.Clone()).ToList();
+
+            clone.weapon = weapon.Clone();
 
             return clone;
+        }
+
+        public void GiveWeaponToUnit(BaseWeapon newWeapon) 
+        {
+            if (weapon != newWeapon)
+            {
+                weapon = newWeapon;
+            }
+        } 
+
+        public override string ToString()
+        {
+            return $"Race: {race}, Health: {health}, Avoid Chance: {avaidChance}, Armor: {armor}, Move Type: {moveType}, Weapon: [{weapon}]";
         }
 
 
