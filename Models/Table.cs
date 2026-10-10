@@ -1,4 +1,5 @@
 ﻿using PaterniLab2.Interfaces;
+using PaterniLab2.Models.Base;
 using PaterniLab2.Requests.Table;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,19 @@ namespace PaterniLab2.Models
 
         public UnitOnTheBoardByRace FirstPlacementOfUnits(CreateGameRequest req) 
         { 
-         throw new NotImplementedException();
+        List<BaseUnit> raceA = _placeRaceOnBoard.PlaceOnBoard(new PlaceOnBoardRequest { 
+             race = req.raceA.race, raceAmountFly = req.raceA.raceAmountFly, raceAmountRide = req.raceA.raceAmountRide, raceMeleeAmount = req.raceA.raceMeleeAmount, raceRangeAmount = req.raceA.raceRangeAmount }, _board);
+
+        List<BaseUnit> raceB = _placeRaceOnBoard.PlaceOnBoard(new PlaceOnBoardRequest { 
+            race = req.raceB.race, raceAmountFly = req.raceB.raceAmountFly, raceAmountRide = req.raceB.raceAmountRide, raceMeleeAmount = req.raceB.raceMeleeAmount, raceRangeAmount = req.raceB.raceRangeAmount }, _board);
+
+         
+        var response = new UnitOnTheBoardByRace { raceA = raceA, raceB = raceB };
+
+            return response;
+
+
+
         }
     }
 }

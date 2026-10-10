@@ -59,6 +59,7 @@ namespace PaterniLab2.Models.Base
         public void TakeDamage(int amount) 
         {
             this.health -= amount;
+            Console.WriteLine($"{race} took {amount} damage. Remaining health: {health}");
         }
 
         public override string ToString()
