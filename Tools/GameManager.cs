@@ -1,4 +1,5 @@
-﻿using PaterniLab2.Models;
+﻿using PaterniLab2.Interfaces;
+using PaterniLab2.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,12 +9,13 @@ namespace PaterniLab2.Tools
     internal class GameManager
     {
         private readonly Table _table;
-        //private readony IMove _move;
+        private readonly IMove _move;
         //private readonly IAttck _attack
-        
-        public GameManager(Table table)
+
+        public GameManager(Table table, IMove move)
         {
             _table = table;
+            _move = move;
         }
 
         public void StartGame()
