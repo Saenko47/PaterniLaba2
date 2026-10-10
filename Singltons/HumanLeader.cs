@@ -23,6 +23,7 @@ namespace PaterniLab2.Singltons
         public void Elect(BaseUnit unit)
         {
             _unit = unit;
+            _unit.ElectAsLeader();
             _unit.GiveWeaponToUnit(humanArefact);
         }
 

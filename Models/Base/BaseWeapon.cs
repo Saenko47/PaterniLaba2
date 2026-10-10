@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Models.Base
 {
     internal abstract class BaseWeapon: IClone<BaseWeapon>
     {
+        public abstract WeaponType weaponType { get; set; }
         public int damage { get; protected set; }
         public int armorPierce { get; protected set; }
 

@@ -11,19 +11,23 @@ namespace PaterniLab2.Models.Base
 
 
         public abstract Race race { get; }
+       
 
-        public int health { get; protected set; }
-        public int avaidChance { get; protected set; }
+        public int health { get; protected set; } = 100;
+        public int avaidChance { get; protected set; } = 5;
         public int armor { get; protected set; }
         public MoveType moveType { get; protected set; }
 
-        
-        public BaseWeapon weapon { get; protected set; } 
+        public bool isLeader { get; set; } = false;
 
-        public BaseUnit(int health, int avaidChance, int armor, MoveType moveType, BaseWeapon weapons)
+
+        public BaseWeapon weapon { get; protected set; }
+        public WeaponType weaponType => weapon.weaponType;
+        
+
+        public BaseUnit(int armor, MoveType moveType, BaseWeapon weapons)
         {
-            this.health = health;
-            this.avaidChance = avaidChance;
+           
             this.armor = armor;
             this.moveType = moveType;
             this.weapon = weapons;
@@ -47,6 +51,15 @@ namespace PaterniLab2.Models.Base
                 weapon = newWeapon;
             }
         } 
+        public void ElectAsLeader()
+        {
+            isLeader = true;
+        }
+
+        public void TakeDamage(int amount) 
+        {
+            this.health -= amount;
+        }
 
         public override string ToString()
         {

@@ -16,6 +16,6 @@ namespace PaterniLab2.Requests.Units
         public MoveType moveType { get;  set; }
 
 
-        public List<BaseWeapon> weapons { get; set; } = new List<BaseWeapon>();
+        public BaseWeapon weapon { get; set; } = null!;
     }
 }
