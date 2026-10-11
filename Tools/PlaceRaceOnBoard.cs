@@ -4,6 +4,7 @@ using PaterniLab2.Models;
 using PaterniLab2.Models.Base;
 using PaterniLab2.Requests.Table;
 using PaterniLab2.Requests.Units;
+using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -37,6 +38,22 @@ namespace PaterniLab2.Tools
             return null; // Обязательный дефолтный возврат, если юнитов нет
         }
 
+        private void ChooseLeader(BaseUnit unitToLeader) 
+        {
+            switch (unitToLeader.race) 
+            { 
+            case Race.Human:
+               HumanLeader.Instance.ElectLeader(unitToLeader);
+                    break;
+            case Race.Elf:
+                    ElfLeader.Instance.ElectLeader(unitToLeader);
+                    break;
+            case Race.Orc:
+                    OrcLeader.Instance.ElectLeader(unitToLeader);
+                    break;
+            }
+        }
+
         public List<BaseUnit> PlaceOnBoard(PlaceOnBoardRequest req, Cell[,] table)
         {
             if (req == null || table == null) return new List<BaseUnit>();
@@ -64,6 +81,10 @@ namespace PaterniLab2.Tools
 
                     if (table[x, y] != null && unitToPlace != null)
                     {
+                        if(placedUnits.Count() == 0) 
+                        {
+                            ChooseLeader(unitToPlace);
+                        }
                         table[x, y].placeForUnit = unitToPlace;
                         placedUnits.Add(unitToPlace);
                     }
