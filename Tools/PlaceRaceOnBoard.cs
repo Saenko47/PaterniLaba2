@@ -43,13 +43,13 @@ namespace PaterniLab2.Tools
             switch (unitToLeader.race) 
             { 
             case Race.Human:
-               HumanLeader.Instance.ElectLeader(unitToLeader);
+               HumanLeader.Instance.Elect(unitToLeader);
                     break;
             case Race.Elf:
-                    ElfLeader.Instance.ElectLeader(unitToLeader);
+                    ElfLeader.Instance.Elect(unitToLeader);
                     break;
             case Race.Orc:
-                    OrcLeader.Instance.ElectLeader(unitToLeader);
+                    OrcLeader.Instance.Elect(unitToLeader);
                     break;
             }
         }

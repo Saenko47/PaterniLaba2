@@ -10,6 +10,11 @@ namespace PaterniLab2.Tools
     {
         public void RenderTable(Table table) 
         {
+            if (table == null || table._board == null)
+            {
+                Console.WriteLine("Table or Board is not initialized!");
+                return;
+            }
             for (int x = 0; x < table.xLen; x++)
             {
                 for (int y = 0; y < table.yLen; y++)

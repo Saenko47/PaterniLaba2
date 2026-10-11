@@ -8,6 +8,6 @@ namespace PaterniLab2.Interfaces
 {
     internal interface IFindToAttack
     {
-        BaseUnit? FindToAttack(Cell unitThatLokingForPray, Cell[,] board);
+        (BaseUnit?, (int, int)) FindToAttack(Cell unitThatLokingForPray, Cell[,] board);
     }
 }

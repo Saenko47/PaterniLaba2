@@ -5,6 +5,7 @@ using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Tools
 {
@@ -15,8 +16,11 @@ namespace PaterniLab2.Tools
         private readonly IFindToAttack _attack;
         private readonly IRender _render;
 
-        private int raceACount;
-        private int raceBCount;
+        private Dictionary<Race, int> raceCounts = new();
+
+        private Race raceA;
+        private Race raceB;
+
         private bool leaderAAlive = true;
         private bool leaderBAlive = true;
 
@@ -38,11 +42,11 @@ namespace PaterniLab2.Tools
 
         private void InitiaizeTabe()
         {
-            var res = _table.FirstPlacementOfUnits(new Requests.Table.CreateGameRequest
+            var req = new Requests.Table.CreateGameRequest
             {
                 raceA = new Requests.Table.PlaceOnBoardRequest
                 {
-                    race = Tools.Enums.Race.Human,
+                    race = Race.Human,
                     raceAmountFly = 0,
                     raceAmountRide = 0,
                     raceMeleeAmount = 2,
@@ -50,15 +54,21 @@ namespace PaterniLab2.Tools
                 },
                 raceB = new Requests.Table.PlaceOnBoardRequest
                 {
-                    race = Tools.Enums.Race.Orc,
+                    race = Race.Orc,
                     raceAmountFly = 0,
                     raceAmountRide = 0,
                     raceMeleeAmount = 4,
                     raceRangeAmount = 0
                 }
-            });
+            };
+            var res = _table.FirstPlacementOfUnits(req);
 
-            UpdateCountsAndLeaders(res.raceA, res.raceB);
+            raceA = req.raceA.race;
+            raceB = req.raceB.race;
+
+            raceCounts[raceA] = res.raceA.Count;
+            raceCounts[raceB] = res.raceB.Count;
+
 
             ShowUnitsBeforeFigth(res.raceA);
             ShowUnitsBeforeFigth(res.raceB);
@@ -68,12 +78,15 @@ namespace PaterniLab2.Tools
         {
             InitiaizeTabe();
 
-            while (IsGameRunning())
+            while (!EndGame())
             {
                 _render.RenderTable(_table);
 
                 // Обрабатываем ход каждого живого юнита на поле
                 ProcessAllUnitsTurns();
+
+                // Проверяем состояние после ходов (вдруг кто-то умер или лидер погиб)
+                if (EndGame()) break;
 
                 Console.WriteLine("Нажмите любую клавишу для следующего хода...");
                 Console.ReadKey();
@@ -83,63 +96,11 @@ namespace PaterniLab2.Tools
             EndGame();
         }
 
-        private bool IsGameRunning()
-        {
-            UpdateCountsAndLeadersFromBoard();
+      
 
-            if (raceACount <= 0 || raceBCount <= 0) return false;
-            if (!leaderAAlive || !leaderBAlive) return false;
+        
 
-            return true;
-        }
-
-        private void UpdateCountsAndLeaders(List<BaseUnit> raceA, List<BaseUnit> raceB)
-        {
-            raceACount = raceA.Count(u => u.health > 0);
-            raceBCount = raceB.Count(u => u.health > 0);
-
-            var leaderA = raceA.FirstOrDefault(u => u.isLeader);
-            var leaderB = raceB.FirstOrDefault(u => u.isLeader);
-
-            leaderAAlive = leaderA == null || leaderA.health > 0;
-            leaderBAlive = leaderB == null || leaderB.health > 0;
-        }
-
-        private void UpdateCountsAndLeadersFromBoard()
-        {
-            int countA = 0;
-            int countB = 0;
-            bool foundLeaderA = false;
-            bool foundLeaderB = false;
-            bool aliveLeaderA = false;
-            bool aliveLeaderB = false;
-
-            for (int x = 0; x < _table.xLen; x++)
-            {
-                for (int y = 0; y < _table.yLen; y++)
-                {
-                    var unit = _table._board[x, y]?.placeForUnit;
-                    if (unit != null && unit.health > 0)
-                    {
-                        if (unit.race == Tools.Enums.Race.Human)
-                        {
-                            countA++;
-                            if (unit.isLeader) { foundLeaderA = true; aliveLeaderA = true; }
-                        }
-                        else if (unit.race == Tools.Enums.Race.Orc)
-                        {
-                            countB++;
-                            if (unit.isLeader) { foundLeaderB = true; aliveLeaderB = true; }
-                        }
-                    }
-                }
-            }
-
-            raceACount = countA;
-            raceBCount = countB;
-            if (foundLeaderA) leaderAAlive = aliveLeaderA;
-            if (foundLeaderB) leaderBAlive = aliveLeaderB;
-        }
+        
 
         private void ProcessAllUnitsTurns()
         {
@@ -163,17 +124,39 @@ namespace PaterniLab2.Tools
                 if (currentCell?.placeForUnit != unit || unit.health <= 0) continue;
 
                 ProcessMove(x, y);
+
+                // Обновляем состояние доски сразу после каждого действия (удаление трупов и проверка лидеров)
+              
             }
         }
 
-        private void EndGame()
+        private bool EndGame()
         {
-            UpdateCountsAndLeadersFromBoard();
-            Console.WriteLine("Игра окончена!");
-            if (!leaderAAlive) Console.WriteLine("Лидер Людей погиб! Орки победили!");
-            else if (!leaderBAlive) Console.WriteLine("Лидер Орков погиб! Люди победили!");
-            else if (raceACount <= 0) Console.WriteLine("Все Люди погибли! Орки победили!");
-            else if (raceBCount <= 0) Console.WriteLine("Все Орки погибли! Люди победили!");
+           
+            
+
+            if (!leaderAAlive)
+            {
+                Console.WriteLine("Лидер Людей погиб! Орки победили!");
+                return true;
+            }
+            else if (!leaderBAlive)
+            {
+                Console.WriteLine("Лидер Орков погиб! Люди победили!");
+                return true;
+            }
+            else if (raceCounts[raceA] <= 0)
+            {
+                Console.WriteLine("Все Люди погибли! Орки победили!");
+                return true;
+            }
+            else if (raceCounts[raceB] <= 0)
+            {
+                Console.WriteLine("Все Орки погибли! Люди победили!");
+                return true;
+            }
+           
+            return false;
         }
 
         private void ProcessMove(int x, int y)
@@ -184,12 +167,32 @@ namespace PaterniLab2.Tools
             var cell = _table._board[x, y];
             if (cell == null || cell.placeForUnit == null || cell.placeForUnit.health <= 0) return;
 
-            // 1. ИИ пытается найти врага и ударить его, если он в пределах досягаемости
+            // 1. ИИ пытается найти врага и ударить его, используя реальный урон оружия
             var targetEnemy = _attack.FindToAttack(cell, _table._board);
-            if (targetEnemy != null)
+            
+            if (targetEnemy.Item1 != null)
             {
-                int damage = 25; // Базовый урон (можно заменить на урон от оружия, если доступно)
-                targetEnemy.TakeDamage(damage);
+                // Берем урон из оружия атакующего юнита
+                int weaponDamage = cell.placeForUnit.weapon?.damage ?? 0;
+                targetEnemy.Item1.TakeDamage(weaponDamage);
+
+                Console.WriteLine($"{cell.placeForUnit.race} атакует {targetEnemy.Item1.race} с уроном {weaponDamage}. Здоровье врага: {targetEnemy.Item1.health}");
+                // Если враг погиб от удара, сразу очищаем поле и проверяем лидеров
+                if (targetEnemy.Item1.health <= 0)
+                {
+                    Console.WriteLine($"{targetEnemy.Item1.race} погиб!");
+                    raceCounts[targetEnemy.Item1.race]--;
+                    if (targetEnemy.Item1.isLeader)
+                    {
+                        if (targetEnemy.Item1.race == raceA)
+                            leaderAAlive = false;
+                        else if (targetEnemy.Item1.race == raceB)
+                            leaderBAlive = false;
+                    }
+                    // Очищаем поле от мертвого юнита
+                    _table._board[targetEnemy.Item2.Item1, targetEnemy.Item2.Item2].placeForUnit = null;
+
+                }
                 return;
             }
 

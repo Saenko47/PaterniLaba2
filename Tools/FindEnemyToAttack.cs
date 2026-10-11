@@ -8,7 +8,7 @@ namespace PaterniLab2.Tools
 {
     internal class FindEnemyToAttack: IFindToAttack
     {
-        public BaseUnit? FindToAttack(Models.Cell unitThatLookingForPray, Models.Cell[,] board)
+        public (BaseUnit?, (int, int)) FindToAttack(Models.Cell unitThatLookingForPray, Models.Cell[,] board)
         {
             int startX = unitThatLookingForPray.x;
             int startY = unitThatLookingForPray.y;
@@ -31,13 +31,13 @@ namespace PaterniLab2.Tools
                     if (targetCell?.placeForUnit != null && targetCell?.placeForUnit.race != unitThatLookingForPray.placeForUnit.race)
                     {
                         // Возвращаем первую попавшуюся цель
-                        return targetCell.placeForUnit;
+                        return (targetCell.placeForUnit, (x, y));
                     }
                 }
             }
 
             // Враг/цель не найдены
-            return null;
+            return (null, (0, 0));
         }
     }
 }
