@@ -1,4 +1,5 @@
 ﻿using PaterniLab2.Interfaces;
+using PaterniLab2.Models;
 using PaterniLab2.Models.Base;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,9 @@ namespace PaterniLab2.Tools
 {
     internal class FindEnemyToAttack: IFindToAttack
     {
-        public (BaseUnit?, (int, int)) FindToAttack(Models.Cell unitThatLookingForPray, Models.Cell[,] board)
+        public Cell FindToAttack(Models.Cell unitThatLookingForPray, Table table)
         {
+            var board = table._board;
             int startX = unitThatLookingForPray.x;
             int startY = unitThatLookingForPray.y;
             int range = unitThatLookingForPray.placeForUnit.weapon.range;
@@ -31,13 +33,13 @@ namespace PaterniLab2.Tools
                     if (targetCell?.placeForUnit != null && targetCell?.placeForUnit.race != unitThatLookingForPray.placeForUnit.race)
                     {
                         // Возвращаем первую попавшуюся цель
-                        return (targetCell.placeForUnit, (x, y));
+                        return targetCell;
                     }
                 }
             }
 
             // Враг/цель не найдены
-            return (null, (0, 0));
+            return null;
         }
     }
 }

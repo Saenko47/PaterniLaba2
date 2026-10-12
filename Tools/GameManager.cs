@@ -11,10 +11,14 @@ namespace PaterniLab2.Tools
 {
     internal class GameManager
     {
+        public event Action<BaseUnit>? OnSomeoneDie;
+
         private readonly Table _table;
         private readonly IMove _move;
         private readonly IFindToAttack _attack;
         private readonly IRender _render;
+
+        private readonly IAi ai;
 
         private Dictionary<Race, int> raceCounts = new();
 
@@ -24,12 +28,15 @@ namespace PaterniLab2.Tools
         private bool leaderAAlive = true;
         private bool leaderBAlive = true;
 
-        public GameManager(Table table, IMove move, IFindToAttack attack, IRender render)
+        public GameManager(Table table, IMove move, IFindToAttack attack, IRender render, IAi ai)
         {
             _table = table;
             _move = move;
             _attack = attack;
             _render = render;
+            this.ai = ai;
+
+            OnSomeoneDie += HandleUnitDeath;
         }
 
         private void ShowUnitsBeforeFigth(List<BaseUnit> units)
@@ -80,6 +87,11 @@ namespace PaterniLab2.Tools
 
             while (!EndGame())
             {
+                foreach (var (r, count) in raceCounts)
+                {
+                    Console.WriteLine($"Remaining {r}: {count}");
+                }
+
                 _render.RenderTable(_table);
 
                 // Обрабатываем ход каждого живого юнита на поле
@@ -88,19 +100,18 @@ namespace PaterniLab2.Tools
                 // Проверяем состояние после ходов (вдруг кто-то умер или лидер погиб)
                 if (EndGame()) break;
 
-                Console.WriteLine("Нажмите любую клавишу для следующего хода...");
-                Console.ReadKey();
+               
             }
 
             _render.RenderTable(_table);
             EndGame();
         }
 
-      
 
-        
 
-        
+
+
+
 
         private void ProcessAllUnitsTurns()
         {
@@ -111,6 +122,7 @@ namespace PaterniLab2.Tools
                 for (int y = 0; y < _table.yLen; y++)
                 {
                     var cell = _table._board[x, y];
+                    // Добавляем проверку, что юнит действительно существует и его здоровье > 0
                     if (cell?.placeForUnit != null && cell.placeForUnit.health > 0)
                     {
                         unitCells.Add((x, y, cell.placeForUnit));
@@ -121,12 +133,11 @@ namespace PaterniLab2.Tools
             foreach (var (x, y, unit) in unitCells)
             {
                 var currentCell = _table._board[x, y];
-                if (currentCell?.placeForUnit != unit || unit.health <= 0) continue;
+                // Если юнит за время чьего-то чужого хода уже умер или сдвинулся — пропускаем
+                if (currentCell?.placeForUnit == null || currentCell.placeForUnit != unit || unit.health <= 0)
+                    continue;
 
-                ProcessMove(x, y);
-
-                // Обновляем состояние доски сразу после каждого действия (удаление трупов и проверка лидеров)
-              
+                ProcessMove(currentCell);
             }
         }
 
@@ -159,58 +170,44 @@ namespace PaterniLab2.Tools
             return false;
         }
 
-        private void ProcessMove(int x, int y)
+        private void ProcessMove(Cell cellWithUnit)
         {
-            if (x < 0 || x >= _table.xLen) return;
-            if (y < 0 || y >= _table.yLen) return;
+            if (cellWithUnit.x < 0 || cellWithUnit.x >= _table.xLen) return;
+            if (cellWithUnit.y < 0 || cellWithUnit.y >= _table.yLen) return;
 
-            var cell = _table._board[x, y];
-            if (cell == null || cell.placeForUnit == null || cell.placeForUnit.health <= 0) return;
+           
 
-            // 1. ИИ пытается найти врага и ударить его, используя реальный урон оружия
-            var targetEnemy = _attack.FindToAttack(cell, _table._board);
-            
-            if (targetEnemy.Item1 != null)
+            ai.MakeMove(cellWithUnit, _table, OnSomeoneDie);
+        }
+
+        private void HandleUnitDeath(BaseUnit deadUnit)
+        {
+            if (deadUnit == null) return;
+
+            if (!raceCounts.ContainsKey(deadUnit.race))
             {
-                // Берем урон из оружия атакующего юнита
-                int weaponDamage = cell.placeForUnit.weapon?.damage ?? 0;
-                targetEnemy.Item1.TakeDamage(weaponDamage);
+                raceCounts[deadUnit.race] = 0;
+            }
 
-                Console.WriteLine($"{cell.placeForUnit.race} атакует {targetEnemy.Item1.race} с уроном {weaponDamage}. Здоровье врага: {targetEnemy.Item1.health}");
-                // Если враг погиб от удара, сразу очищаем поле и проверяем лидеров
-                if (targetEnemy.Item1.health <= 0)
+            raceCounts[deadUnit.race]--;
+
+            if (deadUnit.isLeader)
+            {
+                if (deadUnit.race == raceA)
                 {
-                    Console.WriteLine($"{targetEnemy.Item1.race} погиб!");
-                    raceCounts[targetEnemy.Item1.race]--;
-                    if (targetEnemy.Item1.isLeader)
-                    {
-                        if (targetEnemy.Item1.race == raceA)
-                            leaderAAlive = false;
-                        else if (targetEnemy.Item1.race == raceB)
-                            leaderBAlive = false;
-                    }
-                    // Очищаем поле от мертвого юнита
-                    _table._board[targetEnemy.Item2.Item1, targetEnemy.Item2.Item2].placeForUnit = null;
-
+                    leaderAAlive = false;
                 }
-                return;
+                else if (deadUnit.race == raceB)
+                {
+                    leaderBAlive = false;
+                }
             }
+            Console.WriteLine($"{deadUnit.race} unit has died. Remaining {deadUnit.race}: {raceCounts[deadUnit.race]}");
+        }
 
-            // 2. Если врагов рядом нет — совершаем шаг в сторону противника
-            if (cell.placeForUnit.race == Tools.Enums.Race.Human)
-            {
-                if (x + 1 < _table.xLen && _table._board[x + 1, y]?.placeForUnit == null)
-                    _move.MoveRight(cell);
-                else if (y + 1 < _table.yLen && _table._board[x, y + 1]?.placeForUnit == null)
-                    _move.MoveUp(cell);
-            }
-            else
-            {
-                if (x - 1 >= 0 && _table._board[x - 1, y]?.placeForUnit == null)
-                    _move.MoveLeft(cell);
-                else if (y - 1 >= 0 && _table._board[x, y - 1]?.placeForUnit == null)
-                    _move.MoveDown(cell);
-            }
+        public void InvokeUnitDeath(BaseUnit unit)
+        {
+            OnSomeoneDie?.Invoke(unit);
         }
     }
 }
