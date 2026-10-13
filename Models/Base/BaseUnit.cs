@@ -9,7 +9,8 @@ namespace PaterniLab2.Models.Base
     internal abstract class BaseUnit:IClone<BaseUnit>
     {
 
-
+        public int x { get; private set; }
+        public int y { get; private set; }
         public abstract Race race { get; }
        
 
@@ -31,6 +32,12 @@ namespace PaterniLab2.Models.Base
             this.armor = armor;
             this.moveType = moveType;
             this.weapon = weapons;
+        }
+
+        public void SetPosition(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
         }
 
         public virtual BaseUnit Clone()
@@ -64,7 +71,7 @@ namespace PaterniLab2.Models.Base
 
         public override string ToString()
         {
-            return $"Race: {race}, Health: {health}, Avoid Chance: {avaidChance}, Armor: {armor}, Move Type: {moveType}, Weapon: [{weapon}]";
+            return $"Race: {race}, Health: {health}, Avoid Chance: {avaidChance}, Armor: {armor}, Move Type: {moveType}, Weapon: [{weapon}]\nX: {x}, Y: {y}";
         }
 
 

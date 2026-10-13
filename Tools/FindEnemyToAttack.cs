@@ -9,37 +9,34 @@ namespace PaterniLab2.Tools
 {
     internal class FindEnemyToAttack: IFindToAttack
     {
-        public Cell FindToAttack(Models.Cell unitThatLookingForPray, Table table)
+        public BaseUnit FindToAttack(BaseUnit unitThatLookingForPray, List<BaseUnit> enemyUnits)
         {
-            var board = table._board;
+            if (unitThatLookingForPray == null || enemyUnits == null) return null;
+
             int startX = unitThatLookingForPray.x;
             int startY = unitThatLookingForPray.y;
-            int range = unitThatLookingForPray.placeForUnit.weapon.range;
+            int range = unitThatLookingForPray.weapon.range;
 
-            int rows = board.GetLength(0);
-            int cols = board.GetLength(1);
+            BaseUnit closestEnemy = null;
+            int minDistance = int.MaxValue;
 
-            // Проходим циклом по квадрату вокруг юнита в пределах радиуса оружия
-            for (int x = Math.Max(0, startX - range); x <= Math.Min(rows - 1, startX + range); x++)
+            foreach (var enemy in enemyUnits)
             {
-                for (int y = Math.Max(0, startY - range); y <= Math.Min(cols - 1, startY + range); y++)
+                // На всякий случай пропускаем самого себя
+                if (enemy == unitThatLookingForPray) continue;
+
+                // Вычисляем расстояние по сетке (Манхэттенское расстояние)
+                int distance = Math.Abs(enemy.x - startX) + Math.Abs(enemy.y - startY);
+
+                // Проверяем: укладывается ли в радиус оружия и ближе ли текущего найденного
+                if (distance <= range && distance < minDistance)
                 {
-                    // Пропускаем саму клетку, где стоит наш юнит
-                    if (x == startX && y == startY) continue;
-
-                    var targetCell = board[x, y];
-
-                    // Проверяем, есть ли там юнит и враг ли он (здесь можно добавить проверку команды)
-                    if (targetCell?.placeForUnit != null && targetCell?.placeForUnit.race != unitThatLookingForPray.placeForUnit.race)
-                    {
-                        // Возвращаем первую попавшуюся цель
-                        return targetCell;
-                    }
+                    minDistance = distance;
+                    closestEnemy = enemy;
                 }
             }
 
-            // Враг/цель не найдены
-            return null;
+            return closestEnemy; // Вернет null, никого нет в радиусе атаки
         }
     }
 }

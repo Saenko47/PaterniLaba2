@@ -9,10 +9,8 @@ namespace PaterniLab2.Tools
 {
     internal class Ai : IAi
     {
-  
         private readonly IAttack _attack;
         private readonly IMove _move;
-
         private readonly IFindToAttack _findToAttack;
 
         public Ai(IAttack attack, IMove move, IFindToAttack findToAttack)
@@ -21,51 +19,68 @@ namespace PaterniLab2.Tools
             _move = move;
             _findToAttack = findToAttack;
         }
-        private void MoveUnit(Cell cellWithUnit, Table table)
+
+        private void MoveTowardsEnemy(BaseUnit unit, List<BaseUnit> enemyUnits, Table table)
         {
-            if (cellWithUnit?.placeForUnit == null) return;
+            if (unit == null || enemyUnits == null || enemyUnits.Count == 0) return;
 
-            var _random = new Random();
+            // 1. Находим самого близкого врага для преследования
+            BaseUnit target = null;
+            int minDistance = int.MaxValue;
 
+            foreach (var enemy in enemyUnits)
+            {
+                int dist = Math.Abs(enemy.x - unit.x) + Math.Abs(enemy.y - unit.y);
+                if (dist < minDistance)
+                {
+                    minDistance = dist;
+                    target = enemy;
+                }
+            }
+
+            if (target == null) return;
+
+            // Создаем экземпляр сервиса движения (или используем внедренный _move, если он у вас универсальный)
             var moveService = new Move(table);
 
-            // Массив делегатов с доступными направлениями движения
-            Action<Cell>[] possibleMoves = new Action<Cell>[]
+            // 2. Вычисляем, по какой оси выгоднее сделать шаг
+            int diffX = target.x - unit.x;
+            int diffY = target.y - unit.y;
+
+            // Пытаемся походить по X или Y в зависимости от того, где расстояние больше
+            if (Math.Abs(diffX) > Math.Abs(diffY))
             {
-            moveService.MoveUp,
-            moveService.MoveDown,
-            moveService.MoveLeft,
-            moveService.MoveRight
-            };
-
-            // Выбираем случайный индекс от 0 до 3
-            int randomIndex = _random.Next(possibleMoves.Length);
-
-            // Вызываем выбранный метод перемещения
-            possibleMoves[randomIndex](cellWithUnit);
+                if (diffX > 0) moveService.MoveRight(unit);
+                else moveService.MoveLeft(unit);
+            }
+            else
+            {
+                if (diffY > 0) moveService.MoveUp(unit); // или MoveDown в зависимости от вашей оси Y
+                else moveService.MoveDown(unit);
+            }
         }
 
-        public void MakeMove(Cell cellWithUnit, Table board, Action<Cell> onUnitDeath)
+        public void MakeMove(BaseUnit unit, Table board, List<BaseUnit> enemyUnits, Action<BaseUnit> onUnitDeath)
         {
-            if (cellWithUnit == null || cellWithUnit.placeForUnit == null) return;
+            if (unit == null) return;
 
-            IFindToAttack findToAttack = new FindEnemyToAttack();
-            Cell targetCell = findToAttack.FindToAttack(cellWithUnit, board);
+            // Используем внедренный интерфейс вместо создания new
+            BaseUnit targetEnemy = _findToAttack.FindToAttack(unit, enemyUnits);
 
-            if (targetCell != null)
+            if (targetEnemy != null)
             {
-                _attack.AttackUnit(cellWithUnit, targetCell);
+                // Враг в радиусе атаки — бьем!
+                _attack.AttackUnit(unit, targetEnemy);
 
-                // Проверяем гибель цели
-                if (targetCell.placeForUnit != null && targetCell.placeForUnit.health <= 0)
+                if (targetEnemy.health <= 0)
                 {
-               
-                    onUnitDeath?.Invoke(targetCell);
+                    onUnitDeath?.Invoke(targetEnemy);
                 }
             }
             else
             {
-                MoveUnit(cellWithUnit, board);
+                // Врага рядом нет — целенаправленно идем к нему
+                MoveTowardsEnemy(unit, enemyUnits, board);
             }
         }
     }

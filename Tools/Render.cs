@@ -1,5 +1,6 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models;
+using PaterniLab2.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace PaterniLab2.Tools
 {
     internal class Render: IRender
     {
-        public void RenderTable(Table table)
+        public void RenderTable(Table table, List<BaseUnit> units)
         {
             Console.ReadLine();
             Console.Clear();
@@ -28,16 +29,15 @@ namespace PaterniLab2.Tools
                 Console.Write("|");
                 for (int y = 0; y < table.yLen; y++)
                 {
-                    var cell = table._board[x, y];
+                    // Ищем юнита, у которого координаты совпадают с текущей клеткой (x, y)
+                    var unit = units?.FirstOrDefault(u => u.x == x && u.y == y);
 
-                    if (cell.placeForUnit == null)
+                    if (unit == null)
                     {
                         Console.Write(" . |");
                     }
                     else
                     {
-                        var unit = cell.placeForUnit;
-
                         // Выбираем цвет в зависимости от расы
                         Console.ForegroundColor = unit.race switch
                         {
@@ -54,7 +54,7 @@ namespace PaterniLab2.Tools
                         // Если юнит — лидер, помечаем звездочкой, иначе пробел
                         string leaderChar = unit.isLeader ? "★" : " ";
 
-                        // Иконка оружия: Меле или РД (используем string вместо char)
+                        // Иконка оружия: Меле или РД
                         string weaponChar = unit.weaponType == Enums.WeaponType.Melee ? "⚔" : "🏹";
 
                         Console.Write($"{leaderChar}{raceChar}{weaponChar}|");

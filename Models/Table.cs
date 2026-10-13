@@ -23,29 +23,29 @@ namespace PaterniLab2.Models
             this.xLen = xLen;
             this.yLen = yLen;
 
-           InitializeBoard(xLen, yLen);
-
-        }
-        private void InitializeBoard(int xLen, int yLen)
-        {
-            for (int i = 0; i < xLen; i++)
+            for (int x = 0; x < xLen; x++)
             {
-                for (int j = 0; j < yLen; j++)
+                for (int y = 0; y < yLen; y++)
                 {
-                    _board[i, j] = new Cell(i, j);
+                    _board[x, y] = new Cell {isEmpty = true };
                 }
             }
+
+
         }
 
-        
-        public void DeleteUnitFromBoard(Cell cellWithUnitToDelete)
-        {
-            if (cellWithUnitToDelete == null || cellWithUnitToDelete.placeForUnit == null) return;
+        public void ClearCell(int x, int y) 
+        { 
+            if(x >= 0 && x < xLen && y >= 0 && y < yLen) _board[x, y].isEmpty = true;
             
-
-
-            cellWithUnitToDelete.placeForUnit = null;
         }
+
+        public void SetCell(int x, int y)
+        {
+            if (x >= 0 && x < xLen && y >= 0 && y < yLen) _board[x, y].isEmpty = false;
+        }
+
+
 
         public UnitOnTheBoardByRace FirstPlacementOfUnits(CreateGameRequest req) 
         { 

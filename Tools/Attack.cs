@@ -1,5 +1,6 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models;
+using PaterniLab2.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,14 +11,14 @@ namespace PaterniLab2.Tools
     {
        
 
-        public void AttackUnit(Cell cellWithUnit, Cell targetCell) 
+        public void AttackUnit(BaseUnit cellWithUnit, BaseUnit targetCell) 
         {
             if (targetCell == null || cellWithUnit == null) return;
             
 
-            int damage = cellWithUnit.placeForUnit.weapon.damage;
+            int damage = cellWithUnit.weapon.damage;
 
-            targetCell.placeForUnit.TakeDamage(damage);
+            targetCell.TakeDamage(damage);
         }
     }
 }

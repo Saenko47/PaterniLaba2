@@ -1,5 +1,6 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models;
+using PaterniLab2.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,68 +16,74 @@ namespace PaterniLab2.Tools
             _table = table;
         }
 
-        public void MoveUp(Cell cellWhereUnitToMove)
+        public void MoveUp(BaseUnit unit)
         {
+            if(unit == null) return;
             // 1. Проверка выхода за верхнюю границу
-            if (cellWhereUnitToMove.y + 1 >= _table.yLen) return;
+            if (unit.y + 1 >= _table.yLen) return;
 
-            var targetCell = _table._board[cellWhereUnitToMove.x, cellWhereUnitToMove.y + 1];
+
 
             // 2. Проверка: занята ли целевая ячейка
-            if (targetCell.placeForUnit != null) return;
+            if (_table._board[unit.x, unit.y + 1].isEmpty == false) return;
 
+           _table.ClearCell(unit.x, unit.y);
             // 3. Перемещение
-            var unit = cellWhereUnitToMove.placeForUnit;
-            cellWhereUnitToMove.placeForUnit = null;
-            targetCell.placeForUnit = unit;
+            unit.SetPosition(unit.x, unit.y + 1);
+
+          _table.SetCell(unit.x, unit.y);
+
         }
 
-        public void MoveDown(Cell cellWhereUnitToMove)
+        public void MoveDown(BaseUnit unit)
         {
+            if (unit == null) return;
             // 1. Проверка выхода за нижнюю границу (y - 1 < 0)
-            if (cellWhereUnitToMove.y - 1 < 0) return;
-
-            var targetCell = _table._board[cellWhereUnitToMove.x, cellWhereUnitToMove.y - 1];
+            if (unit.y - 1 < 0) return;
 
             // 2. Проверка: занята ли целевая ячейка
-            if (targetCell.placeForUnit != null) return;
+            if (_table._board[unit.x, unit.y - 1].isEmpty == false) return;
 
+
+            _table.ClearCell(unit.x, unit.y);
             // 3. Перемещение
-            var unit = cellWhereUnitToMove.placeForUnit;
-            cellWhereUnitToMove.placeForUnit = null;
-            targetCell.placeForUnit = unit;
+            unit.SetPosition(unit.x, unit.y - 1);
+
+            _table.SetCell(unit.x, unit.y);
         }
 
-        public void MoveLeft(Cell cellWhereUnitToMove)
+        public void MoveLeft(BaseUnit unit)
         {
+            if (unit == null) return;
             // 1. Проверка выхода за левую границу (x - 1 < 0)
-            if (cellWhereUnitToMove.x - 1 < 0) return;
+            if (unit.x - 1 < 0) return;
 
-            var targetCell = _table._board[cellWhereUnitToMove.x - 1, cellWhereUnitToMove.y];
-
+         
             // 2. Проверка: занята ли целевая ячейка
-            if (targetCell.placeForUnit != null) return;
+            if (_table._board[unit.x - 1, unit.y].isEmpty == false) return;
 
             // 3. Перемещение
-            var unit = cellWhereUnitToMove.placeForUnit;
-            cellWhereUnitToMove.placeForUnit = null;
-            targetCell.placeForUnit = unit;
+            _table.ClearCell(unit.x, unit.y);
+            // 3. Перемещение
+            unit.SetPosition(unit.x - 1, unit.y);
+
+            _table.SetCell(unit.x, unit.y);
         }
 
-        public void MoveRight(Cell cellWhereUnitToMove)
+        public void MoveRight(BaseUnit unit)
         {
             // 1. Проверка выхода за правую границу (x + 1 >= xLen)
-            if (cellWhereUnitToMove.x + 1 >= _table.xLen) return;
+            if (unit.x + 1 >= _table.xLen) return;
 
-            var targetCell = _table._board[cellWhereUnitToMove.x + 1, cellWhereUnitToMove.y];
+           
 
             // 2. Проверка: занята ли целевая ячейка
-            if (targetCell.placeForUnit != null) return;
+            if (_table._board[unit.x + 1, unit.y].isEmpty == false) return;
 
             // 3. Перемещение
-            var unit = cellWhereUnitToMove.placeForUnit;
-            cellWhereUnitToMove.placeForUnit = null;
-            targetCell.placeForUnit = unit;
+            _table.ClearCell(unit.x, unit.y);
+            unit.SetPosition(unit.x + 1, unit.y);
+            _table.SetCell(unit.x, unit.y);
         }
     }
 }

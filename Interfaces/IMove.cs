@@ -1,4 +1,5 @@
 ﻿using PaterniLab2.Models;
+using PaterniLab2.Models.Base;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,9 +8,9 @@ namespace PaterniLab2.Interfaces
 {
     internal interface IMove
     {
-        void MoveUp(Cell cellWhereUnitToMove);
-        void MoveLeft(Cell cellWhereUnitToMove);
-        void MoveRight(Cell cellWhereUnitToMove);
-        void MoveDown(Cell cellWhereUnitToMove);
+        void MoveUp(BaseUnit unit);
+        void MoveLeft(BaseUnit unit);
+        void MoveRight(BaseUnit unit);
+        void MoveDown(BaseUnit unit);
     }
 }

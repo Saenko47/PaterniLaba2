@@ -63,30 +63,43 @@ namespace PaterniLab2.Tools
 
             if (xLim == 0 || yLim == 0) return new List<BaseUnit>();
 
-            // Determine starting row and direction
-            int y = (table[0, 0].placeForUnit == null) ? 0 : yLim - 1;
+            int y = (table[0, 0].isEmpty == true) ? 0 : yLim - 1;
             int stepY = (y == 0) ? 1 : -1;
 
-            // Loop until row bounds are exceeded OR units run out
             List<BaseUnit> placedUnits = new List<BaseUnit>();
-            while (y >= 0 && y < yLim )
+
+            // Сначала собираем точное количество юнитов в список, основываясь на исходных данных
+            List<BaseUnit> unitsToPlaceList = new List<BaseUnit>();
+            for (int i = 0; i < req.raceMeleeAmount; i++)
             {
-                if (req.raceRangeAmount <= 0 && req.raceMeleeAmount <= 0) break;
-                for (int x = 0; x < xLim; x++)
+                unitsToPlaceList.Add(_createUnitByRace.CreateByRaceAndWeapon(req.race, WeaponType.Melee, MoveType.Walk));
+            }
+            for (int i = 0; i < req.raceRangeAmount; i++)
+            {
+                unitsToPlaceList.Add(_createUnitByRace.CreateByRaceAndWeapon(req.race, WeaponType.Range, MoveType.Walk));
+            }
+
+            int unitIndex = 0;
+
+            // Теперь расставляем готовый список по свободным клеткам
+            while (y >= 0 && y < yLim && unitIndex < unitsToPlaceList.Count)
+            {
+                for (int x = 0; x < xLim && unitIndex < unitsToPlaceList.Count; x++)
                 {
-                    // Optional check: stop placing if unit counts hit 0 mid-row
-                    if (req.raceRangeAmount <= 0 && req.raceMeleeAmount <= 0) break;
-
-                    var unitToPlace = ChooseUnitToPlace(req);
-
-                    if (table[x, y] != null && unitToPlace != null)
+                    if (table[x, y].isEmpty == true)
                     {
-                        if(placedUnits.Count() == 0) 
+                        var unitToPlace = unitsToPlaceList[unitIndex];
+
+                        if (placedUnits.Count == 0 && unitIndex == 0)
                         {
                             ChooseLeader(unitToPlace);
                         }
-                        table[x, y].placeForUnit = unitToPlace;
+
+                        unitToPlace.SetPosition(x, y);
+                        table[x, y].isEmpty = false;
                         placedUnits.Add(unitToPlace);
+
+                        unitIndex++; // Переходим к следующему юниту только когда успешно поставили текущего
                     }
                 }
 
