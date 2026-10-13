@@ -83,7 +83,7 @@ namespace PaterniLab2.Tools
 
             while (true)
             {
-                // 1. Проверяем условие окончания перед началом хода
+                
                 if (CheckGameOver(out string winMessage))
                 {
                     Console.WriteLine(winMessage);
@@ -96,14 +96,14 @@ namespace PaterniLab2.Tools
                     Console.WriteLine($"Units of {unitsB[0].race}: {unitsB.Count}");
                 }
 
-                // 2. Рисуем актуальное состояние доски
+                
                 _render.RenderTable(_table, unitsA.Concat(unitsB).ToList());
 
-                // 3. Ждем нажатия Enter перед ходом СЛЕДУЮЩЕГО юнита
+               
                 Console.WriteLine("\nНажмите Enter, чтобы сделать ход следующим юнитом...");
                 Console.ReadLine();
 
-                // 4. Ход одного юнита от Команды А
+               
                 if (unitsA.Count() > 0)
                 {
                     indexA = indexA % unitsA.Count();
@@ -115,7 +115,7 @@ namespace PaterniLab2.Tools
                     indexA++;
                 }
 
-                // Проверяем, не закончилась ли игра после хода команды А
+                
                 if (CheckGameOver(out string winMsgA))
                 {
                     _render.RenderTable(_table, unitsA.Concat(unitsB).ToList());
@@ -123,7 +123,7 @@ namespace PaterniLab2.Tools
                     break;
                 }
 
-                // 5. Ход одного юнита от Команды Б
+               
                 if (unitsB.Count() > 0)
                 {
                     indexB = indexB % unitsB.Count;
@@ -136,7 +136,7 @@ namespace PaterniLab2.Tools
                 }
             }
 
-            // Финальная отрисовка при победе
+            
             _render.RenderTable(_table, unitsA.Concat(unitsB).ToList());
         }
 

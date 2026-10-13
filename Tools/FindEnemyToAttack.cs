@@ -22,13 +22,13 @@ namespace PaterniLab2.Tools
 
             foreach (var enemy in enemyUnits)
             {
-                // На всякий случай пропускаем самого себя
+               
                 if (enemy == unitThatLookingForPray) continue;
 
-                // Вычисляем расстояние по сетке (Манхэттенское расстояние)
+                
                 int distance = Math.Abs(enemy.x - startX) + Math.Abs(enemy.y - startY);
 
-                // Проверяем: укладывается ли в радиус оружия и ближе ли текущего найденного
+               
                 if (distance <= range && distance < minDistance)
                 {
                     minDistance = distance;
@@ -36,7 +36,7 @@ namespace PaterniLab2.Tools
                 }
             }
 
-            return closestEnemy; // Вернет null, никого нет в радиусе атаки
+            return closestEnemy; 
         }
     }
 }

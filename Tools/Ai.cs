@@ -24,7 +24,7 @@ namespace PaterniLab2.Tools
         {
             if (unit == null || enemyUnits == null || enemyUnits.Count == 0) return;
 
-            // 1. Находим самого близкого врага для преследования
+           
             BaseUnit target = null;
             int minDistance = int.MaxValue;
 
@@ -40,14 +40,14 @@ namespace PaterniLab2.Tools
 
             if (target == null) return;
 
-            // Создаем экземпляр сервиса движения (или используем внедренный _move, если он у вас универсальный)
+            
             var moveService = new Move(table);
 
-            // 2. Вычисляем, по какой оси выгоднее сделать шаг
+            
             int diffX = target.x - unit.x;
             int diffY = target.y - unit.y;
 
-            // Пытаемся походить по X или Y в зависимости от того, где расстояние больше
+          
             if (Math.Abs(diffX) > Math.Abs(diffY))
             {
                 if (diffX > 0) moveService.MoveRight(unit);
@@ -55,7 +55,7 @@ namespace PaterniLab2.Tools
             }
             else
             {
-                if (diffY > 0) moveService.MoveUp(unit); // или MoveDown в зависимости от вашей оси Y
+                if (diffY > 0) moveService.MoveUp(unit); 
                 else moveService.MoveDown(unit);
             }
         }
@@ -64,12 +64,12 @@ namespace PaterniLab2.Tools
         {
             if (unit == null) return;
 
-            // Используем внедренный интерфейс вместо создания new
+           
             BaseUnit targetEnemy = _findToAttack.FindToAttack(unit, enemyUnits);
 
             if (targetEnemy != null)
             {
-                // Враг в радиусе атаки — бьем!
+                
                 _attack.AttackUnit(unit, targetEnemy);
 
                 if (targetEnemy.health <= 0)
@@ -79,7 +79,7 @@ namespace PaterniLab2.Tools
             }
             else
             {
-                // Врага рядом нет — целенаправленно идем к нему
+               
                 MoveTowardsEnemy(unit, enemyUnits, board);
             }
         }
