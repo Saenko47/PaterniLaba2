@@ -11,7 +11,7 @@ namespace PaterniLab2.Tools
 {
     internal class GameManager
     {
-        public event Action<BaseUnit>? OnSomeoneDie;
+        public event Action<Cell>? OnSomeoneDie;
 
         private readonly Table _table;
         private readonly IMove _move;
@@ -138,6 +138,7 @@ namespace PaterniLab2.Tools
                     continue;
 
                 ProcessMove(currentCell);
+               
             }
         }
 
@@ -180,9 +181,13 @@ namespace PaterniLab2.Tools
             ai.MakeMove(cellWithUnit, _table, OnSomeoneDie);
         }
 
-        private void HandleUnitDeath(BaseUnit deadUnit)
+        private void HandleUnitDeath(Cell deadCell)
         {
-            if (deadUnit == null) return;
+            if (deadCell == null || deadCell.placeForUnit == null) return;
+
+            var deadUnit = deadCell.placeForUnit;
+
+            _table.DeleteUnitFromBoard(deadCell);
 
             if (!raceCounts.ContainsKey(deadUnit.race))
             {
@@ -205,7 +210,7 @@ namespace PaterniLab2.Tools
             Console.WriteLine($"{deadUnit.race} unit has died. Remaining {deadUnit.race}: {raceCounts[deadUnit.race]}");
         }
 
-        public void InvokeUnitDeath(BaseUnit unit)
+        public void InvokeUnitDeath(Cell unit)
         {
             OnSomeoneDie?.Invoke(unit);
         }

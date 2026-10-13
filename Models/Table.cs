@@ -38,19 +38,13 @@ namespace PaterniLab2.Models
         }
 
         
-        public void DeleteUnitFromBoard(BaseUnit unitToDelete)
+        public void DeleteUnitFromBoard(Cell cellWithUnitToDelete)
         {
-            for (int i = 0; i < xLen; i++)
-            {
-                for (int j = 0; j < yLen; j++)
-                {
-                    if (_board[i, j].placeForUnit == unitToDelete)
-                    {
-                        _board[i, j].placeForUnit = null;
-                        return;
-                    }
-                }
-            }
+            if (cellWithUnitToDelete == null || cellWithUnitToDelete.placeForUnit == null) return;
+            
+
+
+            cellWithUnitToDelete.placeForUnit = null;
         }
 
         public UnitOnTheBoardByRace FirstPlacementOfUnits(CreateGameRequest req) 

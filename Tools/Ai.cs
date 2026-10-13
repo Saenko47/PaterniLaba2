@@ -45,7 +45,7 @@ namespace PaterniLab2.Tools
             possibleMoves[randomIndex](cellWithUnit);
         }
 
-        public void MakeMove(Cell cellWithUnit, Table board, Action<BaseUnit> onUnitDeath)
+        public void MakeMove(Cell cellWithUnit, Table board, Action<Cell> onUnitDeath)
         {
             if (cellWithUnit == null || cellWithUnit.placeForUnit == null) return;
 
@@ -59,13 +59,8 @@ namespace PaterniLab2.Tools
                 // Проверяем гибель цели
                 if (targetCell.placeForUnit != null && targetCell.placeForUnit.health <= 0)
                 {
-                    var deadUnit = targetCell.placeForUnit;
-
-                    // Удаляем юнит с доски (метод должен занулять cell.placeForUnit = null)
-                    board.DeleteUnitFromBoard(deadUnit);
-
-                    // Уведомляем подписчиков о смерти один раз
-                    onUnitDeath?.Invoke(deadUnit);
+               
+                    onUnitDeath?.Invoke(targetCell);
                 }
             }
             else

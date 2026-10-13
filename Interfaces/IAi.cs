@@ -8,6 +8,6 @@ namespace PaterniLab2.Interfaces
 {
     internal interface IAi
     {
-        public void MakeMove(Cell cellWithUnit, Table table, Action<BaseUnit> onUnitDeath);
+        public void MakeMove(Cell cellWithUnit, Table table, Action<Cell> onUnitDeath);
     }
 }
