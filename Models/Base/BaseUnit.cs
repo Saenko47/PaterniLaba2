@@ -24,6 +24,8 @@ namespace PaterniLab2.Models.Base
 
         public BaseWeapon weapon { get; protected set; }
         public WeaponType weaponType => weapon.weaponType;
+
+        public List<IItem> inventory { get; } = new List<IItem>();
         
 
         public BaseUnit(int armor, MoveType moveType, BaseWeapon weapons)
@@ -33,7 +35,58 @@ namespace PaterniLab2.Models.Base
             this.moveType = moveType;
             this.weapon = weapons;
         }
+        public void AddItem(IItem item)
+        {
+            if (item == null) return;
 
+            inventory.Add(item);
+            ApplyBuffs(item);
+        }
+
+      
+        public void RemoveItem(IItem item)
+        {
+            if (item == null || !inventory.Contains(item)) return;
+
+            inventory.Remove(item);
+            RemoveBuffs(item); 
+        }
+        private void ApplyBuffs(IItem item)
+        {
+            foreach (var buff in item.Buffs)
+            {
+                switch (buff.Key)
+                {
+                    case ItemBuffType.Health:
+                        this.health += buff.Value;
+                        break;
+                    case ItemBuffType.Armor:
+                        this.armor += buff.Value;
+                        break;
+                    case ItemBuffType.AvoidChance:
+                        this.avaidChance += buff.Value;
+                        break;
+                }
+            }
+        }
+        private void RemoveBuffs(IItem item)
+        {
+            foreach (var buff in item.Buffs)
+            {
+                switch (buff.Key)
+                {
+                    case ItemBuffType.Health:
+                        this.health -= buff.Value; 
+                        break;
+                    case ItemBuffType.Armor:
+                        this.armor -= buff.Value;
+                        break;
+                    case ItemBuffType.AvoidChance:
+                        this.avaidChance -= buff.Value;
+                        break;
+                }
+            }
+        }
         public void SetPosition(int x, int y)
         {
             this.x = x;

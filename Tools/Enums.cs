@@ -26,8 +26,13 @@ namespace PaterniLab2.Tools
         Melee,
         Range
         }
-        
+        public enum ItemBuffType
+        {
+            Health,
+            Armor,
+            AvoidChance
+        }
 
-        
+
     }
 }
