@@ -1,4 +1,5 @@
 ﻿using PaterniLab2.Interfaces.Factory;
+using PaterniLab2.Models.Base;
 using PaterniLab2.Models.Units;
 using PaterniLab2.Models.Weapons.Orcs;
 using PaterniLab2.Requests.Units;
@@ -13,11 +14,11 @@ namespace PaterniLab2.Factories.Units
     {
       protected override OrcUnit CreateMeleeUnit(MoveType move)
         {
-            return new OrcUnit(20, move,new BattleAxe());
+            return new OrcUnit(20, move,new BattleAxe(), new Inventory(3));
         }
         protected override OrcUnit CreatRangeUnit(MoveType move)
         {
-            return new OrcUnit(10, move, new Sling());
+            return new OrcUnit(10, move, new Sling(), new Inventory(3));
         }
     }
 }

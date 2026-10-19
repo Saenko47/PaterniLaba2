@@ -1,5 +1,5 @@
 ﻿using PaterniLab2.Models;
-using PaterniLab2.Models.Base;
+using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests.Table;
 using System;
 using System.Collections.Generic;

@@ -1,10 +1,11 @@
 ﻿using PaterniLab2.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using static PaterniLab2.Tools.Enums;
 
-namespace PaterniLab2.Models.Base
+namespace PaterniLab2.Models.Base.Unit
 {
     internal abstract class BaseUnit:IClone<BaseUnit>
     {
@@ -21,72 +22,51 @@ namespace PaterniLab2.Models.Base
 
         public bool isLeader { get; set; } = false;
 
+        public IInventory inventory;
 
         public BaseWeapon weapon { get; protected set; }
         public WeaponType weaponType => weapon.weaponType;
 
-        public List<IItem> inventory { get; } = new List<IItem>();
+        
         
 
-        public BaseUnit(int armor, MoveType moveType, BaseWeapon weapons)
+        public BaseUnit(int armor, MoveType moveType, BaseWeapon weapons, IInventory inventory)
         {
            
             this.armor = armor;
             this.moveType = moveType;
             this.weapon = weapons;
-        }
-        public void AddItem(IItem item)
-        {
-            if (item == null) return;
-
-            inventory.Add(item);
-            ApplyBuffs(item);
+            this.inventory = inventory;
         }
 
-      
-        public void RemoveItem(IItem item)
+        protected void ReconsiderInventory()
         {
-            if (item == null || !inventory.Contains(item)) return;
 
-            inventory.Remove(item);
-            RemoveBuffs(item); 
-        }
-        private void ApplyBuffs(IItem item)
-        {
-            foreach (var buff in item.Buffs)
+            if (inventory == null) return;
+
+          
+            foreach (var item in inventory.GetAllEquippedItems())
             {
-                switch (buff.Key)
+                if (item?.buffs == null) continue;
+
+                foreach (var buff in item.buffs)
                 {
-                    case ItemBuffType.Health:
-                        this.health += buff.Value;
-                        break;
-                    case ItemBuffType.Armor:
-                        this.armor += buff.Value;
-                        break;
-                    case ItemBuffType.AvoidChance:
-                        this.avaidChance += buff.Value;
-                        break;
+                    switch (buff.Key)
+                    {
+                        case ItemBuffType.Health:
+                            health += buff.Value;
+                            break;
+                        case ItemBuffType.Armor:
+                            armor += buff.Value;
+                            break;
+                        case ItemBuffType.AvoidChance:
+                            avaidChance += buff.Value;
+                            break;
+                    }
                 }
             }
         }
-        private void RemoveBuffs(IItem item)
-        {
-            foreach (var buff in item.Buffs)
-            {
-                switch (buff.Key)
-                {
-                    case ItemBuffType.Health:
-                        this.health -= buff.Value; 
-                        break;
-                    case ItemBuffType.Armor:
-                        this.armor -= buff.Value;
-                        break;
-                    case ItemBuffType.AvoidChance:
-                        this.avaidChance -= buff.Value;
-                        break;
-                }
-            }
-        }
+
         public void SetPosition(int x, int y)
         {
             this.x = x;
@@ -124,7 +104,10 @@ namespace PaterniLab2.Models.Base
 
         public override string ToString()
         {
-            return $"Race: {race}, Health: {health}, Avoid Chance: {avaidChance}, Armor: {armor}, Move Type: {moveType}, Weapon: [{weapon}]\nX: {x}, Y: {y}";
+            string equippedStr = string.Join(", ", inventory.GetAllEquippedItems().Select(item => item));
+
+            return $"Race: {race}, Health: {health}, Avoid Chance: {avaidChance}, Armor: {armor}, Move Type: {moveType}, Weapon: [{weapon}]\nX: {x}, Y: {y}" +
+                $"\n Items:{equippedStr}";
         }
 
 

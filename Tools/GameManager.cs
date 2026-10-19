@@ -1,6 +1,6 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models;
-using PaterniLab2.Models.Base;
+using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Tools
 {
-    internal class GameManager
+    internal class GameManager:IGameManager
     {
         public event Action<BaseUnit>? OnSomeoneDie;
 
@@ -171,7 +171,7 @@ namespace PaterniLab2.Tools
         {
             Console.WriteLine($"Ходит юнит: {unit.race} на позиции ({unit.x}, {unit.y})");
             var opponentTeam = unit.race == unitsA[0].race ? unitsB : unitsA;
-            _ai.MakeMove(unit, _table, opponentTeam, OnSomeoneDie);
+            _ai.MakeMove(unit, opponentTeam, OnSomeoneDie);
         }
 
         private void HandleUnitDeath(BaseUnit deadUnit)

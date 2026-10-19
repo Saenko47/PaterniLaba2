@@ -32,6 +32,15 @@ namespace PaterniLab2.Tools
             Armor,
             AvoidChance
         }
+        public enum ItemType
+        {
+            Helmet,
+            Chestplate,
+            Leggings,
+            Boots,
+            Jewery
+            
+        }
 
 
     }

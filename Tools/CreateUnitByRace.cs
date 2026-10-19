@@ -1,7 +1,7 @@
 ﻿using PaterniLab2.Factories;
 using PaterniLab2.Factories.Units;
 using PaterniLab2.Interfaces;
-using PaterniLab2.Models.Base;
+using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Models.Units;
 using System;
 using System.Collections.Generic;

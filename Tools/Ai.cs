@@ -1,6 +1,6 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models;
-using PaterniLab2.Models.Base;
+using PaterniLab2.Models.Base.Unit;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,7 +20,7 @@ namespace PaterniLab2.Tools
             _findToAttack = findToAttack;
         }
 
-        private void MoveTowardsEnemy(BaseUnit unit, List<BaseUnit> enemyUnits, Table table)
+        private void MoveTowardsEnemy(BaseUnit unit, List<BaseUnit> enemyUnits)
         {
             if (unit == null || enemyUnits == null || enemyUnits.Count == 0) return;
 
@@ -40,27 +40,24 @@ namespace PaterniLab2.Tools
 
             if (target == null) return;
 
-            
-            var moveService = new Move(table);
-
-            
+           
             int diffX = target.x - unit.x;
             int diffY = target.y - unit.y;
 
           
             if (Math.Abs(diffX) > Math.Abs(diffY))
             {
-                if (diffX > 0) moveService.MoveRight(unit);
-                else moveService.MoveLeft(unit);
+                if (diffX > 0) _move.MoveRight(unit);
+                else _move.MoveLeft(unit);
             }
             else
             {
-                if (diffY > 0) moveService.MoveUp(unit); 
-                else moveService.MoveDown(unit);
+                if (diffY > 0) _move.MoveUp(unit); 
+                else _move.MoveDown(unit);
             }
         }
 
-        public void MakeMove(BaseUnit unit, Table board, List<BaseUnit> enemyUnits, Action<BaseUnit> onUnitDeath)
+        public void MakeMove(BaseUnit unit, List<BaseUnit> enemyUnits, Action<BaseUnit> onUnitDeath)
         {
             if (unit == null) return;
 
@@ -80,7 +77,7 @@ namespace PaterniLab2.Tools
             else
             {
                
-                MoveTowardsEnemy(unit, enemyUnits, board);
+                MoveTowardsEnemy(unit, enemyUnits);
             }
         }
     }

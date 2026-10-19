@@ -1,6 +1,6 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models;
-using PaterniLab2.Models.Base;
+using PaterniLab2.Models.Base.Unit;
 using System;
 using System.Collections.Generic;
 using System.Text;

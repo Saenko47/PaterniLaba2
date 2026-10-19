@@ -1,7 +1,7 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Interfaces.Factory;
 using PaterniLab2.Models;
-using PaterniLab2.Models.Base;
+using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests.Table;
 using PaterniLab2.Requests.Units;
 using PaterniLab2.Singltons;

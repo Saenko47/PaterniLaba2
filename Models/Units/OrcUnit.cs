@@ -1,4 +1,6 @@
-﻿using PaterniLab2.Models.Base;
+﻿using PaterniLab2.Interfaces;
+using PaterniLab2.Models.Base;
+using PaterniLab2.Models.Base.Unit;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,10 +14,11 @@ namespace PaterniLab2.Models.Units
         private const int HEALTH_BUFF = 80;
 
         public override Race race => Race.Orc;
-        public OrcUnit(int armor, MoveType moveType, BaseWeapon weapon)
-            : base(armor, moveType, weapon)
+        public OrcUnit(int armor, MoveType moveType, BaseWeapon weapon, IInventory inventory)
+            : base(armor, moveType, weapon, inventory)
         {
             this.health += HEALTH_BUFF;
+            ReconsiderInventory();
         }
     }
 }

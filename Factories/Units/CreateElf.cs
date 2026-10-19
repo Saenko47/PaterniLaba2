@@ -1,4 +1,5 @@
 ﻿using PaterniLab2.Interfaces.Factory;
+using PaterniLab2.Models.Base;
 using PaterniLab2.Models.Units;
 using PaterniLab2.Models.Weapons.Elf;
 using PaterniLab2.Requests.Units;
@@ -13,11 +14,11 @@ namespace PaterniLab2.Factories.Units
     {
       protected override ElfUnit CreateMeleeUnit(MoveType move)
         {
-            return new ElfUnit(10, move, new Rapier());
+            return new ElfUnit(10, move, new Rapier(), new Inventory(3));
         }
         protected override ElfUnit CreatRangeUnit(MoveType move)
         {
-            return new ElfUnit(5, move, new LongBow());
+            return new ElfUnit(5, move, new LongBow(), new Inventory(3));
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using PaterniLab2.Models.Base;
+﻿using PaterniLab2.Interfaces;
+using PaterniLab2.Models.Base;
+using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Models.Items.Humans;
 using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
@@ -14,11 +17,13 @@ namespace PaterniLab2.Models.Units
         private const int AVOID_CHANCE = 5;
         public override Race race  => Race.Human;
 
-        public HumanUnit(int armor, MoveType moveType, BaseWeapon weapon)
-        : base(armor, moveType, weapon)
+        public HumanUnit(int armor, MoveType moveType, BaseWeapon weapon, IInventory inventory)
+            : base(armor, moveType, weapon, inventory)
         {
             health += HEALTH_BUFF;
             avaidChance += AVOID_CHANCE;
+            base.inventory.SetBoot(new HumanBoots());
+            ReconsiderInventory();
         }
 
         

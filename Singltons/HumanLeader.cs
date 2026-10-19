@@ -1,4 +1,4 @@
-﻿using PaterniLab2.Models.Base;
+﻿using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Models.Weapons.Humans;
 using System;
 using System.Collections.Generic;
