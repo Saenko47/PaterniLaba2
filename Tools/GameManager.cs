@@ -17,7 +17,6 @@ namespace PaterniLab2.Tools
         private readonly IMove _move;
         private readonly IFindToAttack _attack;
         private readonly IRender _render;
-        private readonly IAi _ai;
 
         private List<BaseUnit> unitsA = new List<BaseUnit>();
         private List<BaseUnit> unitsB = new List<BaseUnit>();
@@ -25,7 +24,7 @@ namespace PaterniLab2.Tools
         private bool leaderAAlive = true;
         private bool leaderBAlive = true;
 
-        public GameManager(Table table, IMove move, IFindToAttack attack, IRender render, IAi ai)
+        public GameManager(Table table, IMove move, IFindToAttack attack, IRender render)
         {
             _table = table;
             _move = move;
@@ -171,7 +170,7 @@ namespace PaterniLab2.Tools
         {
             Console.WriteLine($"Ходит юнит: {unit.race} на позиции ({unit.x}, {unit.y})");
             var opponentTeam = unit.race == unitsA[0].race ? unitsB : unitsA;
-            _ai.MakeMove(unit, opponentTeam, OnSomeoneDie);
+            unit.MakeMove(opponentTeam, OnSomeoneDie);
         }
 
         private void HandleUnitDeath(BaseUnit deadUnit)

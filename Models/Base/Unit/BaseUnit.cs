@@ -25,20 +25,33 @@ namespace PaterniLab2.Models.Base.Unit
         public IInventory inventory { get; private set; }
         public ISkillContainer skillContainer { get; private set; }
 
+        private IBehaviour behaviour;
+
         public BaseWeapon weapon { get; protected set; }
         public WeaponType weaponType => weapon.weaponType;
 
-        
-        
+        public int amountOfMoves => moveType == MoveType.Cavalry ? 2 : 1;
+        public int amountOfBattleMoves { get; private set; } = 1;
 
-        public BaseUnit(int armor, MoveType moveType, BaseWeapon weapons, IInventory inventory)
+     
+
+
+        public BaseUnit(int armor, MoveType moveType, BaseWeapon weapons,IBehaviour behaviour, IInventory inventory)
         {
            
             this.armor = armor;
             this.moveType = moveType;
             this.weapon = weapons;
             this.inventory = inventory;
+            this.behaviour = behaviour;
         }
+
+        public void MakeMove(List<BaseUnit> enemyUnits, Action<BaseUnit> onUnitDeath) 
+        {
+            behaviour.MakeMove(enemyUnits,onUnitDeath);
+        }
+
+       
 
         protected void ReconsiderInventory()
         {
@@ -113,6 +126,12 @@ namespace PaterniLab2.Models.Base.Unit
 
             return $"Race: {race}, Health: {health}, Avoid Chance: {avaidChance}, Armor: {armor}, Move Type: {moveType}, Weapon: [{weapon}]\nX: {x}, Y: {y}" +
                 $"\n Items:{equippedStr}";
+        }
+
+
+        private void Tick()
+        {
+
         }
 
 
