@@ -22,7 +22,8 @@ namespace PaterniLab2.Models.Base.Unit
 
         public bool isLeader { get; set; } = false;
 
-        public IInventory inventory;
+        public IInventory inventory { get; private set; }
+        public ISkillContainer skillContainer { get; private set; }
 
         public BaseWeapon weapon { get; protected set; }
         public WeaponType weaponType => weapon.weaponType;
@@ -41,29 +42,33 @@ namespace PaterniLab2.Models.Base.Unit
 
         protected void ReconsiderInventory()
         {
-
             if (inventory == null) return;
 
-          
             foreach (var item in inventory.GetAllEquippedItems())
             {
                 if (item?.buffs == null) continue;
 
                 foreach (var buff in item.buffs)
                 {
-                    switch (buff.Key)
-                    {
-                        case ItemBuffType.Health:
-                            health += buff.Value;
-                            break;
-                        case ItemBuffType.Armor:
-                            armor += buff.Value;
-                            break;
-                        case ItemBuffType.AvoidChance:
-                            avaidChance += buff.Value;
-                            break;
-                    }
+                    ApplyBuff(buff.Key, buff.Value);
                 }
+            }
+        }
+
+
+        public void ApplyBuff(BuffType buffType, int value)
+        {
+            switch (buffType)
+            {
+                case BuffType.Health:
+                    health += value;
+                    break;
+                case BuffType.Armor:
+                    armor += value;
+                    break;
+                case BuffType.AvoidChance:
+                    avaidChance += value; 
+                    break;
             }
         }
 

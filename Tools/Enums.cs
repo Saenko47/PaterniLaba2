@@ -26,7 +26,7 @@ namespace PaterniLab2.Tools
         Melee,
         Range
         }
-        public enum ItemBuffType
+        public enum BuffType
         {
             Health,
             Armor,
