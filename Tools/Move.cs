@@ -23,8 +23,12 @@ namespace PaterniLab2.Tools
         
             if (!isCellFree(targetX, targetY)) return;
 
+            int oldX = unit.x;
+            int oldY = unit.y;
+
             unit.SetPosition(targetX, targetY);
-            onMove?.Invoke(new Vector2Int(unit.x, unit.y), new Vector2Int(targetX, targetY));
+
+            onMove?.Invoke(new Vector2Int(oldX, oldY), new Vector2Int(targetX, targetY));
         }
         public void MoveDown(BaseUnit unit, Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove)
         {
@@ -38,8 +42,12 @@ namespace PaterniLab2.Tools
 
             if (!isCellFree(targetX, targetY)) return;
 
+            int oldX = unit.x;
+            int oldY = unit.y;
+
             unit.SetPosition(targetX, targetY);
-            onMove?.Invoke(new Vector2Int(unit.x, unit.y), new Vector2Int(targetX, targetY));
+
+            onMove?.Invoke(new Vector2Int(oldX, oldY), new Vector2Int(targetX, targetY));
         }
 
         public void MoveLeft(BaseUnit unit, Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove)
@@ -54,8 +62,12 @@ namespace PaterniLab2.Tools
 
             if (!isCellFree(targetX, targetY)) return;
 
+            int oldX = unit.x;
+            int oldY = unit.y;
+
             unit.SetPosition(targetX, targetY);
-            onMove?.Invoke(new Vector2Int(unit.x, unit.y), new Vector2Int(targetX, targetY));
+
+            onMove?.Invoke(new Vector2Int(oldX, oldY), new Vector2Int(targetX, targetY));
         }
 
         public void MoveRight(BaseUnit unit, Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove)
@@ -70,8 +82,12 @@ namespace PaterniLab2.Tools
 
             if (!isCellFree(targetX, targetY)) return;
 
+            int oldX = unit.x;
+            int oldY = unit.y;
+
             unit.SetPosition(targetX, targetY);
-            onMove?.Invoke(new Vector2Int(unit.x, unit.y), new Vector2Int(targetX, targetY));
+
+            onMove?.Invoke(new Vector2Int(oldX, oldY), new Vector2Int(targetX, targetY));
         }
     }
 }
