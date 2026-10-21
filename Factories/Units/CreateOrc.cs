@@ -3,6 +3,7 @@ using PaterniLab2.Models.Base;
 using PaterniLab2.Models.Units;
 using PaterniLab2.Models.Weapons.Orcs;
 using PaterniLab2.Requests.Units;
+using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,11 +15,15 @@ namespace PaterniLab2.Factories.Units
     {
       protected override OrcUnit CreateMeleeUnit(MoveType move)
         {
-            return new OrcUnit(20, move,new BattleAxe(), new Inventory(3));
+            var newOrc =  new OrcUnit(20, move,new BattleAxe(), new Inventory(3));
+            newOrc.SetBehaviour(new UnitBehaviour(newOrc, new AiMoveHandler(newOrc, new Move()), new Attack(new DamageCalculator()), new FindEnemyToAttack()));
+            return newOrc;
         }
         protected override OrcUnit CreatRangeUnit(MoveType move)
         {
-            return new OrcUnit(10, move, new Sling(), new Inventory(3));
+            var newOrc = new OrcUnit(10, move, new Sling(), new Inventory(3));
+            newOrc.SetBehaviour(new UnitBehaviour(newOrc, new AiMoveHandler(newOrc, new Move()), new Attack(new DamageCalculator()), new FindEnemyToAttack()));
+            return newOrc;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace PaterniLab2.Tools
             _move = move;
         }
 
-        private void MoveRandomly()
+        private void MoveRandomly(Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove)
         {
             if (_owner == null || _move == null) return;
 
@@ -27,23 +27,23 @@ namespace PaterniLab2.Tools
             switch (randomDirection)
             {
                 case 0:
-                    _move.MoveUp(_owner);
+                    _move.MoveUp(_owner, bounds, isCellFree, onMove);
                     break;
                 case 1:
-                    _move.MoveDown(_owner);
+                    _move.MoveDown(_owner, bounds, isCellFree, onMove);
                     break;
                 case 2:
-                    _move.MoveLeft(_owner);
+                    _move.MoveLeft(_owner, bounds, isCellFree, onMove);
                     break;
                 case 3:
-                    _move.MoveRight(_owner);
+                    _move.MoveRight(_owner, bounds, isCellFree, onMove);
                     break;
             }
         }
 
-        public void Move() 
+        public void Move(Vector2Int bounds,Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove) 
         {
-            MoveRandomly();
+            MoveRandomly(bounds, isCellFree, onMove);
         }
     }
 }

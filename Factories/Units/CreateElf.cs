@@ -15,11 +15,15 @@ namespace PaterniLab2.Factories.Units
     {
       protected override ElfUnit CreateMeleeUnit(MoveType move)
         {
-            return new ElfUnit(10, move, new Rapier(), new Inventory(3));
+            var newElf = new ElfUnit(10, move, new Rapier(), new Inventory(3));
+            newElf.SetBehaviour(new UnitBehaviour(newElf, new AiMoveHandler(newElf, new Move()), new Attack(new DamageCalculator()), new FindEnemyToAttack()));
+            return newElf;
         }
         protected override ElfUnit CreatRangeUnit(MoveType move)
         {
-            return new ElfUnit(5, move, new LongBow(), new Inventory(3));
+            var newElf = new ElfUnit(5, move, new LongBow(), new Inventory(3));
+            newElf.SetBehaviour(new UnitBehaviour(newElf, new AiMoveHandler(newElf, new Move()), new Attack(new DamageCalculator()), new FindEnemyToAttack()));
+            return newElf;
         }
     }
 }

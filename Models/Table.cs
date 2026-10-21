@@ -1,8 +1,10 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests.Table;
+using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 
 namespace PaterniLab2.Models
@@ -12,16 +14,15 @@ namespace PaterniLab2.Models
 
        public Cell[,] _board { get; set; }
         private readonly IPlaceRaceOnBoard _placeRaceOnBoard;
+        public Action<Vector2Int, Vector2Int>? OnSomeoneMove { get; private set; }
 
-        public int xLen;
-        public int yLen;
+        public Vector2Int frames { get; private set; }
         public Table(int xLen, int yLen, IPlaceRaceOnBoard placeRaceOnBoard)
         {
             _placeRaceOnBoard = placeRaceOnBoard;
             _board = new Cell[xLen, yLen];
 
-            this.xLen = xLen;
-            this.yLen = yLen;
+            frames = new Vector2Int(xLen, yLen);
 
             for (int x = 0; x < xLen; x++)
             {
@@ -36,14 +37,31 @@ namespace PaterniLab2.Models
 
         public void ClearCell(int x, int y) 
         { 
-            if(x >= 0 && x < xLen && y >= 0 && y < yLen) _board[x, y].isEmpty = true;
+            if(x >= 0 && x < frames.X && y >= 0 && y < frames.Y) _board[x, y].isEmpty = true;
             
         }
 
         public void SetCell(int x, int y)
         {
-            if (x >= 0 && x < xLen && y >= 0 && y < yLen) _board[x, y].isEmpty = false;
+            if (x >= 0 && x < frames.X && y >= 0 && y < frames.Y) _board[x, y].isEmpty = false;
         }
+        public bool IsSellFree(int x, int y) 
+        {
+            if (x < 0 || y < 0) return false;
+            if (x >= frames.X || y >= frames.Y) return false;
+
+            return _board[x, y].isEmpty;
+        }
+        public void MoveUnit(Vector2Int from, Vector2Int to)
+        {
+    
+            ClearCell(from.X, from.Y);
+
+            SetCell(to.X, to.Y);
+
+            OnSomeoneMove?.Invoke(from, to);
+        }
+
 
 
 

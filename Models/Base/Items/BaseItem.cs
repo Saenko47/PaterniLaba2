@@ -8,7 +8,7 @@ namespace PaterniLab2.Models.Base.Items
     internal abstract class BaseItem
     {
         public abstract ItemType itemType { get; }
-        public Dictionary<ItemBuffType, int> buffs { get; } = new();
+        public Dictionary<BuffType, int> buffs { get; } = new();
 
 
 

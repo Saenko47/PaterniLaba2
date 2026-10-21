@@ -4,6 +4,7 @@ using PaterniLab2.Models.Items.Humans;
 using PaterniLab2.Models.Units;
 using PaterniLab2.Models.Weapons.Humans;
 using PaterniLab2.Requests.Units;
+using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,11 +19,15 @@ namespace PaterniLab2.Factories.Units
         protected override HumanUnit CreateMeleeUnit(MoveType move)
         {
 
-            return new HumanUnit(15,move, new StraigthSword(), new Inventory(3));
+            var newHuman = new HumanUnit(15,move, new StraigthSword(), new Inventory(3));
+            newHuman.SetBehaviour(new UnitBehaviour(newHuman, new AiMoveHandler(newHuman, new Move()), new Attack(new DamageCalculator()), new FindEnemyToAttack()));
+            return newHuman;
         }
         protected override HumanUnit CreatRangeUnit(MoveType move)
         {
-            return new HumanUnit(7, move, new Crossbow(), new Inventory(3));
+            var newHuman =  new HumanUnit(7, move, new Crossbow(), new Inventory(3));
+            newHuman.SetBehaviour(new UnitBehaviour(newHuman, new AiMoveHandler(newHuman, new Move()), new Attack(new DamageCalculator()), new FindEnemyToAttack()));
+            return newHuman;
         }
     }
 }

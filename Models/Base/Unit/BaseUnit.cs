@@ -1,4 +1,5 @@
 ﻿using PaterniLab2.Interfaces;
+using PaterniLab2.Requests;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -36,19 +37,24 @@ namespace PaterniLab2.Models.Base.Unit
      
 
 
-        public BaseUnit(int armor, MoveType moveType, BaseWeapon weapons,IBehaviour behaviour, IInventory inventory)
+        public BaseUnit(int armor, MoveType moveType, BaseWeapon weapons, IInventory inventory)
         {
            
             this.armor = armor;
             this.moveType = moveType;
             this.weapon = weapons;
             this.inventory = inventory;
+          
+        }
+        public void SetBehaviour(IBehaviour behaviour) 
+        {
             this.behaviour = behaviour;
         }
 
-        public void MakeMove(List<BaseUnit> enemyUnits, Action<BaseUnit> onUnitDeath) 
+        public void MakeMove(CombatContext context) 
         {
-            behaviour.MakeMove(enemyUnits,onUnitDeath);
+            if (behaviour == null) return;
+            behaviour.MakeMove(context);
         }
 
        

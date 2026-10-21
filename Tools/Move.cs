@@ -3,86 +3,75 @@ using PaterniLab2.Models;
 using PaterniLab2.Models.Base.Unit;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 
 namespace PaterniLab2.Tools
 {
     internal class Move:IMove
     {
-        private readonly Table _table;
-
-        public Move(Table table)
-        {
-            _table = table;
-        }
-
-        public void MoveUp(BaseUnit unit)
-        {
-            if(unit == null) return;
-
-          
-            if (unit.y + 1 >= _table.yLen) return;
-
-           
-            if (_table._board[unit.x, unit.y + 1].isEmpty == false) return;
-
-           _table.ClearCell(unit.x, unit.y);
-          
-            unit.SetPosition(unit.x, unit.y + 1);
-
-          _table.SetCell(unit.x, unit.y);
-
-        }
-
-        public void MoveDown(BaseUnit unit)
+        public void MoveUp(BaseUnit unit, Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove)
         {
             if (unit == null) return;
-           
-            if (unit.y - 1 < 0) return;
 
-           
-            if (_table._board[unit.x, unit.y - 1].isEmpty == false) return;
+            int targetX = unit.x;
+            int targetY = unit.y + 1;
 
+        
+            if (targetY >= bounds.Y) return;
 
-            _table.ClearCell(unit.x, unit.y);
-           
-            unit.SetPosition(unit.x, unit.y - 1);
+        
+            if (!isCellFree(targetX, targetY)) return;
 
-            _table.SetCell(unit.x, unit.y);
+            unit.SetPosition(targetX, targetY);
+            onMove?.Invoke(new Vector2Int(unit.x, unit.y), new Vector2Int(targetX, targetY));
         }
-
-        public void MoveLeft(BaseUnit unit)
+        public void MoveDown(BaseUnit unit, Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove)
         {
             if (unit == null) return;
-          
-            if (unit.x - 1 < 0) return;
 
-         
-          
-            if (_table._board[unit.x - 1, unit.y].isEmpty == false) return;
+            int targetX = unit.x;
+            int targetY = unit.y - 1;
 
-          
-            _table.ClearCell(unit.x, unit.y);
-           
-            unit.SetPosition(unit.x - 1, unit.y);
+            // Проверка нижней границы
+            if (targetY < 0) return;
 
-            _table.SetCell(unit.x, unit.y);
+            if (!isCellFree(targetX, targetY)) return;
+
+            unit.SetPosition(targetX, targetY);
+            onMove?.Invoke(new Vector2Int(unit.x, unit.y), new Vector2Int(targetX, targetY));
         }
 
-        public void MoveRight(BaseUnit unit)
+        public void MoveLeft(BaseUnit unit, Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove)
         {
-            
-            if (unit.x + 1 >= _table.xLen) return;
+            if (unit == null) return;
 
-           
+            int targetX = unit.x - 1;
+            int targetY = unit.y;
 
-           
-            if (_table._board[unit.x + 1, unit.y].isEmpty == false) return;
+            // Проверка левой границы
+            if (targetX < 0) return;
 
-            
-            _table.ClearCell(unit.x, unit.y);
-            unit.SetPosition(unit.x + 1, unit.y);
-            _table.SetCell(unit.x, unit.y);
+            if (!isCellFree(targetX, targetY)) return;
+
+            unit.SetPosition(targetX, targetY);
+            onMove?.Invoke(new Vector2Int(unit.x, unit.y), new Vector2Int(targetX, targetY));
+        }
+
+        public void MoveRight(BaseUnit unit, Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove)
+        {
+            if (unit == null) return;
+
+            int targetX = unit.x + 1;
+            int targetY = unit.y;
+
+            // Проверка правой границы (bounds.x хранит xLen)
+            if (targetX >= bounds.X) return;
+
+            if (!isCellFree(targetX, targetY)) return;
+
+            unit.SetPosition(targetX, targetY);
+            onMove?.Invoke(new Vector2Int(unit.x, unit.y), new Vector2Int(targetX, targetY));
         }
     }
 }

@@ -11,7 +11,7 @@ namespace PaterniLab2.Models.Items.Elfs
         private const int ARMOR_BUFF = 5;
         public ElfLeggins() 
         {
-            base.buffs.Add(ItemBuffType.Armor, ARMOR_BUFF);
+            base.buffs.Add(BuffType.Armor, ARMOR_BUFF);
         }
     }
 }

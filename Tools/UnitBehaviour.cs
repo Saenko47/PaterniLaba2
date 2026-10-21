@@ -1,5 +1,6 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Requests;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,14 +23,14 @@ namespace PaterniLab2.Tools
             _owner = owner;
         }
 
-        public void MakeMove(List<BaseUnit> enemyUnits, Action<BaseUnit> onUnitDeath) 
+        public void MakeMove(CombatContext context) 
         {
             int moveAmount = _owner.amountOfMoves;
             int amountOfHit = _owner.amountOfBattleMoves;
 
             while (amountOfHit > 0 || moveAmount > 0) 
             {
-                BaseUnit targetEnemy = _findToAttack.FindToAttack(_owner, enemyUnits);
+                BaseUnit targetEnemy = _findToAttack.FindToAttack(_owner, context.opponentTeam);
 
                 if (targetEnemy != null && amountOfHit > 0)
                 {
@@ -37,12 +38,12 @@ namespace PaterniLab2.Tools
                     amountOfHit--;
                     if (targetEnemy.health <= 0)
                     {
-                        onUnitDeath?.Invoke(targetEnemy);
+                        context.onUnitDeath?.Invoke(targetEnemy);
                     }
                 }
                 else if (moveAmount > 0)
                 {
-                    _move.Move();
+                    _move.Move(context.framesOfTable, context.isCellFree, context.onMove);
                     moveAmount--;
                 }
                 else

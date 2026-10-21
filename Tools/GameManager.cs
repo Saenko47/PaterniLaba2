@@ -1,6 +1,7 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models;
 using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Requests;
 using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,7 @@ namespace PaterniLab2.Tools
         public event Action<BaseUnit>? OnSomeoneDie;
 
         private readonly Table _table;
-        private readonly IMove _move;
-        private readonly IFindToAttack _attack;
+        
         private readonly IRender _render;
 
         private List<BaseUnit> unitsA = new List<BaseUnit>();
@@ -24,14 +24,12 @@ namespace PaterniLab2.Tools
         private bool leaderAAlive = true;
         private bool leaderBAlive = true;
 
-        public GameManager(Table table, IMove move, IFindToAttack attack, IRender render)
+        public GameManager(Table table, IRender render)
         {
             _table = table;
-            _move = move;
-            _attack = attack;
+         
             _render = render;
-            _ai = ai;
-
+           
             OnSomeoneDie += HandleUnitDeath;
         }
 
@@ -170,7 +168,8 @@ namespace PaterniLab2.Tools
         {
             Console.WriteLine($"Ходит юнит: {unit.race} на позиции ({unit.x}, {unit.y})");
             var opponentTeam = unit.race == unitsA[0].race ? unitsB : unitsA;
-            unit.MakeMove(opponentTeam, OnSomeoneDie);
+            unit.MakeMove(new CombatContext {framesOfTable =  _table.frames,opponentTeam = opponentTeam,
+                isCellFree = _table.IsSellFree, onUnitDeath = OnSomeoneDie, onMove = _table.MoveUnit });
         }
 
         private void HandleUnitDeath(BaseUnit deadUnit)
