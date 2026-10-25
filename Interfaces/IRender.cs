@@ -8,6 +8,6 @@ namespace PaterniLab2.Interfaces
 {
     internal interface IRender
     {
-        public void RenderTable(Table table, List<BaseUnit> units);
+        public void RenderTable(ITable table, List<BaseUnit> units);
     }
 }

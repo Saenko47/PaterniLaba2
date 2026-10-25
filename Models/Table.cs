@@ -9,14 +9,14 @@ using System.Text;
 
 namespace PaterniLab2.Models
 {
-    internal class Table
+    internal class Table: ITable
     {
 
        public Cell[,] _board { get; set; }
         private readonly IPlaceRaceOnBoard _placeRaceOnBoard;
         public Action<Vector2Int, Vector2Int>? OnSomeoneMove { get; private set; }
 
-        public Vector2Int frames { get; private set; }
+        private Vector2Int frames;
         public Table(int xLen, int yLen, IPlaceRaceOnBoard placeRaceOnBoard)
         {
             _placeRaceOnBoard = placeRaceOnBoard;
@@ -41,7 +41,7 @@ namespace PaterniLab2.Models
             
         }
 
-        public void SetCell(int x, int y)
+        private void SetCell(int x, int y)
         {
             if (x >= 0 && x < frames.X && y >= 0 && y < frames.Y) _board[x, y].isEmpty = false;
         }
@@ -60,6 +60,11 @@ namespace PaterniLab2.Models
             SetCell(to.X, to.Y);
 
             OnSomeoneMove?.Invoke(from, to);
+        }
+
+        public Vector2Int GetFrames() 
+        {
+            return frames;
         }
 
 

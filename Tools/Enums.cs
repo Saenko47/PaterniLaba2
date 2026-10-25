@@ -42,6 +42,14 @@ namespace PaterniLab2.Tools
             
         }
 
+        public enum StatusEffect
+        { 
+        Health,
+        Armor,
+        AvoidChance,
+        Attack
+        }
+
 
     }
 }

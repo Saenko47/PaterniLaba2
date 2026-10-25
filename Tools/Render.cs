@@ -9,15 +9,16 @@ namespace PaterniLab2.Tools
 {
     internal class Render: IRender
     {
-        public void RenderTable(Table table, List<BaseUnit> units)
+        public void RenderTable(ITable table, List<BaseUnit> units)
         {
             Console.ReadLine();
             Console.Clear();
 
-            int xLen = table.frames.X;
-            int yLen = table.frames.Y;
+            var frames = table.GetFrames();
+            int xLen = frames.X;
+            int yLen = frames.Y;
 
-            if (table == null || table._board == null)
+            if (table == null)
             {
                 Console.WriteLine("Table or Board is not initialized!");
                 return;

@@ -1,8 +1,11 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Requests;
+using PaterniLab2.Requests.Units;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Net.WebSockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using static PaterniLab2.Tools.Enums;
 
@@ -13,6 +16,8 @@ namespace PaterniLab2.Models.Base.Unit
 
         public int x { get; private set; }
         public int y { get; private set; }
+
+
         public abstract Race race { get; }
        
 
@@ -21,18 +26,24 @@ namespace PaterniLab2.Models.Base.Unit
         public int armor { get; protected set; }
         public MoveType moveType { get; protected set; }
 
+
         public bool isLeader { get; set; } = false;
 
+
         public IInventory inventory { get; private set; }
-        public ISkillContainer skillContainer { get; private set; }
+        public ISkillContainer skillContainer { get; private set; } //under constraction
 
         private IBehaviour behaviour;
+
 
         public BaseWeapon weapon { get; protected set; }
         public WeaponType weaponType => weapon.weaponType;
 
+
         public int amountOfMoves => moveType == MoveType.Cavalry ? 2 : 1;
         public int amountOfBattleMoves { get; private set; } = 1;
+
+        private List<StatusEffectObj> statusEffects = new List<StatusEffectObj>();
 
      
 
@@ -46,6 +57,7 @@ namespace PaterniLab2.Models.Base.Unit
             this.inventory = inventory;
           
         }
+
         public void SetBehaviour(IBehaviour behaviour) 
         {
             this.behaviour = behaviour;
@@ -55,6 +67,7 @@ namespace PaterniLab2.Models.Base.Unit
         {
             if (behaviour == null) return;
             behaviour.MakeMove(context);
+            Tick();
         }
 
        
@@ -89,6 +102,52 @@ namespace PaterniLab2.Models.Base.Unit
                     avaidChance += value; 
                     break;
             }
+        }
+
+        public void ApplyStatusEffect(StatusEffect statusEffect, int value, bool isPositive) 
+        {
+            int certify = isPositive ? 1 : -1;
+            switch (statusEffect) 
+            {
+                case StatusEffect.Health:
+                    health += value * certify;
+                    break;
+                case StatusEffect.Armor:
+                    armor += value * certify;
+                    break;
+                case StatusEffect.AvoidChance:
+                    avaidChance += value * certify;
+                    break;
+            }
+        }
+
+
+        public void RecieveStatusEffect(RequestOnRecievingStatusEffect newStatusEffect) 
+        {
+            if (newStatusEffect == null) return;
+
+            var copyOfStatusEffect = statusEffects.FirstOrDefault(sE => sE.statusEffect == newStatusEffect.statusEffects);
+
+            if (copyOfStatusEffect != null)
+            {
+                copyOfStatusEffect.AddTurns(newStatusEffect.duration);
+                return;
+            }
+
+            var newStatusEffectObj = new StatusEffectObj(newStatusEffect.isFrendly, newStatusEffect.isOneTimer, newStatusEffect.statusEffects, newStatusEffect.duration, newStatusEffect.value);
+
+            ApplyStatusEffect(newStatusEffect.statusEffects, newStatusEffect.value, newStatusEffect.isFrendly);
+
+            statusEffects.Add(newStatusEffectObj);
+        }
+
+        public void EndStatusEffect(StatusEffectObj statusEffectToDelete) 
+        {
+            if (statusEffectToDelete == null) return;
+
+
+            statusEffects.Remove(statusEffectToDelete);
+
         }
 
         public void SetPosition(int x, int y)
@@ -126,6 +185,12 @@ namespace PaterniLab2.Models.Base.Unit
             Console.WriteLine($"{race} took {amount} damage. Remaining health: {health}");
         }
 
+        public void TakeStatusEffect() 
+        { 
+        
+        }
+
+
         public override string ToString()
         {
             string equippedStr = string.Join(", ", inventory.GetAllEquippedItems().Select(item => item));
@@ -137,7 +202,14 @@ namespace PaterniLab2.Models.Base.Unit
 
         private void Tick()
         {
+            foreach (var statusEffect in statusEffects) 
+            {
+                if (statusEffect.turnsRamains <= 0) EndStatusEffect(statusEffect);
 
+                if (!statusEffect.isOneTimer) ApplyStatusEffect(statusEffect.statusEffect, statusEffect.value, statusEffect.isFrendly);
+
+                statusEffect.DecreamentTunsRamain();
+            }
         }
 
 

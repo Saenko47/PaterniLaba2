@@ -14,7 +14,7 @@ namespace PaterniLab2.Tools
     {
         public event Action<BaseUnit>? OnSomeoneDie;
 
-        private readonly Table _table;
+        private readonly ITable _table;
         
         private readonly IRender _render;
 
@@ -24,7 +24,7 @@ namespace PaterniLab2.Tools
         private bool leaderAAlive = true;
         private bool leaderBAlive = true;
 
-        public GameManager(Table table, IRender render)
+        public GameManager(ITable table, IRender render)
         {
             _table = table;
          
@@ -43,23 +43,23 @@ namespace PaterniLab2.Tools
 
         private void InitiaizeTabe()
         {
-            var req = new Requests.Table.CreateGameRequest
+            var req = new Requests.Table.CreateGameRequest //For test purpuses
             {
                 raceA = new Requests.Table.PlaceOnBoardRequest
                 {
                     race = Race.Human,
                     raceAmountFly = 0,
                     raceAmountRide = 0,
-                    raceMeleeAmount = 3,
-                    raceRangeAmount = 0
+                    raceMeleeAmount = 2,
+                    raceRangeAmount = 1
                 },
                 raceB = new Requests.Table.PlaceOnBoardRequest
                 {
                     race = Race.Orc,
                     raceAmountFly = 0,
                     raceAmountRide = 0,
-                    raceMeleeAmount = 2,
-                    raceRangeAmount = 0
+                    raceMeleeAmount = 0,
+                    raceRangeAmount = 2
                 }
             };
             var res = _table.FirstPlacementOfUnits(req);
@@ -168,7 +168,7 @@ namespace PaterniLab2.Tools
         {
             Console.WriteLine($"Ходит юнит: {unit.race} на позиции ({unit.x}, {unit.y})");
             var opponentTeam = unit.race == unitsA[0].race ? unitsB : unitsA;
-            unit.MakeMove(new CombatContext {framesOfTable =  _table.frames,opponentTeam = opponentTeam,
+            unit.MakeMove(new CombatContext {framesOfTable =  _table.GetFrames() ,opponentTeam = opponentTeam,
                 isCellFree = _table.IsSellFree, onUnitDeath = OnSomeoneDie, onMove = _table.MoveUnit });
         }
 
