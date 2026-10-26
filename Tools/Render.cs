@@ -9,66 +9,117 @@ namespace PaterniLab2.Tools
 {
     internal class Render: IRender
     {
+        private const string MeleeIcon = "⚔";
+        private const string RangedIcon = "↗"; 
+
+        private static ConsoleColor RaceColor(Enums.Race race) => race switch
+        {
+            Enums.Race.Human => ConsoleColor.Cyan,
+            Enums.Race.Elf => ConsoleColor.Green,
+            Enums.Race.Orc => ConsoleColor.Red,
+            Enums.Race.Dwarf => ConsoleColor.DarkYellow,
+            _ => ConsoleColor.White
+        };
+
+        private static void WriteColored(string text, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.Write(text);
+            Console.ResetColor();
+        }
+
         public void RenderTable(ITable table, List<BaseUnit> units)
         {
-            Console.ReadLine();
-            Console.Clear();
-
-            var frames = table.GetFrames();
-            int xLen = frames.X;
-            int yLen = frames.Y;
-
             if (table == null)
             {
                 Console.WriteLine("Table or Board is not initialized!");
                 return;
             }
 
-            Console.WriteLine("=== BATTLEFIELD ===");
-            Console.WriteLine("Расы: [H]uman, [E]lf, [O]rc, [D]warf | Лидер: ★ | Оружие: ⚔ Меле, 🏹 РД");
-            Console.WriteLine(new string('-', xLen * 4 + 1));
+            Console.ReadLine();
+            Console.Clear();
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            var frames = table.GetFrames();
+            int xLen = frames.X;
+            int yLen = frames.Y;
+
+            // Ширина клетки: лидер(1) + раса(1) + оружие(1) + id
+            int maxId = units != null && units.Count > 0 ? units.Max(u => u.id) : 0;
+            int idWidth = maxId.ToString().Length;
+            int cellWidth = Math.Max(3 + idWidth, yLen.ToString().Length);
+            int rowLabelWidth = Math.Max(xLen.ToString().Length, 1);
+            string pad = new string(' ', rowLabelWidth + 1);
+
+            string Border(char left, char mid, char right) =>
+                pad + left + string.Join(mid.ToString(), Enumerable.Repeat(new string('─', cellWidth), yLen)) + right;
+
+            // ===== Заголовок и легенда =====
+            WriteColored("⚔  BATTLEFIELD  ⚔", ConsoleColor.Yellow);
+            Console.WriteLine();
+            Console.WriteLine();
+
+            Console.Write("Расы: ");
+            WriteColored("[H]uman  ", RaceColor(Enums.Race.Human));
+            WriteColored("[E]lf  ", RaceColor(Enums.Race.Elf));
+            WriteColored("[O]rc  ", RaceColor(Enums.Race.Orc));
+            WriteColored("[D]warf", RaceColor(Enums.Race.Dwarf));
+            Console.WriteLine();
+
+            Console.Write("Лидер: ");
+            WriteColored("★", ConsoleColor.Yellow);
+            Console.WriteLine($"   Оружие: {MeleeIcon} меле, {RangedIcon} дальний бой   Число — ID юнита");
+            Console.WriteLine();
+
+            // ===== Номера столбцов =====
+            Console.Write(pad + " ");
+            for (int y = 0; y < yLen; y++)
+            {
+                string label = y.ToString().PadLeft((cellWidth + y.ToString().Length) / 2).PadRight(cellWidth);
+                WriteColored(label, ConsoleColor.DarkGray);
+                Console.Write(" ");
+            }
+            Console.WriteLine();
+
+            // ===== Сетка =====
+            Console.WriteLine(Border('┌', '┬', '┐'));
 
             for (int x = 0; x < xLen; x++)
             {
-                Console.Write("|");
+                WriteColored(x.ToString().PadLeft(rowLabelWidth) + " ", ConsoleColor.DarkGray);
+                Console.Write("│");
+
                 for (int y = 0; y < yLen; y++)
                 {
-                    // Ищем юнита, у которого координаты совпадают с текущей клеткой (x, y)
                     var unit = units?.FirstOrDefault(u => u.x == x && u.y == y);
 
                     if (unit == null)
                     {
-                        Console.Write(" . |");
+                        int left = (cellWidth - 1) / 2;
+                        string empty = new string(' ', left) + "·" + new string(' ', cellWidth - left - 1);
+                        WriteColored(empty, ConsoleColor.DarkGray);
                     }
                     else
                     {
-                        // Выбираем цвет в зависимости от расы
-                        Console.ForegroundColor = unit.race switch
-                        {
-                            Enums.Race.Human => ConsoleColor.Blue,
-                            Enums.Race.Elf => ConsoleColor.Green,
-                            Enums.Race.Orc => ConsoleColor.Red,
-                            Enums.Race.Dwarf => ConsoleColor.DarkYellow,
-                            _ => ConsoleColor.White
-                        };
-
-                        // Первая буква расы как символ
+                        var color = RaceColor(unit.race);
                         char raceChar = unit.race.ToString()[0];
+                        string weapon = unit.weaponType == Enums.WeaponType.Melee ? MeleeIcon : RangedIcon;
 
-                        // Если юнит — лидер, помечаем звездочкой, иначе пробел
-                        string leaderChar = unit.isLeader ? "★" : " ";
+                        if (unit.isLeader) WriteColored("★", ConsoleColor.Yellow);
+                        else Console.Write(" ");
 
-                        // Иконка оружия: Меле или РД
-                        string weaponChar = unit.weaponType == Enums.WeaponType.Melee ? "⚔" : "🏹";
-
-                        Console.Write($"{leaderChar}{raceChar}{weaponChar}|");
-
-                        Console.ResetColor();
+                        WriteColored(raceChar.ToString(), color);
+                        WriteColored(weapon, ConsoleColor.Gray);
+                        WriteColored(unit.id.ToString().PadLeft(cellWidth - 3), color);
                     }
+
+                    Console.Write("│");
                 }
+
                 Console.WriteLine();
-                Console.WriteLine(new string('-', yLen * 4 + 1));
+                Console.WriteLine(x < xLen - 1 ? Border('├', '┼', '┤') : Border('└', '┴', '┘'));
             }
         }
+    
     }
 }

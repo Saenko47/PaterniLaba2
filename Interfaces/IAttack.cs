@@ -8,6 +8,6 @@ namespace PaterniLab2.Interfaces
 {
     internal interface IAttack
     {
-        void AttackUnit(BaseUnit cellWithUnit, BaseUnit targetCell);
+        bool AttackUnit(BaseUnit cellWithUnit, BaseUnit targetCell);
     }
 }

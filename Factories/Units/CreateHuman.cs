@@ -16,17 +16,17 @@ namespace PaterniLab2.Factories.Units
     {
      
         
-        protected override HumanUnit CreateMeleeUnit(MoveType move)
+        protected override HumanUnit CreateMeleeUnit(int id, MoveType move)
         {
 
-            var newHuman = new HumanUnit(15,move, new StraigthSword(), new Inventory(3));
-            newHuman.SetBehaviour(new UnitBehaviour(newHuman, new AiMoveHandler(newHuman, new Move()), new Attack(new DamageCalculator()), new FindEnemyToAttack()));
+            var newHuman = new HumanUnit(id,15,move, new StraigthSword(), new Inventory(3));
+            newHuman.SetBehaviour(new ControlledByHumanUnit(newHuman, new HumanKeyboardMoveInput(newHuman, new Move()), new Attack(new DamageCalculator()), new FindUnit()));
             return newHuman;
         }
-        protected override HumanUnit CreatRangeUnit(MoveType move)
+        protected override HumanUnit CreatRangeUnit(int id, MoveType move)
         {
-            var newHuman =  new HumanUnit(7, move, new Crossbow(), new Inventory(3));
-            newHuman.SetBehaviour(new UnitBehaviour(newHuman, new AiMoveHandler(newHuman, new Move()), new Attack(new DamageCalculator()), new FindEnemyToAttack()));
+            var newHuman =  new HumanUnit(id,7, move, new Crossbow(), new Inventory(3));
+            newHuman.SetBehaviour(new AiUnitBehaviour(newHuman, new AiMoveHandler(newHuman, new Move()), new Attack(new DamageCalculator()), new FindUnit()));
             return newHuman;
         }
     }

@@ -14,8 +14,8 @@ namespace PaterniLab2.Models.Units
         private const int HEALTH_BUFF = 80;
 
         public override Race race => Race.Orc;
-        public OrcUnit(int armor, MoveType moveType, BaseWeapon weapon, IInventory inventory)
-            : base(armor, moveType, weapon, inventory)
+        public OrcUnit(int id, int armor, MoveType moveType, BaseWeapon weapon, IInventory inventory)
+            : base(id, armor, moveType, weapon, inventory)
         {
             this.health += HEALTH_BUFF;
             ReconsiderInventory();

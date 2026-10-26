@@ -13,16 +13,16 @@ namespace PaterniLab2.Factories.Units
 {
     internal class CreateOrc: BaseCreateUnit<OrcUnit>
     {
-      protected override OrcUnit CreateMeleeUnit(MoveType move)
+      protected override OrcUnit CreateMeleeUnit(int id, MoveType move)
         {
-            var newOrc =  new OrcUnit(20, move,new BattleAxe(), new Inventory(3));
-            newOrc.SetBehaviour(new UnitBehaviour(newOrc, new AiMoveHandler(newOrc, new Move()), new Attack(new DamageCalculator()), new FindEnemyToAttack()));
+            var newOrc =  new OrcUnit(id,20, move,new BattleAxe(), new Inventory(3));
+            newOrc.SetBehaviour(new AiUnitBehaviour(newOrc, new AiMoveHandler(newOrc, new Move()), new Attack(new DamageCalculator()), new FindUnit()));
             return newOrc;
         }
-        protected override OrcUnit CreatRangeUnit(MoveType move)
+        protected override OrcUnit CreatRangeUnit(int id, MoveType move)
         {
-            var newOrc = new OrcUnit(10, move, new Sling(), new Inventory(3));
-            newOrc.SetBehaviour(new UnitBehaviour(newOrc, new AiMoveHandler(newOrc, new Move()), new Attack(new DamageCalculator()), new FindEnemyToAttack()));
+            var newOrc = new OrcUnit(id,10, move, new Sling(), new Inventory(3));
+            newOrc.SetBehaviour(new AiUnitBehaviour(newOrc, new AiMoveHandler(newOrc, new Move()), new Attack(new DamageCalculator()), new FindUnit()));
             return newOrc;
         }
     }

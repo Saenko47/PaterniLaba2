@@ -15,6 +15,7 @@ namespace PaterniLab2.Models.Base
         public abstract int range { get; protected set; }
         public int radiusOfAttack { get; protected set; } = 0;
         public StrategysToFind strategysToFind { get; protected set; } = StrategysToFind.Cross;
+        public int amoutOfUnitsThatWillBeToched { get; set; } = 1;
 
         public BaseWeapon Clone()
         {

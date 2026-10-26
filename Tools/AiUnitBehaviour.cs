@@ -1,21 +1,22 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
+using PaterniLab2.Requests.Units;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace PaterniLab2.Tools
 {
-    internal class UnitBehaviour:IBehaviour
+    internal class AiUnitBehaviour:IBehaviour
     {
         protected readonly BaseUnit _owner;
         private readonly IMoveHandler _move;
         private readonly IAttack _attack;
 
-        private readonly IFindToAttack _findToAttack;
+        private readonly IFindUnit _findToAttack;
 
-        public UnitBehaviour(BaseUnit owner, IMoveHandler move, IAttack attack, IFindToAttack findToAttack) 
+        public AiUnitBehaviour(BaseUnit owner, IMoveHandler move, IAttack attack, IFindUnit findToAttack) 
         {
             _move = move;
             _attack = attack;
@@ -30,10 +31,21 @@ namespace PaterniLab2.Tools
 
             while (amountOfHit > 0 || moveAmount > 0) 
             {
-                BaseUnit targetEnemy = _findToAttack.FindToAttack(_owner, context.opponentTeam);
-
-                if (targetEnemy != null && amountOfHit > 0)
+                List<BaseUnit> units = _findToAttack.Find(new ReqiestOnFindingUnit
                 {
+                    strategysToFind = _owner.weapon.strategysToFind,
+                    allUnits = context.allUnits,
+                    isLookingForComrades = false,
+                    rangeOfFindings = _owner.weapon.range,
+                    unitThatLooking = _owner
+                }
+                );
+
+               
+
+                if (units.Count > 0 && amountOfHit > 0)
+                {
+                    var targetEnemy = units[0];
                     _attack.AttackUnit(_owner, targetEnemy);
                     amountOfHit--;
                     if (targetEnemy.health <= 0)

@@ -17,14 +17,16 @@ namespace PaterniLab2.Tools
         }
 
 
-        public void AttackUnit(BaseUnit cellWithUnit, BaseUnit targetCell) 
+        public bool AttackUnit(BaseUnit cellWithUnit, BaseUnit targetCell) 
         {
-            if (targetCell == null || cellWithUnit == null) return;
+            if (targetCell == null || cellWithUnit == null) return false;
             
 
             int damage = _damageCalculator.CalculateDamage(cellWithUnit, targetCell);
 
             targetCell.TakeDamage(damage);
+
+            return true;
         }
     }
 }

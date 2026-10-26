@@ -13,6 +13,7 @@ namespace PaterniLab2.Models.Base.Unit
 {
     internal abstract class BaseUnit:IClone<BaseUnit>
     {
+        public int id { get; private set; }
 
         public int x { get; private set; }
         public int y { get; private set; }
@@ -48,9 +49,9 @@ namespace PaterniLab2.Models.Base.Unit
      
 
 
-        public BaseUnit(int armor, MoveType moveType, BaseWeapon weapons, IInventory inventory)
+        public BaseUnit(int id,int armor, MoveType moveType, BaseWeapon weapons, IInventory inventory)
         {
-           
+            this.id = id;
             this.armor = armor;
             this.moveType = moveType;
             this.weapon = weapons;
@@ -200,7 +201,7 @@ namespace PaterniLab2.Models.Base.Unit
         {
             string equippedStr = string.Join(", ", inventory.GetAllEquippedItems().Select(item => item));
 
-            return $"Race: {race}, Health: {health}, Avoid Chance: {avaidChance}, Armor: {armor}, Move Type: {moveType}, Weapon: [{weapon}]\nX: {x}, Y: {y}" +
+            return $"Id:{id}, Race: {race}, Health: {health}, Avoid Chance: {avaidChance}, Armor: {armor}, Move Type: {moveType}, Weapon: [{weapon}]\nX: {x}, Y: {y}" +
                 $"\n Items:{equippedStr}";
         }
 

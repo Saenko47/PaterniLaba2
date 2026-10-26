@@ -17,9 +17,9 @@ namespace PaterniLab2.Tools
             _move = move;
         }
 
-        private void MoveRandomly(Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove)
+        private bool MoveRandomly(Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove)
         {
-            if (_owner == null || _move == null) return;
+            if (_owner == null || _move == null) return false;
 
             Random random = new Random();
             int randomDirection = random.Next(0, 4);
@@ -27,23 +27,24 @@ namespace PaterniLab2.Tools
             switch (randomDirection)
             {
                 case 0:
-                    _move.MoveUp(_owner, bounds, isCellFree, onMove);
-                    break;
+                   return _move.MoveUp(_owner, bounds, isCellFree, onMove);
+                    
                 case 1:
-                    _move.MoveDown(_owner, bounds, isCellFree, onMove);
-                    break;
+                    return _move.MoveDown(_owner, bounds, isCellFree, onMove);
+                   
                 case 2:
-                    _move.MoveLeft(_owner, bounds, isCellFree, onMove);
-                    break;
+                    return _move.MoveLeft(_owner, bounds, isCellFree, onMove);
+                    
                 case 3:
-                    _move.MoveRight(_owner, bounds, isCellFree, onMove);
-                    break;
+                    return _move.MoveRight(_owner, bounds, isCellFree, onMove);
+                default:
+                    return false;
             }
         }
 
-        public void Move(Vector2Int bounds,Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove) 
+        public bool Move(Vector2Int bounds,Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove) 
         {
-            MoveRandomly(bounds, isCellFree, onMove);
+            return MoveRandomly(bounds, isCellFree, onMove);
         }
     }
 }

@@ -8,11 +8,10 @@ using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Tools
 {
-    internal class FindUnit
+    internal class FindUnit:IFindUnit
     {
 
-        public class UnitFinder:IFindUnit
-        {
+       
             private List<BaseUnit> FindByCross(ReqiestOnFindingUnit req)
             {
                 var foundUnits = new List<BaseUnit>();
@@ -93,5 +92,5 @@ namespace PaterniLab2.Tools
                 return ChooseWhatStrategy(req);
             }
         }
-    }
+    
 }

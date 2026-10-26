@@ -167,8 +167,8 @@ namespace PaterniLab2.Tools
         private void ProcessMove(BaseUnit unit)
         {
             Console.WriteLine($"Ходит юнит: {unit.race} на позиции ({unit.x}, {unit.y})");
-            var opponentTeam = unit.race == unitsA[0].race ? unitsB : unitsA;
-            unit.MakeMove(new CombatContext {framesOfTable =  _table.GetFrames() ,opponentTeam = opponentTeam,
+            var units = unitsA.Concat(unitsB).ToList();
+            unit.MakeMove(new CombatContext {framesOfTable =  _table.GetFrames() ,allUnits = units,
                 isCellFree = _table.IsSellFree, onUnitDeath = OnSomeoneDie, onMove = _table.MoveUnit });
         }
 
