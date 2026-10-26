@@ -10,9 +10,8 @@ namespace PaterniLab2.Tools
 {
     internal class ControlledByHumanUnit:IBehaviour
     {
-        protected readonly BaseUnit _owner;
+      
 
-        private readonly IMoveInputSource _input;
         private readonly IMoveHandler _move;
         private readonly IAttack _attack;
 
@@ -22,16 +21,16 @@ namespace PaterniLab2.Tools
         private int amountOfHit;
 
 
-        public ControlledByHumanUnit(BaseUnit owner, IMoveHandler move, IAttack attack, IFindUnit findToAttack)
+        public ControlledByHumanUnit( IMoveHandler move, IAttack attack, IFindUnit findToAttack)
         {
            
             _move = move;
             _attack = attack;
             _findToAttack = findToAttack;
-            _owner = owner;
+           
         }
 
-        private void InitializeAmountOfMoves() 
+        private void InitializeAmountOfMoves(BaseUnit _owner) 
         {
             amountOfMoves = _owner.amountOfMoves;
             amountOfHit = _owner.amountOfBattleMoves;
@@ -39,13 +38,13 @@ namespace PaterniLab2.Tools
 
 
 
-        private bool TryMoveUnit(CombatContext context)
+        private bool TryMoveUnit(CombatContext context, BaseUnit _owner)
         {
             if (amountOfMoves <= 0) return false;
 
             // Делегируем выбор движения промежуточному классу, 
             // передавая ему оригинальный чистый _moveHandler
-            bool success = _move.Move(context.framesOfTable, context.isCellFree, context.onMove);
+            bool success = _move.Move(_owner,context.framesOfTable, context.isCellFree, context.onMove);
 
             if (success)
             {
@@ -55,7 +54,7 @@ namespace PaterniLab2.Tools
             return success;
         }
 
-        private bool TryAttack(CombatContext context)
+        private bool TryAttack(CombatContext context, BaseUnit _owner)
         {
             if (amountOfHit <= 0)
             {
@@ -111,42 +110,41 @@ namespace PaterniLab2.Tools
             return true;
         }
 
-        private bool TryUseSkill(CombatContext context) 
+        private bool TryUseSkill(CombatContext context, BaseUnit _owner) 
         {
             throw new NotImplementedException();
         }
 
-        private bool TryProccesMove(int decision, CombatContext context) 
+        private bool TryProccesMove(int decision, CombatContext context, BaseUnit _owner) 
         {
             switch (decision)
             {
                 case 1:
-                    return TryMoveUnit(context);
+                    return TryMoveUnit(context, _owner);
                 case 2:
-                    return TryAttack(context);
+                    return TryAttack(context, _owner);
                 case 3:
-                    return TryUseSkill(context);
+                    return TryUseSkill(context, _owner);
                 default:
                     return false;
             }
            
-        } 
+        }
 
-       
-        public void MakeMove(CombatContext context)
+
+        public void MakeMove(CombatContext context, BaseUnit _owner)
         {
             if (context == null) return;
 
-            InitializeAmountOfMoves();
+            InitializeAmountOfMoves(_owner);
 
             while (amountOfMoves > 0 && amountOfHit > 0)
             {
-               
                 Console.WriteLine($"\nОчки хода: {amountOfMoves}, Очки боя: {amountOfHit}");
                 Console.WriteLine("Что вы хотите сделать?\n1. Move\n2. AttackWithWeapon\n3. Use Skill");
 
-                string input = Console.ReadLine();
-                if (!int.TryParse(input, out int decision))
+                string actionInput = Console.ReadLine();
+                if (!int.TryParse(actionInput, out int decision))
                 {
                     Console.WriteLine("Неверный формат ввода. Попробуйте снова.");
                     continue;
@@ -159,12 +157,22 @@ namespace PaterniLab2.Tools
                 }
 
                 // Пытаемся выполнить действие
-                if (!TryProccesMove(decision, context))
+                if (!TryProccesMove(decision, context, _owner))
                 {
-                    Console.WriteLine("Действие недоступно или не удалось выполнить. Попробуйте снова. Или хотите закончить?\n 1 - нет\n любое другое число - да");
-                    if (int.Parse(Console.ReadLine()) != 1) return;
+                    Console.WriteLine("Действие недоступно или не удалось выполнить. Попробуйте снова. Или хотите закончить?\n 1 - нет\n любое другое число (или Enter) - да");
 
-                    
+                    string retryInput = Console.ReadLine();
+
+                    // Если пустая строка (Enter), не число или не 1 — завершаем ход юнита
+                    if (string.IsNullOrEmpty(retryInput) || !int.TryParse(retryInput, out int choice) || choice != 1)
+                    {
+                        break; // Выходим из цикла while, чтобы перейти к "Ход юнита завершен"
+                    }
+
+                    Console.Clear();
+
+                    // Безопасный вызов делегата (эквивалентно null-check)
+                    context.updateRender?.Invoke(_owner.id);
                 }
             }
 

@@ -18,6 +18,8 @@ namespace PaterniLab2.Requests
         public Func<int, int, bool> isCellFree { get; set; } = null!;
 
         public Action<Vector2Int, Vector2Int> onMove { get; set; } = null!;
+
+        public Action<int?>? updateRender { get; set; } 
        
 
     }

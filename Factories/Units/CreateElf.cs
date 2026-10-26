@@ -17,13 +17,13 @@ namespace PaterniLab2.Factories.Units
         {
            
             var newElf = new ElfUnit(id,10, move, new Rapier(), new Inventory(3));
-            newElf.SetBehaviour(new AiUnitBehaviour(newElf, new AiMoveHandler(newElf, new Move()), new Attack(new DamageCalculator()), new FindUnit()));
+            
             return newElf;
         }
         protected override ElfUnit CreatRangeUnit(int id, MoveType move)
         {
             var newElf = new ElfUnit(id,5, move, new LongBow(), new Inventory(3));
-            newElf.SetBehaviour(new AiUnitBehaviour(newElf, new AiMoveHandler(newElf, new Move()), new Attack(new DamageCalculator()), new FindUnit()));
+           
             return newElf;
         }
     }

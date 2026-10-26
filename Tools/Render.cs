@@ -28,7 +28,7 @@ namespace PaterniLab2.Tools
             Console.ResetColor();
         }
 
-        public void RenderTable(ITable table, List<BaseUnit> units)
+        public void RenderTable(ITable table, List<BaseUnit> units, int? id = null)
         {
             if (table == null)
             {
@@ -101,16 +101,36 @@ namespace PaterniLab2.Tools
                     }
                     else
                     {
+                        // Проверяем: передан ли id И совпадает ли он с текущим юнитом
+                        bool isSelected = id.HasValue && (unit.id == id.Value);
+
+                        var originalBackground = Console.BackgroundColor;
+                        if (isSelected)
+                        {
+                            Console.BackgroundColor = ConsoleColor.DarkCyan; // Подсветка выбранного юнита
+                        }
+
                         var color = RaceColor(unit.race);
                         char raceChar = unit.race.ToString()[0];
                         string weapon = unit.weaponType == Enums.WeaponType.Melee ? MeleeIcon : RangedIcon;
 
-                        if (unit.isLeader) WriteColored("★", ConsoleColor.Yellow);
-                        else Console.Write(" ");
+                        if (unit.isLeader)
+                            WriteColored("★", ConsoleColor.Yellow);
+                        else
+                            Console.Write(" ");
 
                         WriteColored(raceChar.ToString(), color);
                         WriteColored(weapon, ConsoleColor.Gray);
-                        WriteColored(unit.id.ToString().PadLeft(cellWidth - 3), color);
+
+                        int printedLength = 1 + 1 + weapon.Length;
+                        string idStr = unit.id.ToString().PadRight(cellWidth - printedLength);
+
+                        WriteColored(idStr, color);
+
+                        if (isSelected)
+                        {
+                            Console.BackgroundColor = originalBackground; // Возвращаем фон назад
+                        }
                     }
 
                     Console.Write("│");
@@ -120,6 +140,6 @@ namespace PaterniLab2.Tools
                 Console.WriteLine(x < xLen - 1 ? Border('├', '┼', '┤') : Border('└', '┴', '┘'));
             }
         }
-    
+
     }
 }

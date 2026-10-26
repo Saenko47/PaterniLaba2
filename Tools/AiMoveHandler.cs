@@ -8,16 +8,14 @@ namespace PaterniLab2.Tools
 {
     internal class AiMoveHandler: IMoveHandler
     {
-        private BaseUnit _owner;
         private IMove _move;
 
-        public AiMoveHandler(BaseUnit owner,IMove move) 
+        public AiMoveHandler(IMove move) 
         {
-            _owner = owner;
             _move = move;
         }
 
-        private bool MoveRandomly(Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove)
+        private bool MoveRandomly(BaseUnit _owner, Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove)
         {
             if (_owner == null || _move == null) return false;
 
@@ -42,9 +40,9 @@ namespace PaterniLab2.Tools
             }
         }
 
-        public bool Move(Vector2Int bounds,Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove) 
+        public bool Move(BaseUnit _owner, Vector2Int bounds,Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove) 
         {
-            return MoveRandomly(bounds, isCellFree, onMove);
+            return MoveRandomly(_owner,bounds, isCellFree, onMove);
         }
     }
 }

@@ -8,6 +8,6 @@ namespace PaterniLab2.Interfaces
 {
     internal interface IMoveHandler
     {
-        public bool Move(Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove);
+        public bool Move(BaseUnit _owner, Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove);
     }
 }

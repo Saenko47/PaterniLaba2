@@ -2,6 +2,7 @@
 using PaterniLab2.Models;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
+using PaterniLab2.Requests.Table;
 using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,11 @@ using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Tools
 {
-    internal class GameManager:IGameManager
+    internal class GameManager : IGameManager
     {
         public event Action<BaseUnit>? OnSomeoneDie;
 
         private readonly ITable _table;
-        
         private readonly IRender _render;
 
         private List<BaseUnit> unitsA = new List<BaseUnit>();
@@ -27,9 +27,7 @@ namespace PaterniLab2.Tools
         public GameManager(ITable table, IRender render)
         {
             _table = table;
-         
             _render = render;
-           
             OnSomeoneDie += HandleUnitDeath;
         }
 
@@ -41,9 +39,20 @@ namespace PaterniLab2.Tools
             }
         }
 
+        private void RenderTable(int? id = null)
+        {
+            
+            string raceAName = unitsA.Count > 0 ? unitsA[0].race.ToString() : "Команда A";
+            string raceBName = unitsB.Count > 0 ? unitsB[0].race.ToString() : "Команда B";
+
+            Console.WriteLine($"=== Юнитов {raceAName}: {unitsA.Count} | Юнитов {raceBName}: {unitsB.Count} ===");
+
+            _render.RenderTable(_table, unitsA.Concat(unitsB).ToList(), id);
+        }
+
         private void InitiaizeTabe()
         {
-            var req = new Requests.Table.CreateGameRequest //For test purpuses
+            var req = new Requests.Table.CreateGameRequest
             {
                 raceA = new Requests.Table.PlaceOnBoardRequest
                 {
@@ -51,7 +60,8 @@ namespace PaterniLab2.Tools
                     raceAmountFly = 0,
                     raceAmountRide = 0,
                     raceMeleeAmount = 2,
-                    raceRangeAmount = 1
+                    raceRangeAmount = 1,
+                    isAi = false
                 },
                 raceB = new Requests.Table.PlaceOnBoardRequest
                 {
@@ -59,16 +69,31 @@ namespace PaterniLab2.Tools
                     raceAmountFly = 0,
                     raceAmountRide = 0,
                     raceMeleeAmount = 0,
-                    raceRangeAmount = 2
+                    raceRangeAmount = 2,
+                    isAi = true
                 }
             };
+
             var res = _table.FirstPlacementOfUnits(req);
 
             unitsA = res.raceA;
             unitsB = res.raceB;
 
+            SetBehaviorForTeam(unitsA, req.raceA.isAi);
+            SetBehaviorForTeam(unitsB, req.raceB.isAi);
+
             ShowUnitsBeforeFigth(res.raceA);
             ShowUnitsBeforeFigth(res.raceB);
+        }
+
+        private void SetBehaviorForTeam(List<BaseUnit> units, bool isAi)
+        {
+            AiUnitBehaviour aiBeha = new AiUnitBehaviour(new AiMoveHandler(new Move()), new Attack(new DamageCalculator()), new FindUnit());
+            ControlledByHumanUnit humanBeha = new ControlledByHumanUnit(new HumanKeyboardMoveInput(new Move()), new Attack(new DamageCalculator()), new FindUnit());
+
+            IBehaviour beha = isAi ? aiBeha : humanBeha;
+
+            foreach (var unit in units) unit.SetBehaviour(beha);
         }
 
         public void StartGame()
@@ -77,64 +102,57 @@ namespace PaterniLab2.Tools
 
             int indexA = 0;
             int indexB = 0;
+            bool isTeamATurn = true;
 
             while (true)
             {
-                
                 if (CheckGameOver(out string winMessage))
                 {
-                    Console.WriteLine(winMessage);
+                    RenderTable(); 
+                    Console.WriteLine($"\n{winMessage}");
                     break;
                 }
 
-                if (unitsA.Count > 0 && unitsB.Count > 0)
-                {
-                    Console.WriteLine($"Units of {unitsA[0].race}: {unitsA.Count}");
-                    Console.WriteLine($"Units of {unitsB[0].race}: {unitsB.Count}");
-                }
+           
+                RenderTable();
 
-                
-                _render.RenderTable(_table, unitsA.Concat(unitsB).ToList());
-
-               
-                Console.WriteLine("\nНажмите Enter, чтобы сделать ход следующим юнитом...");
+                string currentTeamName = isTeamATurn ? "Команда A" : "Команда B";
+                Console.WriteLine($"\nНажмите Enter, чтобы сделать ход ({currentTeamName})...");
                 Console.ReadLine();
 
-               
-                if (unitsA.Count() > 0)
+                if (isTeamATurn)
                 {
-                    indexA = indexA % unitsA.Count();
-                    var unitA = unitsA[indexA];
-                    if (unitA.health > 0)
+                    if (unitsA.Count > 0)
                     {
-                        ProcessMove(unitA);
+                        indexA = indexA % unitsA.Count;
+                        var unitA = unitsA[indexA];
+
+                        if (unitA.health > 0)
+                        {
+                            
+                            ProcessMove(unitA);
+                        }
+                        indexA++;
                     }
-                    indexA++;
+                }
+                else
+                {
+                    if (unitsB.Count > 0)
+                    {
+                        indexB = indexB % unitsB.Count;
+                        var unitB = unitsB[indexB];
+
+                        if (unitB.health > 0)
+                        {
+                            
+                            ProcessMove(unitB);
+                        }
+                        indexB++;
+                    }
                 }
 
-                
-                if (CheckGameOver(out string winMsgA))
-                {
-                    _render.RenderTable(_table, unitsA.Concat(unitsB).ToList());
-                    Console.WriteLine(winMsgA);
-                    break;
-                }
-
-               
-                if (unitsB.Count() > 0)
-                {
-                    indexB = indexB % unitsB.Count;
-                    var unitB = unitsB[indexB];
-                    if (unitB.health > 0)
-                    {
-                        ProcessMove(unitB);
-                    }
-                    indexB++;
-                }
+                isTeamATurn = !isTeamATurn;
             }
-
-            
-            _render.RenderTable(_table, unitsA.Concat(unitsB).ToList());
         }
 
         private bool CheckGameOver(out string message)
@@ -149,12 +167,12 @@ namespace PaterniLab2.Tools
                 message = "Лидер Орков погиб! Люди победили!";
                 return true;
             }
-            if (unitsA.Count() <= 0)
+            if (unitsA.Count == 0)
             {
                 message = "Все Люди погибли! Орки победили!";
                 return true;
             }
-            if (unitsB.Count() <= 0)
+            if (unitsB.Count == 0)
             {
                 message = "Все Орки погибли! Люди победили!";
                 return true;
@@ -166,31 +184,33 @@ namespace PaterniLab2.Tools
 
         private void ProcessMove(BaseUnit unit)
         {
-            Console.WriteLine($"Ходит юнит: {unit.race} на позиции ({unit.x}, {unit.y})");
+            Console.WriteLine($"\nХодит юнит: {unit.race} [ID: {unit.id}] на позиции ({unit.x}, {unit.y})");
             var units = unitsA.Concat(unitsB).ToList();
-            unit.MakeMove(new CombatContext {framesOfTable =  _table.GetFrames() ,allUnits = units,
-                isCellFree = _table.IsSellFree, onUnitDeath = OnSomeoneDie, onMove = _table.MoveUnit });
+
+            unit.MakeMove(new CombatContext
+            {
+                framesOfTable = _table.GetFrames(),
+                allUnits = units,
+                isCellFree = _table.IsSellFree,
+                onUnitDeath = OnSomeoneDie,
+                onMove = _table.MoveUnit,
+               
+                updateRender = (id) => RenderTable(unit.id)
+            });
         }
 
         private void HandleUnitDeath(BaseUnit deadUnit)
         {
             if (deadUnit == null) return;
 
-            // Очищаем клетку на карте
             _table.ClearCell(deadUnit.x, deadUnit.y);
 
-            if (deadUnit.race == unitsA[0].race)
-            {
-                unitsA.Remove(deadUnit);
-            }
-            else
-            {
-                unitsB.Remove(deadUnit);
-            }
+            unitsA.Remove(deadUnit);
+            unitsB.Remove(deadUnit);
 
             if (deadUnit.isLeader)
             {
-                if (deadUnit.race == unitsA[0].race)
+                if (deadUnit.race == Race.Human) // или проверка по вашей бизнес-логике лидера
                 {
                     leaderAAlive = false;
                 }

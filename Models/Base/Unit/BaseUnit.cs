@@ -67,7 +67,7 @@ namespace PaterniLab2.Models.Base.Unit
         public void MakeMove(CombatContext context) 
         {
             if (behaviour == null) return;
-            behaviour.MakeMove(context);
+            behaviour.MakeMove(context, this);
             Tick();
         }
 

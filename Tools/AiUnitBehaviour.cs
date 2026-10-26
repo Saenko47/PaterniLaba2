@@ -10,21 +10,21 @@ namespace PaterniLab2.Tools
 {
     internal class AiUnitBehaviour:IBehaviour
     {
-        protected readonly BaseUnit _owner;
+     
         private readonly IMoveHandler _move;
         private readonly IAttack _attack;
 
         private readonly IFindUnit _findToAttack;
 
-        public AiUnitBehaviour(BaseUnit owner, IMoveHandler move, IAttack attack, IFindUnit findToAttack) 
+        public AiUnitBehaviour(IMoveHandler move, IAttack attack, IFindUnit findToAttack) 
         {
             _move = move;
             _attack = attack;
             _findToAttack = findToAttack;
-            _owner = owner;
+          
         }
 
-        public void MakeMove(CombatContext context) 
+        public void MakeMove(CombatContext context, BaseUnit _owner) 
         {
             int moveAmount = _owner.amountOfMoves;
             int amountOfHit = _owner.amountOfBattleMoves;
@@ -55,7 +55,7 @@ namespace PaterniLab2.Tools
                 }
                 else if (moveAmount > 0)
                 {
-                    _move.Move(context.framesOfTable, context.isCellFree, context.onMove);
+                    _move.Move(_owner, context.framesOfTable, context.isCellFree, context.onMove);
                     moveAmount--;
                 }
                 else
