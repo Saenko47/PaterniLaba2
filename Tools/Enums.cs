@@ -49,6 +49,11 @@ namespace PaterniLab2.Tools
         AvoidChance,
         Attack
         }
+        public enum StrategysToFind 
+        { 
+        Cross,
+        Circle
+        }
 
 
     }

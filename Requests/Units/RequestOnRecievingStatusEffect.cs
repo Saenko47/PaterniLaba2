@@ -11,6 +11,8 @@ namespace PaterniLab2.Requests.Units
 
         public bool isOneTimer { get; set; }
 
+        public bool isStacking { get; set; }
+
         public StatusEffect statusEffects { get; set; }
 
         public int duration { get; set; }

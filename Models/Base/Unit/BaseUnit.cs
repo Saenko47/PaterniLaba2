@@ -134,7 +134,13 @@ namespace PaterniLab2.Models.Base.Unit
                 return;
             }
 
-            var newStatusEffectObj = new StatusEffectObj(newStatusEffect.isFrendly, newStatusEffect.isOneTimer, newStatusEffect.statusEffects, newStatusEffect.duration, newStatusEffect.value);
+            if (newStatusEffect.isOneTimer)
+            {
+                ApplyStatusEffect(newStatusEffect.statusEffects, newStatusEffect.value, newStatusEffect.isFrendly);
+                return;
+            }
+
+            var newStatusEffectObj = new StatusEffectObj(newStatusEffect.isFrendly,newStatusEffect.isStacking, newStatusEffect.statusEffects, newStatusEffect.duration, newStatusEffect.value);
 
             ApplyStatusEffect(newStatusEffect.statusEffects, newStatusEffect.value, newStatusEffect.isFrendly);
 
@@ -145,6 +151,9 @@ namespace PaterniLab2.Models.Base.Unit
         {
             if (statusEffectToDelete == null) return;
 
+            if (statusEffectToDelete.statusEffect != StatusEffect.Health) {
+                ApplyStatusEffect(statusEffectToDelete.statusEffect, statusEffectToDelete.value, !statusEffectToDelete.isFrendly);
+            } 
 
             statusEffects.Remove(statusEffectToDelete);
 
@@ -185,11 +194,7 @@ namespace PaterniLab2.Models.Base.Unit
             Console.WriteLine($"{race} took {amount} damage. Remaining health: {health}");
         }
 
-        public void TakeStatusEffect() 
-        { 
-        
-        }
-
+    
 
         public override string ToString()
         {
@@ -206,7 +211,7 @@ namespace PaterniLab2.Models.Base.Unit
             {
                 if (statusEffect.turnsRamains <= 0) EndStatusEffect(statusEffect);
 
-                if (!statusEffect.isOneTimer) ApplyStatusEffect(statusEffect.statusEffect, statusEffect.value, statusEffect.isFrendly);
+                if(statusEffect.isStacking) ApplyStatusEffect(statusEffect.statusEffect, statusEffect.value, statusEffect.isFrendly);
 
                 statusEffect.DecreamentTunsRamain();
             }
