@@ -59,6 +59,8 @@ namespace PaterniLab2.Models
 
             SetCell(to.X, to.Y);
 
+           
+
             OnSomeoneMove?.Invoke(from, to);
         }
 
@@ -67,7 +69,7 @@ namespace PaterniLab2.Models
             return frames;
         }
 
-
+       
 
 
         public UnitOnTheBoardByRace FirstPlacementOfUnits(CreateGameRequest req) 

@@ -19,7 +19,7 @@ namespace PaterniLab2.Requests
 
         public Action<Vector2Int, Vector2Int> onMove { get; set; } = null!;
 
-        public Action<int?>? updateRender { get; set; } 
+        public Action<Vector2Int?> updateRender { get; set; } = null!;
        
 
     }

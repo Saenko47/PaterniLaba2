@@ -7,10 +7,13 @@ using System.Text;
 
 namespace PaterniLab2.Tools
 {
-    internal class Render: IRender
+    internal class Render : IRender
     {
         private const string MeleeIcon = "⚔";
-        private const string RangedIcon = "↗"; 
+        private const string RangedIcon = "↗";
+
+        // Цвет фона подсветки клетки ходящего юнита
+        private const ConsoleColor ActiveCellBackground = ConsoleColor.DarkBlue;
 
         private static ConsoleColor RaceColor(Enums.Race race) => race switch
         {
@@ -21,14 +24,17 @@ namespace PaterniLab2.Tools
             _ => ConsoleColor.White
         };
 
-        private static void WriteColored(string text, ConsoleColor color)
+        private static void WriteColored(string text, ConsoleColor color, ConsoleColor? background = null)
         {
             Console.ForegroundColor = color;
+            if (background.HasValue)
+                Console.BackgroundColor = background.Value;
+
             Console.Write(text);
             Console.ResetColor();
         }
 
-        public void RenderTable(ITable table, List<BaseUnit> units, int? id = null)
+        public void RenderTable(ITable table, List<BaseUnit> units, Vector2Int? activeCell = null)
         {
             if (table == null)
             {
@@ -68,15 +74,22 @@ namespace PaterniLab2.Tools
 
             Console.Write("Лидер: ");
             WriteColored("★", ConsoleColor.Yellow);
-            Console.WriteLine($"   Оружие: {MeleeIcon} меле, {RangedIcon} дальний бой   Число — ID юнита");
+            Console.Write($"   Оружие: {MeleeIcon} меле, {RangedIcon} дальний бой   Число — ID юнита");
+            if (activeCell.HasValue)
+            {
+                Console.Write("   Ходит: ");
+                WriteColored("   ", ConsoleColor.White, ActiveCellBackground);
+            }
+            Console.WriteLine();
             Console.WriteLine();
 
             // ===== Номера столбцов =====
             Console.Write(pad + " ");
             for (int y = 0; y < yLen; y++)
             {
+                bool isActiveCol = activeCell.HasValue && activeCell.Value.Y == y;
                 string label = y.ToString().PadLeft((cellWidth + y.ToString().Length) / 2).PadRight(cellWidth);
-                WriteColored(label, ConsoleColor.DarkGray);
+                WriteColored(label, isActiveCol ? ConsoleColor.White : ConsoleColor.DarkGray);
                 Console.Write(" ");
             }
             Console.WriteLine();
@@ -86,51 +99,44 @@ namespace PaterniLab2.Tools
 
             for (int x = 0; x < xLen; x++)
             {
-                WriteColored(x.ToString().PadLeft(rowLabelWidth) + " ", ConsoleColor.DarkGray);
+                bool isActiveRow = activeCell.HasValue && activeCell.Value.X == x;
+                WriteColored(x.ToString().PadLeft(rowLabelWidth) + " ",
+                             isActiveRow ? ConsoleColor.White : ConsoleColor.DarkGray);
                 Console.Write("│");
 
                 for (int y = 0; y < yLen; y++)
                 {
+                    bool isActive = activeCell.HasValue
+                                    && activeCell.Value.X == x
+                                    && activeCell.Value.Y == y;
+
+                    ConsoleColor? bg = isActive ? ActiveCellBackground : null;
                     var unit = units?.FirstOrDefault(u => u.x == x && u.y == y);
 
                     if (unit == null)
                     {
                         int left = (cellWidth - 1) / 2;
                         string empty = new string(' ', left) + "·" + new string(' ', cellWidth - left - 1);
-                        WriteColored(empty, ConsoleColor.DarkGray);
+                        WriteColored(empty, isActive ? ConsoleColor.White : ConsoleColor.DarkGray, bg);
                     }
                     else
                     {
-                        // Проверяем: передан ли id И совпадает ли он с текущим юнитом
-                        bool isSelected = id.HasValue && (unit.id == id.Value);
-
-                        var originalBackground = Console.BackgroundColor;
-                        if (isSelected)
-                        {
-                            Console.BackgroundColor = ConsoleColor.DarkCyan; // Подсветка выбранного юнита
-                        }
-
                         var color = RaceColor(unit.race);
                         char raceChar = unit.race.ToString()[0];
                         string weapon = unit.weaponType == Enums.WeaponType.Melee ? MeleeIcon : RangedIcon;
 
                         if (unit.isLeader)
-                            WriteColored("★", ConsoleColor.Yellow);
+                            WriteColored("★", ConsoleColor.Yellow, bg);
                         else
-                            Console.Write(" ");
+                            WriteColored(" ", ConsoleColor.White, bg);
 
-                        WriteColored(raceChar.ToString(), color);
-                        WriteColored(weapon, ConsoleColor.Gray);
+                        WriteColored(raceChar.ToString(), color, bg);
+                        WriteColored(weapon, isActive ? ConsoleColor.White : ConsoleColor.Gray, bg);
 
                         int printedLength = 1 + 1 + weapon.Length;
                         string idStr = unit.id.ToString().PadRight(cellWidth - printedLength);
 
-                        WriteColored(idStr, color);
-
-                        if (isSelected)
-                        {
-                            Console.BackgroundColor = originalBackground; // Возвращаем фон назад
-                        }
+                        WriteColored(idStr, color, bg);
                     }
 
                     Console.Write("│");
@@ -140,6 +146,5 @@ namespace PaterniLab2.Tools
                 Console.WriteLine(x < xLen - 1 ? Border('├', '┼', '┤') : Border('└', '┴', '┘'));
             }
         }
-
     }
 }

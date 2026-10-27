@@ -39,7 +39,7 @@ namespace PaterniLab2.Tools
             }
         }
 
-        private void RenderTable(int? id = null)
+        private void Render(Vector2Int? unitThatMove = null)
         {
             
             string raceAName = unitsA.Count > 0 ? unitsA[0].race.ToString() : "Команда A";
@@ -47,7 +47,7 @@ namespace PaterniLab2.Tools
 
             Console.WriteLine($"=== Юнитов {raceAName}: {unitsA.Count} | Юнитов {raceBName}: {unitsB.Count} ===");
 
-            _render.RenderTable(_table, unitsA.Concat(unitsB).ToList(), id);
+            _render.RenderTable(_table, unitsA.Concat(unitsB).ToList(),  unitThatMove);
         }
 
         private void InitiaizeTabe()
@@ -96,6 +96,18 @@ namespace PaterniLab2.Tools
             foreach (var unit in units) unit.SetBehaviour(beha);
         }
 
+        private void InterateToMove(int index, List<BaseUnit> teamThatMove) 
+        {
+            if (teamThatMove.Count < 0) return;
+
+            int currentIndex = index % teamThatMove.Count;
+            var unit = teamThatMove[currentIndex];
+
+            if (unit.health < 0) return;
+
+            ProcessMove(unit);
+        }
+
         public void StartGame()
         {
             InitiaizeTabe();
@@ -108,13 +120,13 @@ namespace PaterniLab2.Tools
             {
                 if (CheckGameOver(out string winMessage))
                 {
-                    RenderTable(); 
+                    Render(); 
                     Console.WriteLine($"\n{winMessage}");
                     break;
                 }
 
            
-                RenderTable();
+                Render();
 
                 string currentTeamName = isTeamATurn ? "Команда A" : "Команда B";
                 Console.WriteLine($"\nНажмите Enter, чтобы сделать ход ({currentTeamName})...");
@@ -122,33 +134,13 @@ namespace PaterniLab2.Tools
 
                 if (isTeamATurn)
                 {
-                    if (unitsA.Count > 0)
-                    {
-                        indexA = indexA % unitsA.Count;
-                        var unitA = unitsA[indexA];
-
-                        if (unitA.health > 0)
-                        {
-                            
-                            ProcessMove(unitA);
-                        }
-                        indexA++;
-                    }
+                    InterateToMove(indexA, unitsA);
+                    indexA++;
                 }
                 else
                 {
-                    if (unitsB.Count > 0)
-                    {
-                        indexB = indexB % unitsB.Count;
-                        var unitB = unitsB[indexB];
-
-                        if (unitB.health > 0)
-                        {
-                            
-                            ProcessMove(unitB);
-                        }
-                        indexB++;
-                    }
+                    InterateToMove(indexB, unitsB);
+                    indexB++;
                 }
 
                 isTeamATurn = !isTeamATurn;
@@ -184,6 +176,7 @@ namespace PaterniLab2.Tools
 
         private void ProcessMove(BaseUnit unit)
         {
+            Render(new Vector2Int(unit.x, unit.y));
             Console.WriteLine($"\nХодит юнит: {unit.race} [ID: {unit.id}] на позиции ({unit.x}, {unit.y})");
             var units = unitsA.Concat(unitsB).ToList();
 
@@ -195,7 +188,7 @@ namespace PaterniLab2.Tools
                 onUnitDeath = OnSomeoneDie,
                 onMove = _table.MoveUnit,
                
-                updateRender = (id) => RenderTable(unit.id)
+                updateRender = Render
             });
         }
 

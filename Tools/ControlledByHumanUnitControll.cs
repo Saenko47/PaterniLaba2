@@ -42,8 +42,7 @@ namespace PaterniLab2.Tools
         {
             if (amountOfMoves <= 0) return false;
 
-            // Делегируем выбор движения промежуточному классу, 
-            // передавая ему оригинальный чистый _moveHandler
+          
             bool success = _move.Move(_owner,context.framesOfTable, context.isCellFree, context.onMove);
 
             if (success)
@@ -62,7 +61,6 @@ namespace PaterniLab2.Tools
                 return false;
             }
 
-            // 1. Ищем доступные цели в радиусе оружия (точно так же, как у ИИ)
             List<BaseUnit> units = _findToAttack.Find(new ReqiestOnFindingUnit
             {
                 strategysToFind = _owner.weapon.strategysToFind,
@@ -78,7 +76,6 @@ namespace PaterniLab2.Tools
                 return false;
             }
 
-            // 2. Предлагаем игроку выбрать цель из найденных
             Console.WriteLine("Выберите цель для атаки:");
             for (int i = 0; i < units.Count; i++)
             {
@@ -172,7 +169,7 @@ namespace PaterniLab2.Tools
                     Console.Clear();
 
                     // Безопасный вызов делегата (эквивалентно null-check)
-                    context.updateRender?.Invoke(_owner.id);
+                    context.updateRender(new Vector2Int(_owner.x, _owner.y));
                 }
             }
 

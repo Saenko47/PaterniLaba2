@@ -15,6 +15,7 @@ namespace PaterniLab2.Interfaces
         Vector2Int GetFrames();
         void ClearCell(int x, int y);
         UnitOnTheBoardByRace FirstPlacementOfUnits(CreateGameRequest req);
+      
 
     }
 }
