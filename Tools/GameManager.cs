@@ -1,4 +1,5 @@
-﻿using PaterniLab2.Interfaces;
+﻿using Microsoft.VisualBasic;
+using PaterniLab2.Interfaces;
 using PaterniLab2.Models;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
@@ -199,8 +200,10 @@ namespace PaterniLab2.Tools
 
             _table.ClearCell(deadUnit.x, deadUnit.y);
 
-            unitsA.Remove(deadUnit);
-            unitsB.Remove(deadUnit);
+            var armyWherHeServe = armies.FirstOrDefault(a => a._race == deadUnit.race);
+            if (armyWherHeServe == null) return;
+
+            armyWherHeServe.RemoveUnit(deadUnit);
 
             if (deadUnit.isLeader)
             {
