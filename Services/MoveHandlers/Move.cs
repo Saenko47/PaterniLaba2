@@ -1,12 +1,13 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models;
 using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace PaterniLab2.Tools
+namespace PaterniLab2.Services.MoveHandlers
 {
     internal class Move:IMove
     {

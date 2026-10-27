@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PaterniLab2.Tools
+namespace PaterniLab2.Services.AttackAndDamageProccesing
 {
     internal class DamageCalculator: IDamageCalculator
     {

@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PaterniLab2.Tools
+namespace PaterniLab2.Services.Behaviour
 {
     internal class AiUnitBehaviour:IBehaviour
     {

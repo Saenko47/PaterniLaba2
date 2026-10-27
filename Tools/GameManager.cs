@@ -3,6 +3,9 @@ using PaterniLab2.Models;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
 using PaterniLab2.Requests.Table;
+using PaterniLab2.Services.AttackAndDamageProccesing;
+using PaterniLab2.Services.Behaviour;
+using PaterniLab2.Services.MoveHandlers;
 using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
@@ -23,6 +26,8 @@ namespace PaterniLab2.Tools
 
         private bool leaderAAlive = true;
         private bool leaderBAlive = true;
+
+        private List<Army> armies = new List<Army>();
 
         public GameManager(ITable table, IRender render)
         {
@@ -47,7 +52,9 @@ namespace PaterniLab2.Tools
 
             Console.WriteLine($"=== Юнитов {raceAName}: {unitsA.Count} | Юнитов {raceBName}: {unitsB.Count} ===");
 
-            _render.RenderTable(_table, unitsA.Concat(unitsB).ToList(),  unitThatMove);
+            var allUnits = armies[0]._units.Concat(armies[1]._units).ToList();
+
+            _render.RenderTable(_table, allUnits,  unitThatMove);
         }
 
         private void InitiaizeTabe()
@@ -76,14 +83,15 @@ namespace PaterniLab2.Tools
 
             var res = _table.FirstPlacementOfUnits(req);
 
-            unitsA = res.raceA;
-            unitsB = res.raceB;
+            armies.Add(new Army(res.raceA[0].race, res.raceA, false));
+            armies.Add(new Army(res.raceB[0].race, res.raceB, true));
 
-            SetBehaviorForTeam(unitsA, req.raceA.isAi);
-            SetBehaviorForTeam(unitsB, req.raceB.isAi);
 
-            ShowUnitsBeforeFigth(res.raceA);
-            ShowUnitsBeforeFigth(res.raceB);
+            foreach (var army in armies) SetBehaviorForTeam(army._units, army._isAi);
+
+            foreach (var army in armies) ShowUnitsBeforeFigth(army._units);
+
+              
         }
 
         private void SetBehaviorForTeam(List<BaseUnit> units, bool isAi)
@@ -96,12 +104,14 @@ namespace PaterniLab2.Tools
             foreach (var unit in units) unit.SetBehaviour(beha);
         }
 
-        private void InterateToMove(int index, List<BaseUnit> teamThatMove) 
+        private void InterateToMove(Army teamThatMove) 
         {
-            if (teamThatMove.Count < 0) return;
+            if (teamThatMove._units.Count < 0) return;
 
-            int currentIndex = index % teamThatMove.Count;
-            var unit = teamThatMove[currentIndex];
+            int currentIndex = teamThatMove.currentIndex % teamThatMove._units.Count;
+            var unit = teamThatMove._units[currentIndex];
+
+            teamThatMove.IncrementIndex();
 
             if (unit.health < 0) return;
 
@@ -112,38 +122,29 @@ namespace PaterniLab2.Tools
         {
             InitiaizeTabe();
 
-            int indexA = 0;
-            int indexB = 0;
-            bool isTeamATurn = true;
+            int armyIndex = 0;
 
             while (true)
             {
-                if (CheckGameOver(out string winMessage))
-                {
-                    Render(); 
-                    Console.WriteLine($"\n{winMessage}");
-                    break;
-                }
+                //if (CheckGameOver(out string winMessage))
+                //{
+                //    Render(); 
+                //    Console.WriteLine($"\n{winMessage}");
+                //    break;
+                //}
 
            
                 Render();
 
-                string currentTeamName = isTeamATurn ? "Команда A" : "Команда B";
-                Console.WriteLine($"\nНажмите Enter, чтобы сделать ход ({currentTeamName})...");
+                int indexOfCurrentArmy = armyIndex % armies.Count;
+                var currentArmyToMove = armies[indexOfCurrentArmy];
+                Console.WriteLine($"\nНажмите Enter, чтобы сделать ход");
                 Console.ReadLine();
 
-                if (isTeamATurn)
-                {
-                    InterateToMove(indexA, unitsA);
-                    indexA++;
-                }
-                else
-                {
-                    InterateToMove(indexB, unitsB);
-                    indexB++;
-                }
+             
+                InterateToMove(currentArmyToMove);
+                armyIndex++;
 
-                isTeamATurn = !isTeamATurn;
             }
         }
 
@@ -178,12 +179,12 @@ namespace PaterniLab2.Tools
         {
             Render(new Vector2Int(unit.x, unit.y));
             Console.WriteLine($"\nХодит юнит: {unit.race} [ID: {unit.id}] на позиции ({unit.x}, {unit.y})");
-            var units = unitsA.Concat(unitsB).ToList();
+            var allUnits = armies[0]._units.Concat(armies[1]._units).ToList();
 
             unit.MakeMove(new CombatContext
             {
                 framesOfTable = _table.GetFrames(),
-                allUnits = units,
+                allUnits = allUnits,
                 isCellFree = _table.IsSellFree,
                 onUnitDeath = OnSomeoneDie,
                 onMove = _table.MoveUnit,

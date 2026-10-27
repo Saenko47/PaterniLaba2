@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Tools\HumanMoveHandler.cs" />
+    <None Include="Services\MoveHandlers\HumanMoveHandler.cs" />
   </ItemGroup>
 
 </Project>
