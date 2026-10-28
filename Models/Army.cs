@@ -16,6 +16,8 @@ namespace PaterniLab2.Models
         public bool _isAi { get; private set; }
         public int currentIndex { get; private set; }
 
+        public bool HasUnits => _units != null && _units.Count > 0;
+
         public Army(Race race,List<BaseUnit> units, bool isAi) 
         {
             _units = units;

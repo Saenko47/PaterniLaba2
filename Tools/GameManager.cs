@@ -10,6 +10,7 @@ using PaterniLab2.Services.MoveHandlers;
 using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Text;
 using static PaterniLab2.Tools.Enums;
 
@@ -21,12 +22,6 @@ namespace PaterniLab2.Tools
 
         private readonly ITable _table;
         private readonly IRender _render;
-
-        private List<BaseUnit> unitsA = new List<BaseUnit>();
-        private List<BaseUnit> unitsB = new List<BaseUnit>();
-
-        private bool leaderAAlive = true;
-        private bool leaderBAlive = true;
 
         private List<Army> armies = new List<Army>();
 
@@ -47,11 +42,10 @@ namespace PaterniLab2.Tools
 
         private void Render(Vector2Int? unitThatMove = null)
         {
-            
-            string raceAName = unitsA.Count > 0 ? unitsA[0].race.ToString() : "Команда A";
-            string raceBName = unitsB.Count > 0 ? unitsB[0].race.ToString() : "Команда B";
 
-            Console.WriteLine($"=== Юнитов {raceAName}: {unitsA.Count} | Юнитов {raceBName}: {unitsB.Count} ===");
+            List<(string name, int count)> unitsNameAndCounts = armies.Select(a => (name: a._race.ToString(), count: a._units.Count)).ToList();
+
+            foreach (var army in unitsNameAndCounts) Console.WriteLine($"Name:{army.name}, amount: {army.count}");
 
             var allUnits = armies[0]._units.Concat(armies[1]._units).ToList();
 
@@ -127,14 +121,14 @@ namespace PaterniLab2.Tools
 
             while (true)
             {
-                //if (CheckGameOver(out string winMessage))
-                //{
-                //    Render(); 
-                //    Console.WriteLine($"\n{winMessage}");
-                //    break;
-                //}
+                if (CheckGameOver(out string winMessage))
+                {
+                    Render();
+                    Console.WriteLine($"\n{winMessage}");
+                    return;
+                }
 
-           
+
                 Render();
 
                 int indexOfCurrentArmy = armyIndex % armies.Count;
@@ -147,30 +141,30 @@ namespace PaterniLab2.Tools
                 armyIndex++;
 
             }
+
+            
         }
 
         private bool CheckGameOver(out string message)
         {
-            if (!leaderAAlive)
+            var leadersAlive = armies.Where(a => a._isLeaderAlive).ToList();
+
+            if (leadersAlive.Count <= 1) 
             {
-                message = "Лидер Людей погиб! Орки победили!";
-                return true;
+                message = leadersAlive.Count == 1
+                    ? $"{leadersAlive[0]._race} is WIN!!"
+                    : "Draw / No leaders left!";
+                return true; 
             }
-            if (!leaderBAlive)
+            var armiesWithUnits = armies.Where(a => a.HasUnits).ToList();
+
+            if (armiesWithUnits.Count <= 1) 
             {
-                message = "Лидер Орков погиб! Люди победили!";
+                message = leadersAlive.Count == 1
+                   ? $"{armiesWithUnits[0]._race} is WIN!!"
+                   : "Draw / No units left!";
                 return true;
-            }
-            if (unitsA.Count == 0)
-            {
-                message = "Все Люди погибли! Орки победили!";
-                return true;
-            }
-            if (unitsB.Count == 0)
-            {
-                message = "Все Орки погибли! Люди победили!";
-                return true;
-            }
+            } 
 
             message = string.Empty;
             return false;
@@ -207,14 +201,7 @@ namespace PaterniLab2.Tools
 
             if (deadUnit.isLeader)
             {
-                if (deadUnit.race == Race.Human) // или проверка по вашей бизнес-логике лидера
-                {
-                    leaderAAlive = false;
-                }
-                else
-                {
-                    leaderBAlive = false;
-                }
+                armyWherHeServe.KillLeader();
             }
 
             Console.WriteLine($"{deadUnit.race} unit has died.");
