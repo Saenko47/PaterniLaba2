@@ -18,41 +18,35 @@ namespace PaterniLab2.Models.Base.Unit
         public int x { get; private set; }
         public int y { get; private set; }
 
+        protected UnitStats stats = new UnitStats();
 
-        public abstract Race race { get; }
-       
-
-        public int health { get; protected set; } = 100;
-        public int avaidChance { get; protected set; } = 5;
-        public int armor { get; protected set; }
-        public MoveType moveType { get; protected set; }
-
-
+        public abstract Race race { get; } 
         public bool isLeader { get; set; } = false;
-
+        public MoveType moveType { get; protected set; } 
 
         public IInventory inventory { get; private set; }
         public ISkillContainer skillContainer { get; private set; } //under constraction
 
         private IBehaviour behaviour;
 
+        public int health => stats.health;
+        public int armor => stats.armor;
+        public int avoidChance => stats.avoidChance;
+        public int amountOfMoves => stats.amountOfMoves;
+        public int amountOfBattleMoves => stats.amountOfBattleMoves;
+        public int damageMultiplayer => stats.damageMultiplayer;
 
         public BaseWeapon weapon { get; protected set; }
         public WeaponType weaponType => weapon.weaponType;
-
-
-        public int amountOfMoves => moveType == MoveType.Cavalry ? 2 : 1;
-        public int amountOfBattleMoves { get; private set; } = 1;
 
         private List<StatusEffectObj> statusEffects = new List<StatusEffectObj>();
 
      
 
 
-        public BaseUnit(int id,int armor, MoveType moveType, BaseWeapon weapons, IInventory inventory)
+        public BaseUnit(int id, MoveType moveType, BaseWeapon weapons, IInventory inventory)
         {
             this.id = id;
-            this.armor = armor;
             this.moveType = moveType;
             this.weapon = weapons;
             this.inventory = inventory;
@@ -93,15 +87,9 @@ namespace PaterniLab2.Models.Base.Unit
         {
             switch (buffType)
             {
-                case BuffType.Health:
-                    health += value;
-                    break;
-                case BuffType.Armor:
-                    armor += value;
-                    break;
-                case BuffType.AvoidChance:
-                    avaidChance += value; 
-                    break;
+                case BuffType.Health: stats.ModifyHealth(value);  break;
+                case BuffType.Armor:stats.ModifyArmor(value); break;
+                case BuffType.AvoidChance: stats.ModifyAvoidChance(value); break;
             }
         }
 
@@ -110,15 +98,10 @@ namespace PaterniLab2.Models.Base.Unit
             int certify = isPositive ? 1 : -1;
             switch (statusEffect) 
             {
-                case StatusEffect.Health:
-                    health += value * certify;
-                    break;
-                case StatusEffect.Armor:
-                    armor += value * certify;
-                    break;
-                case StatusEffect.AvoidChance:
-                    avaidChance += value * certify;
-                    break;
+                case StatusEffect.Health:stats.ModifyHealth(value * certify);  break;
+                case StatusEffect.Armor:stats.ModifyArmor(value * certify);break;
+                case StatusEffect.AvoidChance:stats.ModifyAvoidChance(value * certify);  break;
+                case StatusEffect.Attack: stats.ModifyMultiplayerToDamage(value * certify); break;
             }
         }
 
@@ -191,7 +174,7 @@ namespace PaterniLab2.Models.Base.Unit
 
         public void TakeDamage(int amount) 
         {
-            this.health -= amount;
+            stats.ModifyHealth(-amount);
             Console.WriteLine($"{race} took {amount} damage. Remaining health: {health}");
         }
 
@@ -201,7 +184,7 @@ namespace PaterniLab2.Models.Base.Unit
         {
             string equippedStr = string.Join(", ", inventory.GetAllEquippedItems().Select(item => item));
 
-            return $"Id:{id}, Race: {race}, Health: {health}, Avoid Chance: {avaidChance}, Armor: {armor}, Move Type: {moveType}, Weapon: [{weapon}]\nX: {x}, Y: {y}" +
+            return $"Id:{id}, Race: {race}, Health: {health}, Avoid Chance: {avoidChance}, Armor: {armor}, Move Type: {moveType}, Weapon: [{weapon}]\nX: {x}, Y: {y}" +
                 $"\n Items:{equippedStr}";
         }
 

@@ -19,13 +19,13 @@ namespace PaterniLab2.Factories.Units
         protected override HumanUnit CreateMeleeUnit(int id, MoveType move)
         {
 
-            var newHuman = new HumanUnit(id,15,move, new StraigthSword(), new Inventory(3));
+            var newHuman = new HumanUnit(id,move, new StraigthSword(), new Inventory(3));
           
             return newHuman;
         }
         protected override HumanUnit CreatRangeUnit(int id, MoveType move)
         {
-            var newHuman =  new HumanUnit(id,7, move, new Crossbow(), new Inventory(3));
+            var newHuman =  new HumanUnit(id, move, new Crossbow(), new Inventory(3));
             
             return newHuman;
         }

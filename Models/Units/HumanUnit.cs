@@ -17,11 +17,11 @@ namespace PaterniLab2.Models.Units
         private const int AVOID_CHANCE = 5;
         public override Race race  => Race.Human;
 
-        public HumanUnit(int id, int armor, MoveType moveType, BaseWeapon weapon, IInventory inventory)
-            : base(id, armor, moveType, weapon, inventory)
+        public HumanUnit(int id, MoveType moveType, BaseWeapon weapon, IInventory inventory)
+            : base(id, moveType, weapon, inventory)
         {
-            health += HEALTH_BUFF;
-            avaidChance += AVOID_CHANCE;
+            stats.ModifyHealth(HEALTH_BUFF);
+            stats.ModifyAvoidChance(AVOID_CHANCE);
             base.inventory.SetBoot(new HumanBoots());
             ReconsiderInventory();
         }
