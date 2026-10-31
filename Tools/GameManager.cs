@@ -110,13 +110,11 @@ namespace PaterniLab2.Tools
 
         private bool InterateToMove(Army teamThatMove) 
         {
-            if (teamThatMove._units.Count == 0) return false;
 
             var unit = teamThatMove.GetUnitToMove();
 
             if (unit == null)
             {
-                
                 return false;
             }
             ProcessMove(unit);
@@ -148,6 +146,11 @@ namespace PaterniLab2.Tools
 
                     int indexOfCurrentArmy = armyIndex % armies.Count;
                     var currentArmyToMove = armies[indexOfCurrentArmy];
+                    if (currentArmyToMove.IsAllMakeMoves()) 
+                    {
+                        armyIndex++;
+                        continue;
+                    }
                     Console.WriteLine($"\nНажмите Enter, чтобы сделать ход");
                     Console.ReadLine();
 

@@ -60,7 +60,7 @@ namespace PaterniLab2.Models
 
             if (unit != null)
             {
-            
+        
                 return unit;
             }
 
@@ -71,7 +71,7 @@ namespace PaterniLab2.Models
             if (unit == null && prevMovin != null)
             {
                 unit = _units.FirstOrDefault(u => u._state.state == UnitStateEnum.Delayed);
-                if (prevMovin == unit) return null;
+               
             }
 
           
