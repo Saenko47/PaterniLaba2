@@ -18,7 +18,9 @@ namespace PaterniLab2.Tools
                 int startX = req.unitThatLooking.x;
                 int startY = req.unitThatLooking.y;
 
-                foreach (var unit in req.allUnits)
+           
+            
+            foreach (var unit in req.allUnits)
                 {
                     if (unit == req.unitThatLooking) continue;
 

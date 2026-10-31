@@ -1,4 +1,5 @@
 ﻿using PaterniLab2.Interfaces;
+using PaterniLab2.Models.States.Unit;
 using PaterniLab2.Requests;
 using PaterniLab2.Requests.Units;
 using System;
@@ -13,6 +14,7 @@ namespace PaterniLab2.Models.Base.Unit
 {
     internal abstract class BaseUnit:IClone<BaseUnit>
     {
+        public IUnitState _state { get; private set; }
         public int id { get; private set; }
 
         public int x { get; private set; }
@@ -27,7 +29,10 @@ namespace PaterniLab2.Models.Base.Unit
         public IInventory inventory { get; private set; }
         public ISkillContainer skillContainer { get; private set; } //under constraction
 
-        private IBehaviour behaviour;
+        internal IBehaviour behaviour;
+
+        public BaseWeapon weapon { get; protected set; }
+        public WeaponType weaponType => weapon.weaponType;
 
         public int health => stats.health;
         public int armor => stats.armor;
@@ -35,21 +40,20 @@ namespace PaterniLab2.Models.Base.Unit
         public int amountOfMoves => stats.amountOfMoves;
         public int amountOfBattleMoves => stats.amountOfBattleMoves;
         public int damageMultiplayer => stats.damageMultiplayer;
+        public int damage => weapon.damage + damageMultiplayer; 
 
-        public BaseWeapon weapon { get; protected set; }
-        public WeaponType weaponType => weapon.weaponType;
 
         private List<StatusEffectObj> statusEffects = new List<StatusEffectObj>();
 
      
-
-
         public BaseUnit(int id, MoveType moveType, BaseWeapon weapons, IInventory inventory)
         {
             this.id = id;
             this.moveType = moveType;
             this.weapon = weapons;
             this.inventory = inventory;
+
+            SetState(new ActiveState());
           
         }
 
@@ -57,12 +61,20 @@ namespace PaterniLab2.Models.Base.Unit
         {
             this.behaviour = behaviour;
         }
-
-        public void MakeMove(CombatContext context) 
+        public void SetState(IUnitState state)
         {
-            if (behaviour == null) return;
-            behaviour.MakeMove(context, this);
-            Tick();
+            _state?.OnExit(this);
+            _state = state;
+            _state?.OnEnter(this);
+        }
+
+        public void RenewState() => SetState(new ActiveState());
+
+        public bool MakeMove(CombatContext context) 
+        {
+            if (behaviour == null) throw new Exception("Behaviour is null!!");
+            
+            return _state.MakeMove(context, this);
         }
 
        
@@ -90,6 +102,7 @@ namespace PaterniLab2.Models.Base.Unit
                 case BuffType.Health: stats.ModifyHealth(value);  break;
                 case BuffType.Armor:stats.ModifyArmor(value); break;
                 case BuffType.AvoidChance: stats.ModifyAvoidChance(value); break;
+                case BuffType.Damage: stats.ModifyMultiplayerToDamage(value); break;
             }
         }
 
@@ -189,7 +202,7 @@ namespace PaterniLab2.Models.Base.Unit
         }
 
 
-        private void Tick()
+        internal void Tick()
         {
             foreach (var statusEffect in statusEffects) 
             {

@@ -65,7 +65,7 @@ namespace PaterniLab2.Services.Behaviour
             List<BaseUnit> units = _findToAttack.Find(new ReqiestOnFindingUnit
             {
                 strategysToFind = _owner.weapon.strategysToFind,
-                allUnits = context.allUnits,
+                armies = context.armies,
                 isLookingForComrades = false,
                 rangeOfFindings = _owner.weapon.range,
                 unitThatLooking = _owner
@@ -130,16 +130,16 @@ namespace PaterniLab2.Services.Behaviour
         }
 
 
-        public void MakeMove(CombatContext context, BaseUnit _owner)
+        public bool MakeMove(CombatContext context, BaseUnit _owner)
         {
-            if (context == null) return;
+            if (context == null) return false;
 
             InitializeAmountOfMoves(_owner);
 
             while (amountOfMoves > 0 && amountOfHit > 0)
             {
                 Console.WriteLine($"\nОчки хода: {amountOfMoves}, Очки боя: {amountOfHit}");
-                Console.WriteLine("Что вы хотите сделать?\n1. Move\n2. AttackWithWeapon\n3. Use Skill");
+                Console.WriteLine("Что вы хотите сделать?\n1. Move\n2. AttackWithWeapon\n3. Use Skill\n4. Move later");
 
                 string actionInput = Console.ReadLine();
                 if (!int.TryParse(actionInput, out int decision))
@@ -148,12 +148,13 @@ namespace PaterniLab2.Services.Behaviour
                     continue;
                 }
 
-                if (decision < 1 || decision > 3)
+                if (decision < 1 || decision > 4)
                 {
                     Console.WriteLine("Недопустимая команда. Выберите от 1 до 3.");
                     continue;
                 }
 
+                if (decision == 4) return false;
                 // Пытаемся выполнить действие
                 if (!TryProccesMove(decision, context, _owner))
                 {
@@ -175,6 +176,7 @@ namespace PaterniLab2.Services.Behaviour
             }
 
             Console.WriteLine("Ход юнита завершен.");
+            return true;
         }
     }
 }

@@ -1,8 +1,10 @@
-﻿using PaterniLab2.Models.Base.Unit;
+﻿using PaterniLab2.Models;
+using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 
 namespace PaterniLab2.Requests
@@ -11,7 +13,7 @@ namespace PaterniLab2.Requests
     {
         public Vector2Int framesOfTable { get; set; }
 
-        public List<BaseUnit> allUnits { get; set; } = null!;
+        public List<Army> armies { get; set; } = null!;
 
         public Action<BaseUnit> onUnitDeath { get; set; } = null!;
 

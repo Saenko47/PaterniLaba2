@@ -15,6 +15,8 @@ namespace PaterniLab2.Tools
     internal class PlaceRaceOnBoard: IPlaceRaceOnBoard
     {
         private readonly ICreateUnitByRace _createUnitByRace;
+        ///private readonly IPlaceUnits _;
+        ///private readony IPlaceUnits _mT2P;
 
         public PlaceRaceOnBoard(ICreateUnitByRace createUnitByRace) 
         {

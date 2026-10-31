@@ -56,30 +56,39 @@ namespace PaterniLab2.Tools
         {
             var req = new Requests.Table.CreateGameRequest
             {
-                raceA = new Requests.Table.PlaceOnBoardRequest
+                reqs = new PlaceOnBoardRequest[]
                 {
+
+                    new PlaceOnBoardRequest
+                    {
                     race = Race.Human,
                     raceAmountFly = 0,
                     raceAmountRide = 0,
                     raceMeleeAmount = 2,
                     raceRangeAmount = 1,
-                    isAi = false
-                },
-                raceB = new Requests.Table.PlaceOnBoardRequest
-                {
+                    isAi = false,
+                    isHandlyPlacement = false
+                    },
+
+
+                    new PlaceOnBoardRequest
+                    {
                     race = Race.Orc,
                     raceAmountFly = 0,
                     raceAmountRide = 0,
-                    raceMeleeAmount = 0,
+                    raceMeleeAmount = 3,
                     raceRangeAmount = 2,
-                    isAi = true
+                    isAi = true,
+                    isHandlyPlacement = false
+                    }
+
                 }
             };
 
             var res = _table.FirstPlacementOfUnits(req);
 
-            armies.Add(new Army(res.raceA[0].race, res.raceA, false));
-            armies.Add(new Army(res.raceB[0].race, res.raceB, true));
+
+            foreach (var army in res.placedArmies) armies.Add(army);
 
 
             foreach (var army in armies) SetBehaviorForTeam(army._units, army._isAi);
@@ -99,18 +108,24 @@ namespace PaterniLab2.Tools
             foreach (var unit in units) unit.SetBehaviour(beha);
         }
 
-        private void InterateToMove(Army teamThatMove) 
+        private bool InterateToMove(Army teamThatMove) 
         {
-            if (teamThatMove._units.Count < 0) return;
+            if (teamThatMove._units.Count == 0) return false;
 
-            int currentIndex = teamThatMove.currentIndex % teamThatMove._units.Count;
-            var unit = teamThatMove._units[currentIndex];
+            var unit = teamThatMove.GetUnitToMove();
 
-            teamThatMove.IncrementIndex();
-
-            if (unit.health < 0) return;
-
+            if (unit == null)
+            {
+                
+                return false;
+            }
             ProcessMove(unit);
+            return true;
+        }
+
+        private bool CheckIfAllInArmiesMakeMove() 
+        {
+            return armies.All(a => a.IsAllMakeMoves());
         }
 
         public void StartGame()
@@ -128,22 +143,31 @@ namespace PaterniLab2.Tools
                     return;
                 }
 
+                while (!CheckIfAllInArmiesMakeMove()) {
+                    Render();
 
-                Render();
+                    int indexOfCurrentArmy = armyIndex % armies.Count;
+                    var currentArmyToMove = armies[indexOfCurrentArmy];
+                    Console.WriteLine($"\nНажмите Enter, чтобы сделать ход");
+                    Console.ReadLine();
 
-                int indexOfCurrentArmy = armyIndex % armies.Count;
-                var currentArmyToMove = armies[indexOfCurrentArmy];
-                Console.WriteLine($"\nНажмите Enter, чтобы сделать ход");
-                Console.ReadLine();
 
-             
-                InterateToMove(currentArmyToMove);
-                armyIndex++;
+                    bool isLock = InterateToMove(currentArmyToMove);
+                    
+                    Console.WriteLine(isLock);
+                    if (!isLock) break;
+                    armyIndex++;
+                   
+                }
+
+                foreach (var army in armies) army.PrepareForNewRound();
 
             }
 
             
         }
+
+
 
         private bool CheckGameOver(out string message)
         {
@@ -170,16 +194,15 @@ namespace PaterniLab2.Tools
             return false;
         }
 
-        private void ProcessMove(BaseUnit unit)
+        private bool ProcessMove(BaseUnit unit)
         {
             Render(new Vector2Int(unit.x, unit.y));
             Console.WriteLine($"\nХодит юнит: {unit.race} [ID: {unit.id}] на позиции ({unit.x}, {unit.y})");
-            var allUnits = armies[0]._units.Concat(armies[1]._units).ToList();
 
-            unit.MakeMove(new CombatContext
+            return unit.MakeMove(new CombatContext
             {
                 framesOfTable = _table.GetFrames(),
-                allUnits = allUnits,
+                armies = armies,
                 isCellFree = _table.IsSellFree,
                 onUnitDeath = OnSomeoneDie,
                 onMove = _table.MoveUnit,

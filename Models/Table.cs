@@ -4,6 +4,7 @@ using PaterniLab2.Requests.Table;
 using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using System.Numerics;
 using System.Text;
 
@@ -13,11 +14,11 @@ namespace PaterniLab2.Models
     {
 
        public Cell[,] _board { get; set; }
-        private readonly IPlaceRaceOnBoard _placeRaceOnBoard;
+        private readonly IPlacementManager _placeRaceOnBoard;
         public Action<Vector2Int, Vector2Int>? OnSomeoneMove { get; private set; }
 
         private Vector2Int frames;
-        public Table(int xLen, int yLen, IPlaceRaceOnBoard placeRaceOnBoard)
+        public Table(int xLen, int yLen, IPlacementManager placeRaceOnBoard)
         {
             _placeRaceOnBoard = placeRaceOnBoard;
             _board = new Cell[xLen, yLen];
@@ -69,24 +70,34 @@ namespace PaterniLab2.Models
             return frames;
         }
 
-       
-
-
-        public UnitOnTheBoardByRace FirstPlacementOfUnits(CreateGameRequest req) 
-        { 
-        List<BaseUnit> raceA = _placeRaceOnBoard.PlaceOnBoard(new PlaceOnBoardRequest { 
-             race = req.raceA.race, raceAmountFly = req.raceA.raceAmountFly, raceAmountRide = req.raceA.raceAmountRide, raceMeleeAmount = req.raceA.raceMeleeAmount, raceRangeAmount = req.raceA.raceRangeAmount }, _board);
-
-        List<BaseUnit> raceB = _placeRaceOnBoard.PlaceOnBoard(new PlaceOnBoardRequest { 
-            race = req.raceB.race, raceAmountFly = req.raceB.raceAmountFly, raceAmountRide = req.raceB.raceAmountRide, raceMeleeAmount = req.raceB.raceMeleeAmount, raceRangeAmount = req.raceB.raceRangeAmount }, _board);
-
-         
-        var response = new UnitOnTheBoardByRace { raceA = raceA, raceB = raceB };
-
-            return response;
 
 
 
+        public UnitOnTheBoardByRace FirstPlacementOfUnits(CreateGameRequest req)
+        {
+            int count = req.amountOfRacesOnBoard;
+            bool isTwo = count <= 2;
+            _placeRaceOnBoard.SetMode(isTwo);
+
+            // Создаем список или массив нужного размера, чтобы не было элементов null
+            List<Army> placedArmiesList = new List<Army>();
+
+            for (int k = 0; k < count; ++k)
+            {
+                // Проверка на всякий случай, если req.reqs[k] вдруг null
+                if (req.reqs[k] != null)
+                {
+                    var army = _placeRaceOnBoard.Place(req.reqs[k], true, _board);
+                    if (army != null)
+                    {
+                        placedArmiesList.Add(army);
+                    }
+                }
+            }
+
+            var res = new UnitOnTheBoardByRace { placedArmies = placedArmiesList };
+
+            return res;
         }
     }
 }

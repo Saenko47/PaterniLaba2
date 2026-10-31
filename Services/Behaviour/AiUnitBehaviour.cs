@@ -24,30 +24,30 @@ namespace PaterniLab2.Services.Behaviour
           
         }
 
-        public void MakeMove(CombatContext context, BaseUnit _owner) 
+        public bool MakeMove(CombatContext context, BaseUnit _owner)
         {
             int moveAmount = _owner.amountOfMoves;
             int amountOfHit = _owner.amountOfBattleMoves;
+            bool hasMovedOrAttacked = false;
 
-            while (amountOfHit > 0 || moveAmount > 0) 
+            while (amountOfHit > 0 || moveAmount > 0)
             {
                 List<BaseUnit> units = _findToAttack.Find(new ReqiestOnFindingUnit
                 {
                     strategysToFind = _owner.weapon.strategysToFind,
-                    allUnits = context.allUnits,
+                    armies = context.armies,
                     isLookingForComrades = false,
                     rangeOfFindings = _owner.weapon.range,
                     unitThatLooking = _owner
-                }
-                );
-
-               
+                });
 
                 if (units.Count > 0 && amountOfHit > 0)
                 {
                     var targetEnemy = units[0];
                     _attack.AttackUnit(_owner, targetEnemy);
                     amountOfHit--;
+                    hasMovedOrAttacked = true;
+
                     if (targetEnemy.health <= 0)
                     {
                         context.onUnitDeath?.Invoke(targetEnemy);
@@ -55,15 +55,26 @@ namespace PaterniLab2.Services.Behaviour
                 }
                 else if (moveAmount > 0)
                 {
-                    _move.Move(_owner, context.framesOfTable, context.isCellFree, context.onMove);
-                    moveAmount--;
+                    bool isCanMove = _move.Move(_owner, context.framesOfTable, context.isCellFree, context.onMove);
+                    if (isCanMove)
+                    {
+                        --moveAmount;
+                        hasMovedOrAttacked = true;
+                    }
+                    else
+                    {
+                        // Юнит не может сдвинуться с места — прекращаем попытки движения, чтобы не зацикливаться
+                        break;
+                    }
                 }
                 else
                 {
-                  
+                    // Больше нет доступных действий (атак и шагов)
                     break;
                 }
             }
+
+            return hasMovedOrAttacked;
         }
     }
 }

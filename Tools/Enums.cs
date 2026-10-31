@@ -30,7 +30,8 @@ namespace PaterniLab2.Tools
         {
             Health,
             Armor,
-            AvoidChance
+            AvoidChance,
+            Damage
         }
         public enum ItemType
         {
@@ -53,6 +54,14 @@ namespace PaterniLab2.Tools
         { 
         Cross,
         Circle
+        }
+
+        public enum UnitStateEnum
+        { 
+        Active,
+        Unactive,
+        Delayed,
+        Stuned
         }
 
 

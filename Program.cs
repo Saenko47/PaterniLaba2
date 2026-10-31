@@ -11,11 +11,23 @@ namespace PaterniLab2
     {
         static void Main(string[] args)
         {
-            var place = new PlaceRaceOnBoard(new CreateUnitByRace(new CreateHuman(), new CreateOrc(), new CreateElf()));
-            Table testTable = new Table(4, 4, place);
+            var unitGenerator = new CreateUnitByRace(new CreateHuman(), new CreateOrc(), new CreateElf());
+
+
+            IPlacementMode automatic = new PlacementMode(new AutomaticPlace2Units(unitGenerator), null);
+            IPlacementManager placementManager = new PlacementManager(automatic, null);
+
+            Table testTable = new Table(4, 4, placementManager);
 
             IGameManager gameManager = new GameManager(testTable, new Render());
-            gameManager.StartGame();
+            try
+            {
+                gameManager.StartGame();
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine(ex);
+            }
 
 
         }
