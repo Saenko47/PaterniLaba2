@@ -64,6 +64,15 @@ namespace PaterniLab2.Tools
         Stuned
         }
 
+        public enum UnitTypeToPlace 
+        { 
+        Melee,
+        CavalryMelee,
+        Range,
+        CavalryRange,
+
+        }
+
 
     }
 }

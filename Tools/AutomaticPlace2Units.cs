@@ -12,7 +12,25 @@ namespace PaterniLab2.Tools
     internal class AutomaticPlace2Units: BasePlacementOfUnits
     {
         public AutomaticPlace2Units(ICreateUnitByRace createUnitByRace) : base(createUnitByRace) { }
-       
+        
+
+        private BaseUnit? AutomaticChooseUnitToPlace(PlaceOnBoardRequest req)
+        {
+            BaseUnit? unitToPlace = null;
+            if (req.raceMeleeAmount > 0)
+            {
+                unitToPlace =  ChooseUnitToPlace(UnitTypeToPlace.Melee, req);
+            }
+            else if (req.raceRangeAmount > 0)
+            {
+                unitToPlace = ChooseUnitToPlace(UnitTypeToPlace.Range, req);
+            }
+            else
+            {
+                throw new InvalidOperationException("No units available to place.");
+            }
+            return unitToPlace;
+        }
 
         public override Army PaceUnitsOnTheBoard(PlaceOnBoardRequest req, Cell[,] table)
         {
@@ -35,7 +53,7 @@ namespace PaterniLab2.Tools
                 {
                     if (table[x, y].isEmpty == true)
                     {
-                        var unitToPlace = ChooseUnitToPlace(req);
+                        var unitToPlace = AutomaticChooseUnitToPlace(req);
 
                         if (unitToPlace == null) break;
 

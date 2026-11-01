@@ -171,8 +171,8 @@ namespace PaterniLab2.Services.Behaviour
                     Console.Clear();
 
                     // Безопасный вызов делегата (эквивалентно null-check)
-                    context.updateRender(new Vector2Int(_owner.x, _owner.y));
                 }
+                context.updateRender(new Vector2Int(_owner.x, _owner.y));
             }
 
             Console.WriteLine("Ход юнита завершен.");

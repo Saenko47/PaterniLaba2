@@ -65,7 +65,7 @@ namespace PaterniLab2.Tools
                     raceAmountFly = 0,
                     raceAmountRide = 0,
                     raceMeleeAmount = 2,
-                    raceRangeAmount = 1,
+                    raceRangeAmount = 0,
                     isAi = false,
                     isHandlyPlacement = false
                     },
@@ -79,7 +79,7 @@ namespace PaterniLab2.Tools
                     raceMeleeAmount = 3,
                     raceRangeAmount = 2,
                     isAi = true,
-                    isHandlyPlacement = false
+                    isHandlyPlacement = true
                     }
 
                 }

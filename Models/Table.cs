@@ -87,7 +87,7 @@ namespace PaterniLab2.Models
                 // Проверка на всякий случай, если req.reqs[k] вдруг null
                 if (req.reqs[k] != null)
                 {
-                    var army = _placeRaceOnBoard.Place(req.reqs[k], true, _board);
+                    var army = _placeRaceOnBoard.Place(req.reqs[k], req.reqs[k].isHandlyPlacement, _board);
                     if (army != null)
                     {
                         placedArmiesList.Add(army);

@@ -3,6 +3,7 @@ using PaterniLab2.Models;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests.Table;
 using PaterniLab2.Singltons;
+using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,21 +21,27 @@ namespace PaterniLab2.Tools
         }
  
 
-        protected BaseUnit? ChooseUnitToPlace(PlaceOnBoardRequest req)
+        protected BaseUnit? ChooseUnitToPlace(UnitTypeToPlace unitTypeToPlace, PlaceOnBoardRequest req)
         {
-            if (req.raceMeleeAmount > 0)
+            switch (unitTypeToPlace)
             {
-                req.raceMeleeAmount--;
-                return _createUnitByRace.CreateByRaceAndWeapon(req.race, WeaponType.Melee, MoveType.Walk);
+                case UnitTypeToPlace.Melee:
+                    req.raceMeleeAmount--;
+                    return _createUnitByRace.CreateByRaceAndWeapon(req.race, WeaponType.Melee, MoveType.Walk);
+                case UnitTypeToPlace.CavalryMelee:
+                    req.raceMeleeAmount--;
+                    req.raceAmountRide--;
+                    return _createUnitByRace.CreateByRaceAndWeapon(req.race, WeaponType.Melee, MoveType.Cavalry);
+                case UnitTypeToPlace.Range:
+                    req.raceRangeAmount--;
+                    return _createUnitByRace.CreateByRaceAndWeapon(req.race, WeaponType.Range, MoveType.Walk);
+                case UnitTypeToPlace.CavalryRange:
+                    req.raceRangeAmount--;
+                    req.raceAmountRide--;
+                    return _createUnitByRace.CreateByRaceAndWeapon(req.race, WeaponType.Range, MoveType.Cavalry);
+                default:
+                    return null;
             }
-
-            if (req.raceRangeAmount > 0)
-            {
-                req.raceRangeAmount--;
-                return _createUnitByRace.CreateByRaceAndWeapon(req.race, WeaponType.Range, MoveType.Walk);
-            }
-
-            return null; 
         }
 
         protected void ChooseLeader(BaseUnit unitToLeader)

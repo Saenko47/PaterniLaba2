@@ -2,6 +2,7 @@
 using PaterniLab2.Models.States.Unit;
 using PaterniLab2.Requests;
 using PaterniLab2.Requests.Units;
+using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -161,6 +162,7 @@ namespace PaterniLab2.Models.Base.Unit
             this.x = x;
             this.y = y;
         }
+        public Vector2Int Position => new Vector2Int(x, y);
 
         public virtual BaseUnit Clone()
         {
@@ -180,6 +182,15 @@ namespace PaterniLab2.Models.Base.Unit
                 weapon = newWeapon;
             }
         } 
+
+        public void PutOnTheHorse()
+        {
+            if (moveType == MoveType.Walk)
+            {
+                moveType = MoveType.Cavalry;
+                stats.ModifyMoves(2);
+            }
+        }
         public void ElectAsLeader()
         {
             isLeader = true;

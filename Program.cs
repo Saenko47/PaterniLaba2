@@ -15,7 +15,8 @@ namespace PaterniLab2
 
 
             IPlacementMode automatic = new PlacementMode(new AutomaticPlace2Units(unitGenerator), null);
-            IPlacementManager placementManager = new PlacementManager(automatic, null);
+            IPlacementMode handly = new PlacementMode(new HandlyPlace2Units(unitGenerator), null);
+            IPlacementManager placementManager = new PlacementManager(automatic, handly);
 
             Table testTable = new Table(4, 4, placementManager);
 
