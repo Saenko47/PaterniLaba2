@@ -39,14 +39,28 @@ namespace PaterniLab2.Tools
             return null;
         }
 
-        private BaseUnit? ChooseToPlace(PlaceOnBoardRequest req, Vector2Int frames, Cell[,] table) 
+        private BaseUnit? ChooseToPlace(PlaceOnBoardRequest req, Vector2Int frames, Cell[,] table, List<BaseUnit> placedUnits) 
         {
             ShowWhoCanBePlaced(req);
 
-            Console.WriteLine("Choose unit type to place: 1 - Melee, 2 - Range, 3 - Cavalry Melee, 4 - Cavalry Range");
+            Console.WriteLine("Choose unit type to place: 1 - Melee, 2 - Range, 3 - Cavalry Melee, 4 - Cavalry Range 5 - Undo");
 
-            int TypeOfUnitToPlace = Convert.ToInt32(Console.ReadLine());
+            if(!int.TryParse(Console.ReadLine(), out int TypeOfUnitToPlace))
+            {
+                Console.WriteLine("Invalid input. Please enter a valid number.");
+                return null;
+            }
 
+            if (TypeOfUnitToPlace == 5)
+            {
+                if (_commands.Count > 0)
+                {
+                    var lastCommand = _commands.Pop();
+                    lastCommand.Undo();
+                    Console.WriteLine("Last placement undone.");
+                }
+                return null;
+            }
             Console.WriteLine("Enter the coordinates to place the unit (x y):");
             string[] coordinates = Console.ReadLine().Split(' ');
             int x = Convert.ToInt32(coordinates[0]);
@@ -56,7 +70,7 @@ namespace PaterniLab2.Tools
                 BaseUnit? unit = ChooseUnitTypeToPlace(req, TypeOfUnitToPlace);
                 if (unit != null)
                 {
-                    var placeCommand = new PlaceCommand(unit, new Vector2Int(x, y), table, req, (UnitTypeToPlace)TypeOfUnitToPlace);
+                    var placeCommand = new PlaceCommand(unit, new Vector2Int(x, y), table, req, (UnitTypeToPlace)TypeOfUnitToPlace, placedUnits);
                     placeCommand.Execute();
                     _commands.Push(placeCommand);
                     Console.WriteLine($"Placed {unit} at ({x}, {y})");
@@ -77,11 +91,16 @@ namespace PaterniLab2.Tools
 
             while (req.isRamainToPlace)
             {
-                var unit = ChooseToPlace(req, frames, table);
+                var unit = ChooseToPlace(req, frames, table, placedUnits);
                 if (unit != null)
                 {
                     placedUnits.Add(unit);
+                    if (!req.isLeaderSet) 
+                    { 
+                    ChooseLeader(unit);
+                    }
                 }
+                req.RenderPlacement?.Invoke();
             }
 
             return new Army(req.race,placedUnits, req.isAi);

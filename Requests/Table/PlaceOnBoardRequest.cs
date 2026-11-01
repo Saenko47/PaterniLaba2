@@ -16,6 +16,9 @@ namespace PaterniLab2.Requests.Table
         public bool isAi { get; set; }
         public bool isHandlyPlacement { get; set; }
 
+        public Action RenderPlacement { get; set; } = null!;
+
         public bool isRamainToPlace => raceMeleeAmount + raceRangeAmount > 0;
+        public bool isLeaderSet { get; set; } = false;
     }
 }

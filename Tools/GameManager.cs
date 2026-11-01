@@ -67,7 +67,8 @@ namespace PaterniLab2.Tools
                     raceMeleeAmount = 2,
                     raceRangeAmount = 0,
                     isAi = false,
-                    isHandlyPlacement = false
+                    isHandlyPlacement = false,
+                    
                     },
 
 
@@ -79,7 +80,8 @@ namespace PaterniLab2.Tools
                     raceMeleeAmount = 3,
                     raceRangeAmount = 2,
                     isAi = true,
-                    isHandlyPlacement = true
+                    isHandlyPlacement = true,
+                    RenderPlacement = () => Render()
                     }
 
                 }

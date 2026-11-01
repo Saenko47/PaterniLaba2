@@ -19,8 +19,9 @@ namespace PaterniLab2.Tools
         private Cell[,] _table;
         private PlaceOnBoardRequest _req;
         private UnitTypeToPlace _unitType;
+        private List<BaseUnit> _placedUnits;
 
-        public PlaceCommand(BaseUnit unit, Vector2Int currentPos, Cell[,] table, PlaceOnBoardRequest req, UnitTypeToPlace unitType)
+        public PlaceCommand(BaseUnit unit, Vector2Int currentPos, Cell[,] table, PlaceOnBoardRequest req, UnitTypeToPlace unitType, List<BaseUnit> placedUnits)
         {
             _unit = unit;
             _prevPos = unit.Position;
@@ -28,6 +29,7 @@ namespace PaterniLab2.Tools
             _table = table;
             _req = req;
             _unitType = unitType;
+            _placedUnits = placedUnits;
         }
         public void Execute()
         {
@@ -45,8 +47,7 @@ namespace PaterniLab2.Tools
             if (_unit == null || _table == null)
                 throw new ArgumentNullException("Unit or table is null");
             _table[_currentPos.X, _currentPos.Y].isEmpty = true;
-            _table[_prevPos.X, _prevPos.Y].isEmpty = false;
-            _unit.SetPosition(_prevPos.X, _prevPos.Y);
+            _placedUnits.Remove(_unit);
 
             switch (_unitType)
             {
