@@ -21,6 +21,8 @@ namespace PaterniLab2.Models.Base.Unit
         public int x { get; private set; }
         public int y { get; private set; }
 
+        public Vector2Int Position => new Vector2Int(x, y);
+
         protected UnitStats stats = new UnitStats();
 
         public abstract Race race { get; } 
@@ -164,8 +166,7 @@ namespace PaterniLab2.Models.Base.Unit
             this.x = x;
             this.y = y;
         }
-        public Vector2Int Position => new Vector2Int(x, y);
-
+        
         public virtual BaseUnit Clone()
         {
            
@@ -204,17 +205,6 @@ namespace PaterniLab2.Models.Base.Unit
             Console.WriteLine($"{race} took {amount} damage. Remaining health: {health}");
         }
 
-    
-
-        public override string ToString()
-        {
-            string equippedStr = string.Join(", ", inventory.GetAllEquippedItems().Select(item => item));
-
-            return $"Id:{id}, Race: {race}, Health: {health}, Avoid Chance: {avoidChance}, Armor: {armor}, Move Type: {moveType}, Weapon: [{weapon}]\nX: {x}, Y: {y}" +
-                $"\n Items:{equippedStr}";
-        }
-
-
         internal void Tick()
         {
             foreach (var statusEffect in statusEffects) 
@@ -225,6 +215,14 @@ namespace PaterniLab2.Models.Base.Unit
 
                 statusEffect.DecreamentTunsRamain();
             }
+        }
+
+        public override string ToString()
+        {
+            string equippedStr = string.Join(", ", inventory.GetAllEquippedItems().Select(item => item));
+
+            return $"Id:{id}, Race: {race}, Health: {health}, Avoid Chance: {avoidChance}, Armor: {armor}, Move Type: {moveType}, Weapon: [{weapon}]\nX: {x}, Y: {y}" +
+                $"\n Items:{equippedStr}";
         }
 
 
