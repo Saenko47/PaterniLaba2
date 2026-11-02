@@ -65,7 +65,7 @@ namespace PaterniLab2.Tools
             string[] coordinates = Console.ReadLine().Split(' ');
             int x = Convert.ToInt32(coordinates[0]);
             int y = Convert.ToInt32(coordinates[1]);
-            if (x >= 0 && x < frames.X && y >= 0 && y < frames.Y)
+            if (x >= 0 && x < frames.X && y >= 0 && y < frames.Y && table[x, y].isEmpty)
             {
                 BaseUnit? unit = ChooseUnitTypeToPlace(req, TypeOfUnitToPlace);
                 if (unit != null)
@@ -96,6 +96,7 @@ namespace PaterniLab2.Tools
                 if (unit != null)
                 {
                     placedUnits.Add(unit);
+                    table[unit.Position.X, unit.Position.Y].isEmpty = false;
                     if (!req.isLeaderSet) 
                     { 
                     ChooseLeader(unit);
