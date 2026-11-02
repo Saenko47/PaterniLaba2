@@ -6,6 +6,7 @@ using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Services.Behaviour
 {
@@ -35,6 +36,20 @@ namespace PaterniLab2.Services.Behaviour
         {
             amountOfMoves = _owner.amountOfMoves;
             amountOfHit = _owner.amountOfBattleMoves;
+        }
+
+        private void HighlightTargetUnits(CombatContext context, List<BaseUnit> units, HighlightType highlightType)
+        {
+            var highlightRequests = new List<RequestOnHighlihtUnit>();
+            foreach (var unit in units)
+            {
+                highlightRequests.Add(new RequestOnHighlihtUnit
+                {
+                    position = unit.Position,
+                    highlightType = highlightType
+                });
+            }
+            context.updateRender(highlightRequests);
         }
 
 
@@ -83,6 +98,9 @@ namespace PaterniLab2.Services.Behaviour
                 Console.WriteLine($"{i + 1}. Враг [X:{units[i].x}, Y:{units[i].y}] (Здоровье: {units[i].health})");
             }
 
+           HighlightTargetUnits(context, units, HighlightType.TargetUnit);
+
+
             string input = Console.ReadLine();
             if (!int.TryParse(input, out int choice) || choice < 1 || choice > units.Count)
             {
@@ -92,13 +110,14 @@ namespace PaterniLab2.Services.Behaviour
 
             var targetEnemy = units[choice - 1];
 
-            // 3. Наносим удар через сервис _attack
+           
             _attack.AttackUnit(_owner, targetEnemy);
-            amountOfHit--; // Списываем очко боя
+           
+            amountOfHit--; 
 
             Console.WriteLine($"Успешная атака по врагу! Осталось очков боя: {amountOfHit}");
 
-            // 4. Проверяем, умер ли враг (как в ИИ)
+          
             if (targetEnemy.health <= 0)
             {
                 context.onUnitDeath?.Invoke(targetEnemy);
@@ -138,8 +157,11 @@ namespace PaterniLab2.Services.Behaviour
 
             while (amountOfMoves > 0 && amountOfHit > 0)
             {
+                
+
                 Console.WriteLine($"\nОчки хода: {amountOfMoves}, Очки боя: {amountOfHit}");
                 Console.WriteLine("Что вы хотите сделать?\n1. Move\n2. AttackWithWeapon\n3. Use Skill\n4. Move later");
+
 
                 string actionInput = Console.ReadLine();
                 if (!int.TryParse(actionInput, out int decision))
@@ -155,24 +177,25 @@ namespace PaterniLab2.Services.Behaviour
                 }
 
                 if (decision == 4) return false;
-                // Пытаемся выполнить действие
+                
                 if (!TryProccesMove(decision, context, _owner))
                 {
                     Console.WriteLine("Действие недоступно или не удалось выполнить. Попробуйте снова. Или хотите закончить?\n 1 - нет\n любое другое число (или Enter) - да");
 
                     string retryInput = Console.ReadLine();
 
-                    // Если пустая строка (Enter), не число или не 1 — завершаем ход юнита
+                   
                     if (string.IsNullOrEmpty(retryInput) || !int.TryParse(retryInput, out int choice) || choice != 1)
                     {
-                        break; // Выходим из цикла while, чтобы перейти к "Ход юнита завершен"
+                        break; 
                     }
 
                     Console.Clear();
 
-                    // Безопасный вызов делегата (эквивалентно null-check)
+                   
                 }
-                context.updateRender(new Vector2Int(_owner.x, _owner.y));
+
+                context.updateRender(null);
             }
 
             Console.WriteLine("Ход юнита завершен.");

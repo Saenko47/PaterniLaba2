@@ -40,16 +40,14 @@ namespace PaterniLab2.Tools
             }
         }
 
-        private void Render(Vector2Int? unitThatMove = null)
+        private void Render(List<RequestOnHighlihtUnit>? highlightRequests = null)
         {
-
+           
             List<(string name, int count)> unitsNameAndCounts = armies.Select(a => (name: a._race.ToString(), count: a._units.Count)).ToList();
 
             foreach (var army in unitsNameAndCounts) Console.WriteLine($"Name:{army.name}, amount: {army.count}");
 
-            var allUnits = armies[0]._units.Concat(armies[1]._units).ToList();
-
-            _render.RenderTable(_table, allUnits,  unitThatMove);
+            _render.Render(armies, highlightRequests);
         }
 
         private void InitiaizeTabe()
@@ -67,7 +65,7 @@ namespace PaterniLab2.Tools
                     raceMeleeAmount = 2,
                     raceRangeAmount = 0,
                     isAi = false,
-                    isHandlyPlacement = false,
+                    isHandlyPlacement = true,
                     
                     },
 
@@ -80,8 +78,8 @@ namespace PaterniLab2.Tools
                     raceMeleeAmount = 3,
                     raceRangeAmount = 2,
                     isAi = true,
-                    isHandlyPlacement = true,
-                    RenderPlacement = () => Render()
+                    isHandlyPlacement = false,
+                 
                     }
 
                 }
@@ -144,7 +142,7 @@ namespace PaterniLab2.Tools
                 }
 
                 while (!CheckIfAllInArmiesMakeMove()) {
-                    Render();
+                   
 
                     int indexOfCurrentArmy = armyIndex % armies.Count;
                     var currentArmyToMove = armies[indexOfCurrentArmy];
@@ -201,8 +199,19 @@ namespace PaterniLab2.Tools
 
         private bool ProcessMove(BaseUnit unit)
         {
-            Render(new Vector2Int(unit.x, unit.y));
+            Console.Clear();
+            Render(new List<RequestOnHighlihtUnit>
+                {
+                    new RequestOnHighlihtUnit
+                    {
+                        position = unit.Position,
+                        highlightType = HighlightType.ActiveUnit
+                    }
+                });
+
             Console.WriteLine($"\nХодит юнит: {unit.race} [ID: {unit.id}] на позиции ({unit.x}, {unit.y})");
+
+
 
             return unit.MakeMove(new CombatContext
             {

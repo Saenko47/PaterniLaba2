@@ -11,6 +11,7 @@ namespace PaterniLab2.Models.Units
     //Elves will have this buffs: large additional avoid chance,  
     internal class ElfUnit:BaseUnit
     {
+        public override string color => "green";
         private const int AVOID_CHANCE = 20;
         public override Race race => Race.Elf;
         public ElfUnit(int id, MoveType moveType, BaseWeapon weapon, IInventory inventory)

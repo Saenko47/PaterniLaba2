@@ -91,6 +91,7 @@ namespace PaterniLab2.Tools
 
             while (req.isRamainToPlace)
             {
+                
                 var unit = ChooseToPlace(req, frames, table, placedUnits);
                 if (unit != null)
                 {

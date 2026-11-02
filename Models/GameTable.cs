@@ -10,7 +10,7 @@ using System.Text;
 
 namespace PaterniLab2.Models
 {
-    internal class Table: ITable
+    internal class GameTable: ITable
     {
 
        public Cell[,] _board { get; set; }
@@ -18,7 +18,7 @@ namespace PaterniLab2.Models
         public Action<Vector2Int, Vector2Int>? OnSomeoneMove { get; private set; }
 
         private Vector2Int frames;
-        public Table(int xLen, int yLen, IPlacementManager placeRaceOnBoard)
+        public GameTable(int xLen, int yLen, IPlacementManager placeRaceOnBoard)
         {
             _placeRaceOnBoard = placeRaceOnBoard;
             _board = new Cell[xLen, yLen];

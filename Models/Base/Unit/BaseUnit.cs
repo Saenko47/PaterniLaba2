@@ -43,6 +43,8 @@ namespace PaterniLab2.Models.Base.Unit
         public int damageMultiplayer => stats.damageMultiplayer;
         public int damage => weapon.damage + damageMultiplayer; 
 
+        public abstract string color { get;  }
+
 
         private List<StatusEffectObj> statusEffects = new List<StatusEffectObj>();
 

@@ -11,6 +11,7 @@ namespace PaterniLab2.Models.Units
     //Dwarfs will have this buffs:large additional armor, additional health
     internal class DwarfUnit:BaseUnit
     {
+        public override string color => "magenta";
         private const int ARMOR_BUFF = 20;
         private const int HEALTH_BUFF = 20;
         public override Race race => Race.Dwarf;

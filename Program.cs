@@ -3,6 +3,7 @@ using PaterniLab2.Interfaces;
 using PaterniLab2.Models;
 using PaterniLab2.Requests.Table;
 using PaterniLab2.Tools;
+using Spectre.Console;
 using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2
@@ -18,17 +19,20 @@ namespace PaterniLab2
             IPlacementMode handly = new PlacementMode(new HandlyPlace2Units(unitGenerator), null);
             IPlacementManager placementManager = new PlacementManager(automatic, handly);
 
-            Table testTable = new Table(4, 4, placementManager);
+           GameTable testTable = new GameTable(4, 4, placementManager);
+            
+            IRender render = new RenderTable(testTable);
 
-            IGameManager gameManager = new GameManager(testTable, new Render());
+            IGameManager gameManager = new GameManager(testTable, render);
             try
             {
                 gameManager.StartGame();
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
+
 
 
         }

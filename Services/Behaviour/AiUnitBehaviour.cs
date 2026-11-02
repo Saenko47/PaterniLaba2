@@ -5,6 +5,7 @@ using PaterniLab2.Requests.Units;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Services.Behaviour
 {
@@ -45,6 +46,7 @@ namespace PaterniLab2.Services.Behaviour
                 {
                     var targetEnemy = units[0];
                     _attack.AttackUnit(_owner, targetEnemy);
+                    
                     amountOfHit--;
                     hasMovedOrAttacked = true;
 

@@ -73,6 +73,15 @@ namespace PaterniLab2.Tools
 
         }
 
+        public enum HighlightType
+        {
+            ActiveUnit,
+            TargetUnit,
+            AttackableUnit,
+            MoveableCell,
+            AttackableCell
+        }
+
 
     }
 }

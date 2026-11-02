@@ -13,6 +13,7 @@ namespace PaterniLab2.Models.Units
     //Human will have this buffs:  additional health,  additional avoid chance 
     internal class HumanUnit: BaseUnit
     {
+        public override string color => "blue";
         private const int HEALTH_BUFF = 35;
         private const int AVOID_CHANCE = 5;
         public override Race race  => Race.Human;

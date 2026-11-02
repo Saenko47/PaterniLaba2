@@ -11,6 +11,7 @@ namespace PaterniLab2.Models.Units
     //Orcs will have this buffs:large additional health,  
     internal class OrcUnit:BaseUnit
     {
+        public override string color => "red";
         private const int HEALTH_BUFF = 80;
 
         public override Race race => Race.Orc;

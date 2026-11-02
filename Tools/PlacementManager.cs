@@ -24,9 +24,9 @@ namespace PaterniLab2.Tools
 
         public void SetMode(bool mode) => isTwo = mode;
 
-        public Army Place(PlaceOnBoardRequest req, bool isAutmatic, Cell[,] cells) 
+        public Army Place(PlaceOnBoardRequest req, bool isHandlyPlacement, Cell[,] cells) 
         {
-            var placementMode = isAutmatic ? _automaticPlacement : _handlyPlacement;
+            var placementMode = isHandlyPlacement ? _handlyPlacement : _automaticPlacement;
 
             return placementMode.Place(req, isTwo, cells);
         }
