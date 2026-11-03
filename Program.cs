@@ -1,7 +1,10 @@
 ﻿using PaterniLab2.Factories.Units;
 using PaterniLab2.Interfaces;
-using PaterniLab2.Models;
+using PaterniLab2.Models.Table;
 using PaterniLab2.Requests.Table;
+using PaterniLab2.Services.GameManager;
+using PaterniLab2.Services.Placement;
+using PaterniLab2.Services.Render;
 using PaterniLab2.Tools;
 using Spectre.Console;
 using static PaterniLab2.Tools.Enums;

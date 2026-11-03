@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using static PaterniLab2.Tools.Enums;
 
-namespace PaterniLab2.Models
+namespace PaterniLab2.Models.Units
 {
     internal class Army
     {
@@ -56,7 +56,7 @@ namespace PaterniLab2.Models
         public BaseUnit? GetUnitToMove()
         {
            
-            var unit = _units.FirstOrDefault(u => u._state.state == UnitStateEnum.Active);
+            var unit = _units.LastOrDefault(u => u._state.state == UnitStateEnum.Active);
 
             if (unit != null)
             {
@@ -64,13 +64,12 @@ namespace PaterniLab2.Models
                 return unit;
             }
 
-            // 2. Look for Delayed units, avoiding the one that moved last time
-            unit = _units.FirstOrDefault(u => u._state.state == UnitStateEnum.Delayed && u != prevMovin);
+            unit = _units.LastOrDefault(u => u._state.state == UnitStateEnum.Delayed && u != prevMovin);
 
          
             if (unit == null && prevMovin != null)
             {
-                unit = _units.FirstOrDefault(u => u._state.state == UnitStateEnum.Delayed);
+                unit = _units.LastOrDefault(u => u._state.state == UnitStateEnum.Delayed);
                 if (unit == prevMovin) return null;
                
             }

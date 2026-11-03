@@ -1,20 +1,21 @@
 ﻿using Microsoft.VisualBasic;
 using PaterniLab2.Interfaces;
-using PaterniLab2.Models;
 using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Models.Units;
 using PaterniLab2.Requests;
 using PaterniLab2.Requests.Table;
 using PaterniLab2.Services.AttackAndDamageProccesing;
 using PaterniLab2.Services.Behaviour;
 using PaterniLab2.Services.MoveHandlers;
 using PaterniLab2.Singltons;
+using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Text;
 using static PaterniLab2.Tools.Enums;
 
-namespace PaterniLab2.Tools
+namespace PaterniLab2.Services.GameManager
 {
     internal class GameManager : IGameManager
     {
@@ -65,7 +66,7 @@ namespace PaterniLab2.Tools
                     raceMeleeAmount = 2,
                     raceRangeAmount = 0,
                     isAi = false,
-                    isHandlyPlacement = true,
+                    isHandlyPlacement = false,
                     
                     },
 

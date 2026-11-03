@@ -1,14 +1,16 @@
 ﻿using PaterniLab2.Interfaces;
-using PaterniLab2.Models;
 using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Models.Table;
+using PaterniLab2.Models.Units;
 using PaterniLab2.Requests.Table;
+using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 using static PaterniLab2.Tools.Enums;
 
-namespace PaterniLab2.Tools
+namespace PaterniLab2.Services.Placement
 {
     internal class HandlyPlace2Units : BasePlacementOfUnits
     {

@@ -1,5 +1,6 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Models.Units;
 using PaterniLab2.Requests.Table;
 using PaterniLab2.Tools;
 using System;
@@ -8,7 +9,7 @@ using System.Net.Http.Headers;
 using System.Numerics;
 using System.Text;
 
-namespace PaterniLab2.Models
+namespace PaterniLab2.Models.Table
 {
     internal class GameTable: ITable
     {
@@ -79,12 +80,12 @@ namespace PaterniLab2.Models
             bool isTwo = count <= 2;
             _placeRaceOnBoard.SetMode(isTwo);
 
-            // Создаем список или массив нужного размера, чтобы не было элементов null
+          
             List<Army> placedArmiesList = new List<Army>();
 
             for (int k = 0; k < count; ++k)
             {
-                // Проверка на всякий случай, если req.reqs[k] вдруг null
+                
                 if (req.reqs[k] != null)
                 {
                     var army = _placeRaceOnBoard.Place(req.reqs[k], req.reqs[k].isHandlyPlacement, _board);

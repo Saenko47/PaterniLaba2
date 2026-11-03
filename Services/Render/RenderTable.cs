@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using PaterniLab2.Interfaces;
-using PaterniLab2.Models;
 using PaterniLab2.Requests;
 using Spectre.Console;
 
-namespace PaterniLab2.Tools
+namespace PaterniLab2.Services.Render
 {
+    using PaterniLab2.Models.Units;
     using Spectre.Console;
     using static PaterniLab2.Tools.Enums;
 

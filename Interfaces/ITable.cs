@@ -1,4 +1,4 @@
-﻿using PaterniLab2.Models;
+﻿using PaterniLab2.Models.Table;
 using PaterniLab2.Requests.Table;
 using PaterniLab2.Tools;
 using System;
