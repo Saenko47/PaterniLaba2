@@ -11,8 +11,8 @@ namespace PaterniLab2.Services.AttackAndDamageProccesing
         public int CalculateDamage(BaseUnit attacker, BaseUnit defender)
         {
             if (attacker == null || defender == null) return 0;
-            int damage = attacker.weapon.damage;
-            // You can add more complex calculations here, such as considering the attacker's and defender's stats, resistances, etc.
+            int damage = attacker.damage - defender.armor;
+            // will be changed to a more complex formula later
             return damage;
         }
     }

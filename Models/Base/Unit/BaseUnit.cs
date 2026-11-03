@@ -15,7 +15,11 @@ namespace PaterniLab2.Models.Base.Unit
 {
     internal abstract class BaseUnit:IClone<BaseUnit>
     {
+        public abstract Race race { get; }
+        public bool isLeader { get; set; } = false;
+
         public IUnitState _state { get; private set; }
+
         public int id { get; private set; }
 
         public int x { get; private set; }
@@ -25,8 +29,6 @@ namespace PaterniLab2.Models.Base.Unit
 
         protected UnitStats stats = new UnitStats();
 
-        public abstract Race race { get; } 
-        public bool isLeader { get; set; } = false;
         public MoveType moveType { get; protected set; } 
 
         public IInventory inventory { get; private set; }
@@ -35,8 +37,8 @@ namespace PaterniLab2.Models.Base.Unit
         internal IBehaviour behaviour;
 
         public BaseWeapon weapon { get; protected set; }
-        public WeaponType weaponType => weapon.weaponType;
 
+        public WeaponType weaponType => weapon.weaponType;
         public int health => stats.health;
         public int armor => stats.armor;
         public int avoidChance => stats.avoidChance;
