@@ -96,35 +96,10 @@ namespace PaterniLab2.Models.Base.Unit
 
                 foreach (var buff in item.buffs)
                 {
-                    ApplyBuff(buff.Key, buff.Value);
+                    ApplyStatusEffect(buff.Key, buff.Value, true);
                 }
             }
         }
-
-
-        public void ApplyBuff(BuffType buffType, int value)
-        {
-            switch (buffType)
-            {
-                case BuffType.Health: stats.ModifyHealth(value);  break;
-                case BuffType.Armor:stats.ModifyArmor(value); break;
-                case BuffType.AvoidChance: stats.ModifyAvoidChance(value); break;
-                case BuffType.Damage: stats.ModifyMultiplayerToDamage(value); break;
-            }
-        }
-
-        public void ApplyStatusEffect(StatusEffect statusEffect, int value, bool isPositive) 
-        {
-            int certify = isPositive ? 1 : -1;
-            switch (statusEffect) 
-            {
-                case StatusEffect.Health:stats.ModifyHealth(value * certify);  break;
-                case StatusEffect.Armor:stats.ModifyArmor(value * certify);break;
-                case StatusEffect.AvoidChance:stats.ModifyAvoidChance(value * certify);  break;
-                case StatusEffect.Attack: stats.ModifyMultiplayerToDamage(value * certify); break;
-            }
-        }
-
 
         public void RecieveStatusEffect(RequestOnRecievingStatusEffect newStatusEffect) 
         {
@@ -151,7 +126,19 @@ namespace PaterniLab2.Models.Base.Unit
             statusEffects.Add(newStatusEffectObj);
         }
 
-        public void EndStatusEffect(StatusEffectObj statusEffectToDelete) 
+        private void ApplyStatusEffect(StatusEffect statusEffect, int value, bool isPositive)
+        {
+            int certify = isPositive ? 1 : -1;
+            switch (statusEffect)
+            {
+                case StatusEffect.Health: stats.ModifyHealth(value * certify); break;
+                case StatusEffect.Armor: stats.ModifyArmor(value * certify); break;
+                case StatusEffect.AvoidChance: stats.ModifyAvoidChance(value * certify); break;
+                case StatusEffect.Attack: stats.ModifyMultiplayerToDamage(value * certify); break;
+            }
+        }
+
+        private void EndStatusEffect(StatusEffectObj statusEffectToDelete) 
         {
             if (statusEffectToDelete == null) return;
 

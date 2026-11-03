@@ -11,7 +11,7 @@ namespace PaterniLab2.Models.Items.Orcs
         private const int ARMOR_BUFF = 10;
         public OrcPlate()
         {
-            base.buffs.Add(BuffType.Armor, ARMOR_BUFF);
+            base.buffs.Add(StatusEffect.Armor, ARMOR_BUFF);
         }
     }
 }

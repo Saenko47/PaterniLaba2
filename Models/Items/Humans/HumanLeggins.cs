@@ -11,7 +11,7 @@ namespace PaterniLab2.Models.Items.Humans
         private const int ARMOR_BUFF = 5;
         public HumanLeggins() 
         {
-            base.buffs.Add(BuffType.Armor, ARMOR_BUFF);
+            base.buffs.Add(StatusEffect.Armor, ARMOR_BUFF);
         }
     }
 }
