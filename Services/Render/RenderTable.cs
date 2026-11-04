@@ -58,7 +58,14 @@ namespace PaterniLab2.Services.Render
                 {
                     if (unit.x >= 0 && unit.x < tableSize.X && unit.y >= 0 && unit.y < tableSize.Y)
                     {
-                        grid[unit.y, unit.x] = $"[{unit.color}]@[/]";
+                        if(unit.isLeader)
+                        {
+                            grid[unit.y, unit.x] = $"[{unit.color}]L[/]";
+                        }
+                        else
+                        {
+                            grid[unit.y, unit.x] = $"[{unit.color}]@[/]";
+                        }
                     }
                 }
             }

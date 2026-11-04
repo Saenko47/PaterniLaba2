@@ -8,6 +8,6 @@ namespace PaterniLab2.Interfaces
 {
     internal interface IBehaviour
     {
-        bool MakeMove(CombatContext context, BaseUnit _owner);
+        bool MakeMove(TableContext context, BaseUnit _owner);
     }
 }

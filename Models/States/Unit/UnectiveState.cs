@@ -12,7 +12,7 @@ namespace PaterniLab2.Models.States.Unit
     {
         public UnitStateEnum state => UnitStateEnum.Unactive;
 
-        public bool MakeMove(CombatContext context, BaseUnit unit)
+        public bool MakeMove(TableContext context, BaseUnit unit)
         {
             Console.WriteLine("Unit is unective!!!");
             return false;

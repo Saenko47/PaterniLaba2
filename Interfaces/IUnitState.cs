@@ -11,7 +11,7 @@ namespace PaterniLab2.Interfaces
     {
         UnitStateEnum state { get; }
 
-        bool MakeMove(CombatContext context, BaseUnit unit);
+        bool MakeMove(TableContext context, BaseUnit unit);
 
         void OnEnter(BaseUnit unit);
         void OnExit(BaseUnit unit);

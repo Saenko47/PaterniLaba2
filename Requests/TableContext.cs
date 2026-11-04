@@ -9,7 +9,7 @@ using System.Text;
 
 namespace PaterniLab2.Requests
 {
-    internal class CombatContext
+    internal class TableContext
     {
         public Vector2Int framesOfTable { get; set; }
 

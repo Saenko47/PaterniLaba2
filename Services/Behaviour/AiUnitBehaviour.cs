@@ -25,7 +25,7 @@ namespace PaterniLab2.Services.Behaviour
           
         }
 
-        public bool MakeMove(CombatContext context, BaseUnit _owner)
+        public bool MakeMove(TableContext context, BaseUnit _owner)
         {
             int moveAmount = _owner.amountOfMoves;
             int amountOfHit = _owner.amountOfBattleMoves;
@@ -65,13 +65,13 @@ namespace PaterniLab2.Services.Behaviour
                     }
                     else
                     {
-                        // Юнит не может сдвинуться с места — прекращаем попытки движения, чтобы не зацикливаться
+                        
                         break;
                     }
                 }
                 else
                 {
-                    // Больше нет доступных действий (атак и шагов)
+                   
                     break;
                 }
             }

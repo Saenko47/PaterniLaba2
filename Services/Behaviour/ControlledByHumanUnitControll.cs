@@ -38,7 +38,7 @@ namespace PaterniLab2.Services.Behaviour
             amountOfHit = _owner.amountOfBattleMoves;
         }
 
-        private void HighlightTargetUnits(CombatContext context, List<BaseUnit> units, HighlightType highlightType)
+        private void HighlightTargetUnits(TableContext context, List<BaseUnit> units, HighlightType highlightType)
         {
             var highlightRequests = new List<RequestOnHighlihtUnit>();
             foreach (var unit in units)
@@ -54,7 +54,7 @@ namespace PaterniLab2.Services.Behaviour
 
 
 
-        private bool TryMoveUnit(CombatContext context, BaseUnit _owner)
+        private bool TryMoveUnit(TableContext context, BaseUnit _owner)
         {
             if (amountOfMoves <= 0) return false;
 
@@ -69,7 +69,7 @@ namespace PaterniLab2.Services.Behaviour
             return success;
         }
 
-        private bool TryAttack(CombatContext context, BaseUnit _owner)
+        private bool TryAttack(TableContext context, BaseUnit _owner)
         {
             if (amountOfHit <= 0)
             {
@@ -127,12 +127,12 @@ namespace PaterniLab2.Services.Behaviour
             return true;
         }
 
-        private bool TryUseSkill(CombatContext context, BaseUnit _owner) 
+        private bool TryUseSkill(TableContext context, BaseUnit _owner) 
         {
             throw new NotImplementedException();
         }
 
-        private bool TryProccesMove(int decision, CombatContext context, BaseUnit _owner) 
+        private bool TryProccesMove(int decision, TableContext context, BaseUnit _owner) 
         {
             switch (decision)
             {
@@ -149,7 +149,7 @@ namespace PaterniLab2.Services.Behaviour
         }
 
 
-        public bool MakeMove(CombatContext context, BaseUnit _owner)
+        public bool MakeMove(TableContext context, BaseUnit _owner)
         {
             if (context == null) return false;
 
@@ -176,7 +176,12 @@ namespace PaterniLab2.Services.Behaviour
                     continue;
                 }
 
-                if (decision == 4) return false;
+                if (decision == 4) {
+                    _owner.SetState(new InactiveState());
+                    return false;
+
+                }
+                
                 
                 if (!TryProccesMove(decision, context, _owner))
                 {

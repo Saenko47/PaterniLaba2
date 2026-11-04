@@ -12,7 +12,7 @@ namespace PaterniLab2.Models.States.Unit
     {
         public UnitStateEnum state => UnitStateEnum.Delayed;
 
-        public bool MakeMove(CombatContext context, BaseUnit unit)
+        public bool MakeMove(TableContext context, BaseUnit unit)
         {
             if (context == null || unit == null || unit.behaviour == null) throw new Exception("null context or unit");
             

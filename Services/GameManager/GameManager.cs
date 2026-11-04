@@ -214,7 +214,7 @@ namespace PaterniLab2.Services.GameManager
 
 
 
-            return unit.MakeMove(new CombatContext
+            return unit.MakeMove(new TableContext
             {
                 framesOfTable = _table.GetFrames(),
                 armies = armies,

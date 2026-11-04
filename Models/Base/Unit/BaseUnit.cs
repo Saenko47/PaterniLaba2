@@ -77,7 +77,7 @@ namespace PaterniLab2.Models.Base.Unit
 
         public void RenewState() => SetState(new ActiveState());
 
-        public bool MakeMove(CombatContext context) 
+        public bool MakeMove(TableContext context) 
         {
             if (behaviour == null) throw new Exception("Behaviour is null!!");
             
@@ -156,16 +156,6 @@ namespace PaterniLab2.Models.Base.Unit
             this.y = y;
         }
         
-        public virtual BaseUnit Clone()
-        {
-           
-            BaseUnit clone = (BaseUnit)this.MemberwiseClone();
-
-
-            clone.weapon = weapon.Clone();
-
-            return clone;
-        }
 
         public void GiveWeaponToUnit(BaseWeapon newWeapon) 
         {
@@ -214,6 +204,17 @@ namespace PaterniLab2.Models.Base.Unit
                 $"\n Items:{equippedStr}";
         }
 
+
+        public virtual BaseUnit Clone()
+        {
+
+            BaseUnit clone = (BaseUnit)this.MemberwiseClone();
+
+
+            clone.weapon = weapon.Clone();
+
+            return clone;
+        }
 
     }
 }

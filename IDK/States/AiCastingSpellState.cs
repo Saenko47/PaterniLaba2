@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PaterniLab2.IDK.States
 {
-    internal class CastingSpellState
+    internal class AiCastingSpellState
     {
     }
 }
