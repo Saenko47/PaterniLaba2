@@ -45,12 +45,12 @@ namespace PaterniLab2.Models.Base.Unit
         public int damageMultiplayer => stats.damageMultiplayer;
         public int damage => weapon.damage + damageMultiplayer;
 
-        public int amountOfMoves => stats.amountOfMoves;
-        public int amountOfBattleMoves => stats.amountOfBattleMoves;
+      
 
         public abstract string color { get;  }
-        public bool isCanMove => stats.amountOfMoves > 0 || stats.amountOfBattleMoves > 0;
-
+        public bool isCanMakeSomething => stats.amountOfMoves > 0 || stats.amountOfBattleMoves > 0;
+        public bool isCanAttack => stats.amountOfBattleMoves > 0;
+        public bool isCanMove => stats.amountOfMoves > 0;
 
         private List<StatusEffectObj> statusEffects = new List<StatusEffectObj>();
 

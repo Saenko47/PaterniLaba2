@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic;
 using PaterniLab2.IDK;
+using PaterniLab2.IDK.States;
 using PaterniLab2.Interfaces;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Models.Units;
@@ -103,7 +104,7 @@ namespace PaterniLab2.Services.GameManager
         private void SetBehaviorForTeam(List<BaseUnit> units, bool isAi)
         {
             AiUnitBehaviourFSN aiBeha = new AiUnitBehaviourFSN(new AiMoveHandler(new Move()), new Attack(new DamageCalculator()), new FindUnit());
-            ControlledByHumanUnit humanBeha = new ControlledByHumanUnit(new HumanKeyboardMoveInput(new Move()), new Attack(new DamageCalculator()), new FindUnit());
+            PlayerUnitBehaviourFSN humanBeha = new PlayerUnitBehaviourFSN(new HumanKeyboardMoveInput(new Move()), new Attack(new DamageCalculator()), new FindUnit());
 
             IBehaviour beha = isAi ? aiBeha : humanBeha;
 

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using static PaterniLab2.Tools.Enums;
 
-namespace PaterniLab2.IDK.States
+namespace PaterniLab2.IDK.States.AI
 {
     internal class AiMoveState:IFSNState
     {

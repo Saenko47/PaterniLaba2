@@ -1,4 +1,5 @@
 ﻿using PaterniLab2.IDK.States;
+using PaterniLab2.IDK.States.AI;
 using PaterniLab2.Interfaces;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
@@ -32,7 +33,7 @@ namespace PaterniLab2.IDK
         {
             var actionResult = ResultOfAction.Awaiting;
             bool check = false;
-            while (owner.isCanMove)
+            while (owner.isCanMakeSomething)
             {
                check = true;
                 List<BaseUnit> units = _find.Find(new ReqiestOnFindingUnit
@@ -45,7 +46,7 @@ namespace PaterniLab2.IDK
                 });
                 Console.WriteLine($"Units found: {units.Count}");
 
-                if (units != null && units.Count > 0 && owner.amountOfBattleMoves > 0)
+                if (units != null && units.Count > 0 && owner.isCanAttack)
                 {
                     var actionContext = new ActionContext
                     {
@@ -54,7 +55,7 @@ namespace PaterniLab2.IDK
                     };
                     actionResult = _attackState.Enter(context, actionContext);
                 }
-                else if (owner.amountOfMoves > 0) 
+                else if (owner.isCanMove) 
                 {
                     var moveActionContext = new ActionContext
                     {
