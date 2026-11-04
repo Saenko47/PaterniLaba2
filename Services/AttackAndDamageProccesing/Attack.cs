@@ -1,6 +1,7 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models;
 using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Requests;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,14 +18,14 @@ namespace PaterniLab2.Services.AttackAndDamageProccesing
         }
 
 
-        public bool AttackUnit(BaseUnit cellWithUnit, BaseUnit targetCell) 
+        public bool AttackUnit(BaseUnit attacker, BaseUnit defender) 
         {
-            if (targetCell == null || cellWithUnit == null) return false;
+            if (defender == null || attacker == null) return false;
             
 
-            int damage = _damageCalculator.CalculateDamage(cellWithUnit, targetCell);
+            int damage = _damageCalculator.CalculateDamage(attacker, defender);
 
-            targetCell.TakeDamage(damage);
+            defender.TakeDamage(damage);
 
             return true;
         }

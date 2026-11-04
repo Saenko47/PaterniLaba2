@@ -1,6 +1,7 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
+using PaterniLab2.Requests.Units;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +18,19 @@ namespace PaterniLab2.IDK.States.Player
             _attack = attack;
         }
 
+
+
+        private List<BaseUnit> GetAvailableTargets(TableContext context, ActionContext actionContext)
+        {
+            return actionContext.targetFinder?.Invoke(new ReqiestOnFindingUnit
+            {
+                strategysToFind = actionContext.owner.weapon.strategysToFind,
+                armies = context.armies,
+                isLookingForComrades = false,
+                rangeOfFindings = actionContext.owner.weapon.range,
+                unitThatLooking = actionContext.owner
+            }) ?? new List<BaseUnit>();
+        }
         private void HighlightTargetUnits(TableContext context, List<BaseUnit> units, HighlightType highlightType)
         {
             var highlightRequests = new List<RequestOnHighlihtUnit>();
@@ -45,28 +59,29 @@ namespace PaterniLab2.IDK.States.Player
 
         public ResultOfAction Enter(TableContext context, ActionContext actionContext)
         {
-            if (actionContext.target == null || actionContext.target.Count == 0)
+            if (actionContext.targetFinder == null)
             {
                 Console.WriteLine("Нет доступных целей для атаки!");
                 return ResultOfAction.FailToAttack;
             }
 
-           
-            ShowUnitsToAttack(actionContext.target);
-            HighlightTargetUnits(context, actionContext.target, HighlightType.TargetUnit);
+            var availableTargets = GetAvailableTargets(context, actionContext);
+
+            ShowUnitsToAttack(availableTargets);
+            HighlightTargetUnits(context, availableTargets, HighlightType.TargetUnit);
 
             Console.Write("Выберите номер цели: ");
 
             
             string input = Console.ReadLine();
-            if (!int.TryParse(input, out int selectedTargetIndex) || selectedTargetIndex < 1 || selectedTargetIndex > actionContext.target.Count)
+            if (!int.TryParse(input, out int selectedTargetIndex) || selectedTargetIndex < 1 || selectedTargetIndex > availableTargets.Count)
             {
                 Console.WriteLine("Неверный выбор цели!");
                 return ResultOfAction.FailToAttack;
             }
 
            
-            var targetEnemy = actionContext.target[selectedTargetIndex - 1];
+            var targetEnemy = availableTargets[selectedTargetIndex - 1];
 
             bool isSuccess = _attack.AttackUnit(actionContext.owner, targetEnemy);
             var attackRes = isSuccess ? ResultOfAction.SuccessAction : ResultOfAction.FailToAttack;
@@ -74,11 +89,7 @@ namespace PaterniLab2.IDK.States.Player
             actionContext.owner.DecreamentMoves(attackRes);
 
           
-            if (targetEnemy.health <= 0)
-            {
-                context.onUnitDeath?.Invoke(targetEnemy);
-                Console.WriteLine($"Враг {targetEnemy.race} уничтожен!");
-            }
+           
 
             return attackRes;
         }

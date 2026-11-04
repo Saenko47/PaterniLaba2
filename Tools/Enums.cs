@@ -79,7 +79,8 @@ namespace PaterniLab2.Tools
             TargetUnit,
             AttackableUnit,
             MoveableCell,
-            AttackableCell
+            AttackableCell,
+            AttacedUnit,
         }
 
         public enum ResultOfAction

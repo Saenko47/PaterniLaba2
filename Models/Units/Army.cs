@@ -1,4 +1,5 @@
 ﻿using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Requests;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,6 +23,8 @@ namespace PaterniLab2.Models.Units
 
         public bool HasUnits => _units != null && _units.Count > 0;
 
+        public event Action<BaseUnit>? OnUnitHit;
+
         public Army() { }
 
         public Army(Race race,List<BaseUnit> units, bool isAi) 
@@ -29,6 +32,26 @@ namespace PaterniLab2.Models.Units
             _units = units;
             _race = race;
             _isAi = isAi;
+            
+            SubscribeToUnitEvents(units);
+        }
+
+        private void HandleUnitHitRender(BaseUnit unit)
+        {
+            if (unit.isAlive)
+            {
+                
+                OnUnitHit?.Invoke(unit);
+            }
+        }
+
+        private void SubscribeToUnitEvents(List<BaseUnit> units)
+        {
+            foreach (var unit in units)
+            {
+                unit.OnUnitHit -= HandleUnitHit;
+                unit.OnUnitHit += HandleUnitHit;
+            }
         }
 
         public void AddToTheArmy(List<BaseUnit> units)
@@ -36,12 +59,33 @@ namespace PaterniLab2.Models.Units
             if (units == null || units.Count == 0) return;
 
             _units.AddRange(units);
+            SubscribeToUnitEvents(units);
         }
 
         public void RemoveUnit(BaseUnit unit) 
         {
             if (unit == null) return;
+            unit.OnUnitHit -= HandleUnitHit;
             _units.Remove(unit);
+        }
+
+        public void HandleUnitHit(BaseUnit unit)
+        {
+
+            if (!unit.isAlive) 
+            { 
+                if(unit.isLeader)
+                {
+                    KillLeader();
+                }
+                RemoveUnit(unit);
+            }
+            
+            OnUnitHit?.Invoke(unit);
+
+
+
+
         }
 
         public void KillLeader() 

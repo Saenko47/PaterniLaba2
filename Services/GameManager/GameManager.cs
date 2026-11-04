@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualBasic;
 using PaterniLab2.IDK;
-using PaterniLab2.IDK.States;
 using PaterniLab2.Interfaces;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Models.Units;
@@ -52,6 +51,12 @@ namespace PaterniLab2.Services.GameManager
 
             _render.Render(armies, highlightRequests);
         }
+        private void HandleArmyHighlightRequest(BaseUnit request)
+        {
+            var req = new RequestOnHighlihtUnit { position = request.Position, highlightType = HighlightType.AttacedUnit };
+            Render(new List<RequestOnHighlihtUnit> { req });
+        }
+
 
         private void InitiaizeTabe()
         {
@@ -93,6 +98,10 @@ namespace PaterniLab2.Services.GameManager
 
             foreach (var army in res.placedArmies) armies.Add(army);
 
+            foreach(var army in armies)
+            {
+                army.OnUnitHit += HandleArmyHighlightRequest;
+            }
 
             foreach (var army in armies) SetBehaviorForTeam(army._units, army._isAi);
 

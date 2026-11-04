@@ -1,6 +1,7 @@
 ﻿using PaterniLab2.IDK.States.Player;
 using PaterniLab2.Interfaces;
 using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Models.States.Unit;
 using PaterniLab2.Requests;
 using PaterniLab2.Requests.Units;
 using System;
@@ -8,7 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using static PaterniLab2.Tools.Enums;
 
-namespace PaterniLab2.IDK.States
+namespace PaterniLab2.IDK
 {
     internal class PlayerUnitBehaviourFSN : IBehaviour
     {
@@ -47,15 +48,8 @@ namespace PaterniLab2.IDK.States
         {
             if (owner.isCanAttack) // Используем проверку очков боя
             {
-                var targets = _find.Find(new ReqiestOnFindingUnit
-                {
-                    strategysToFind = owner.weapon.strategysToFind,
-                    armies = context.armies,
-                    isLookingForComrades = false,
-                    rangeOfFindings = owner.weapon.range,
-                    unitThatLooking = owner
-                });
-                return _attackState.Enter(context, new ActionContext { owner = owner, target = targets });
+                
+                return _attackState.Enter(context, new ActionContext { owner = owner, targetFinder = _find.Find });
             }
             else
             {
@@ -93,6 +87,7 @@ namespace PaterniLab2.IDK.States
                         Console.WriteLine("Spells are not implemented yet.");
                         continue;
                     case 4:
+                        owner.SetState(new UnectiveState());
                         return actionResult == ResultOfAction.SuccessAction || actionResult == ResultOfAction.SuccessMove; // End turn
                 }
 
@@ -100,7 +95,10 @@ namespace PaterniLab2.IDK.States
                 {
                     Console.WriteLine("Action failed. Try another action.");
                 }
+                context.updateRender(null); // Clear highlights after turn ends
             }
+
+           
 
             return actionResult == ResultOfAction.SuccessAction || actionResult == ResultOfAction.SuccessMove;
         }

@@ -48,13 +48,18 @@ namespace PaterniLab2.Models.Base.Unit
       
 
         public abstract string color { get;  }
-        public bool isCanMakeSomething => stats.amountOfMoves > 0 || stats.amountOfBattleMoves > 0;
+
+        public bool isAlive => health > 0;
+
+        public bool isCanMakeSomething => stats.amountOfMoves > 0 && stats.amountOfBattleMoves > 0;
         public bool isCanAttack => stats.amountOfBattleMoves > 0;
         public bool isCanMove => stats.amountOfMoves > 0;
 
         private List<StatusEffectObj> statusEffects = new List<StatusEffectObj>();
 
-     
+        public Action<BaseUnit> OnUnitHit { get; set; } = null!;
+
+
         public BaseUnit(int id, MoveType moveType, BaseWeapon weapons, IInventory inventory)
         {
             this.id = id;
@@ -194,10 +199,14 @@ namespace PaterniLab2.Models.Base.Unit
             isLeader = true;
         }
 
-        public void TakeDamage(int amount) 
+        public void TakeDamage(int damage)
         {
-            stats.ModifyHealth(-amount);
-            Console.WriteLine($"{race} took {amount} damage. Remaining health: {health}");
+            stats.ModifyHealth(-damage);
+            Console.WriteLine($"{race} took {damage} damage. Remaining health: {health}");
+            if (OnUnitHit != null)
+            {
+                OnUnitHit?.Invoke(this);
+            }
         }
 
         internal void Tick()

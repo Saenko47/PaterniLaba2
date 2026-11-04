@@ -26,8 +26,10 @@ namespace PaterniLab2.IDK.States.AI
                 return ResultOfAction.FailToAttack;
 
             var attackRes = 
-                _attack.AttackUnit(actionContext.owner, actionContext.target[0])? 
+                _attack.AttackUnit(actionContext.owner, actionContext.target[0]) ? 
                 ResultOfAction.SuccessAction : ResultOfAction.FailToAttack;
+
+           
 
             actionContext.owner.DecreamentMoves(attackRes);
 

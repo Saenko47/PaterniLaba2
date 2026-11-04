@@ -33,7 +33,7 @@ namespace PaterniLab2.Models.Base.Unit
 
         public void ModifyMoves(int amount) => Math.Max(0,amountOfMoves += amount);
 
-        public void ModifyBattleMoves(int amount) => Math.Max(0, amountOfMoves += amount);
+        public void ModifyBattleMoves(int amount) => Math.Max(0, amountOfBattleMoves += amount);
         public void DecreamentMoves() => amountOfMoves = Math.Max(0, amountOfMoves - 1);
         public void DecreamentBattleMoves() => amountOfBattleMoves = Math.Max(0, amountOfBattleMoves - 1);
 
