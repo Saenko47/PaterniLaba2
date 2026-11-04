@@ -18,9 +18,12 @@ namespace PaterniLab2.IDK.States
             _move = move;
         }
 
-        public bool Enter(TableContext context, ActionContext actionContext)
+        public ResultOfAction Enter(TableContext context, ActionContext actionContext)
         {
-           return _move.Move(actionContext.owner, context.framesOfTable, context.isCellFree, context.onMove);
+            var moveResult = _move.Move(actionContext.owner, context.framesOfTable, context.isCellFree, context.onMove) ?
+                ResultOfAction.SuccessMove : ResultOfAction.FailToMove;
+            actionContext.owner.DecreamentMoves(moveResult);
+            return moveResult;
         }
 
         

@@ -82,6 +82,14 @@ namespace PaterniLab2.Tools
             AttackableCell
         }
 
+        public enum ResultOfAction
+        {
+            SuccessMove,
+            SuccessAction,
+            FailToMove,
+            FailToAttack,
+            Awaiting
+        }
 
     }
 }

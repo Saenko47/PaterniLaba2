@@ -16,34 +16,37 @@ namespace PaterniLab2.Services.MoveHandlers
             _move = move;
         }
 
-        private bool MoveRandomly(BaseUnit _owner, Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove)
+        public bool Move(BaseUnit _owner, Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove)
         {
+            var random = new Random();
             if (_owner == null || _move == null) return false;
 
-            Random random = new Random();
-            int randomDirection = random.Next(0, 4);
+           
+            int startIndex = random.Next(0, 4);
 
-            switch (randomDirection)
+           
+            for (int i = 0; i < 4; i++)
             {
-                case 0:
-                   return _move.MoveUp(_owner, bounds, isCellFree, onMove);
-                    
-                case 1:
-                    return _move.MoveDown(_owner, bounds, isCellFree, onMove);
-                   
-                case 2:
-                    return _move.MoveLeft(_owner, bounds, isCellFree, onMove);
-                    
-                case 3:
-                    return _move.MoveRight(_owner, bounds, isCellFree, onMove);
-                default:
-                    return false;
-            }
-        }
+                int currentDirection = (startIndex + i) % 4;
 
-        public bool Move(BaseUnit _owner, Vector2Int bounds,Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove) 
-        {
-            return MoveRandomly(_owner,bounds, isCellFree, onMove);
+                bool success = currentDirection switch
+                {
+                    0 => _move.MoveUp(_owner, bounds, isCellFree, onMove),
+                    1 => _move.MoveDown(_owner, bounds, isCellFree, onMove),
+                    2 => _move.MoveLeft(_owner, bounds, isCellFree, onMove),
+                    3 => _move.MoveRight(_owner, bounds, isCellFree, onMove),
+                    _ => false
+                };
+
+               
+                if (success)
+                {
+                    return true;
+                }
+            }
+
+        
+            return false;
         }
     }
 }

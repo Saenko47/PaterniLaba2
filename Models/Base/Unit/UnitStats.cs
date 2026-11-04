@@ -1,6 +1,7 @@
 ﻿using PaterniLab2.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 using static PaterniLab2.Tools.Enums;
 
@@ -17,6 +18,8 @@ namespace PaterniLab2.Models.Base.Unit
         public int amountOfMoves { get; protected set; } = 1;
         public int amountOfBattleMoves { get; protected set; } = 1;
 
+        private readonly int _baseMoves = 1;
+        private readonly int _baseBattleMoves = 1;
 
         public UnitStats() { } 
 
@@ -31,6 +34,18 @@ namespace PaterniLab2.Models.Base.Unit
         public void ModifyMoves(int amount) => Math.Max(0,amountOfMoves += amount);
 
         public void ModifyBattleMoves(int amount) => Math.Max(0, amountOfMoves += amount);
+        public void DecreamentMoves() => amountOfMoves = Math.Max(0, amountOfMoves - 1);
+        public void DecreamentBattleMoves() => amountOfBattleMoves = Math.Max(0, amountOfBattleMoves - 1);
+
+        public void ResetMoves()
+        {
+            amountOfMoves = _baseMoves;
+            amountOfBattleMoves = _baseBattleMoves;
+        }
+
+
+
+        
 
     }
 }

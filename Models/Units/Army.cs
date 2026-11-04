@@ -91,7 +91,7 @@ namespace PaterniLab2.Models.Units
         }
         public void PrepareForNewRound() 
         {
-            foreach (var unit in _units) unit.RenewState();
+            foreach (var unit in _units) unit.PrepareUnitForNewTurn();
         } 
     }
 }

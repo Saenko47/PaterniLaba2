@@ -20,12 +20,18 @@ namespace PaterniLab2.IDK.States
             _attack = attack;
         }
 
-        public bool Enter(TableContext context, ActionContext actionContext)
+        public ResultOfAction Enter(TableContext context, ActionContext actionContext)
         {
             if (actionContext.target == null || actionContext.target.Count == 0)
-                return false;
+                return ResultOfAction.FailToAttack;
 
-            return _attack.AttackUnit(actionContext.owner, actionContext.target[0]);
+            var attackRes = 
+                _attack.AttackUnit(actionContext.owner, actionContext.target[0])? 
+                ResultOfAction.SuccessAction : ResultOfAction.FailToAttack;
+
+            actionContext.owner.DecreamentMoves(attackRes);
+
+            return attackRes;
         }
 
       

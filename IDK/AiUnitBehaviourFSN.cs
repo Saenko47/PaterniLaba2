@@ -3,16 +3,19 @@ using PaterniLab2.Interfaces;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
 using PaterniLab2.Requests.Units;
+using Spectre.Console.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.IDK
 {
-    internal class AiUnitBehaviourFSN
+    internal class AiUnitBehaviourFSN:IBehaviour
     {
         private readonly IFSNState _moveState;
         private readonly IFSNState _attackState;
+        private readonly IFSNState _castingSpellState;
         private readonly IFindUnit _find;
 
         public AiUnitBehaviourFSN(IMoveHandler move, IAttack attack, IFindUnit findToAttack)
@@ -22,18 +25,17 @@ namespace PaterniLab2.IDK
             _find = findToAttack;
         }
 
+
+
+
         public bool MakeMove(TableContext context, BaseUnit owner)
         {
-            if (owner == null)
-                return false;
-
-            int moveAmount = owner.amountOfMoves;
-            int amountOfHit = owner.amountOfBattleMoves;
-            bool hasMovedOrAttacked = false;
-
-            while (amountOfHit > 0 || moveAmount > 0)
+            var actionResult = ResultOfAction.Awaiting;
+            bool check = false;
+            while (owner.isCanMove)
             {
-                List<BaseUnit> foundUnits = _find.Find(new ReqiestOnFindingUnit
+               check = true;
+                List<BaseUnit> units = _find.Find(new ReqiestOnFindingUnit
                 {
                     strategysToFind = owner.weapon.strategysToFind,
                     armies = context.armies,
@@ -41,60 +43,40 @@ namespace PaterniLab2.IDK
                     rangeOfFindings = owner.weapon.range,
                     unitThatLooking = owner
                 });
+                Console.WriteLine($"Units found: {units.Count}");
 
-                if (foundUnits != null && foundUnits.Count > 0 && amountOfHit > 0)
+                if (units != null && units.Count > 0 && owner.amountOfBattleMoves > 0)
                 {
-                    var attackContext = new ActionContext
+                    var actionContext = new ActionContext
                     {
                         owner = owner,
-                        target = foundUnits
+                        target = units
                     };
-
-                    bool attackSuccess = _attackState.Enter(context, attackContext);
-
-                    if (attackSuccess)
-                    {
-                        amountOfHit--;
-                        hasMovedOrAttacked = true;
-
-                        var targetEnemy = foundUnits[0];
-                        if (targetEnemy.health <= 0)
-                        {
-                            context.onUnitDeath?.Invoke(targetEnemy);
-                        }
-                    }
-                    else
-                    {
-                        break; 
-                    }
+                    actionResult = _attackState.Enter(context, actionContext);
                 }
-              
-                else if (moveAmount > 0)
+                else if (owner.amountOfMoves > 0) 
                 {
-                    var moveContext = new ActionContext
+                    var moveActionContext = new ActionContext
                     {
-                        owner = owner
+                        owner = owner,
+                        target = null
                     };
-
-                    bool moveSuccess = _moveState.Enter(context, moveContext);
-
-                    if (moveSuccess)
-                    {
-                        moveAmount--;
-                        hasMovedOrAttacked = true;
-                    }
-                    else
-                    {
-                        break; 
-                    }
+                    actionResult = _moveState.Enter(context, moveActionContext);
                 }
                 else
+                {
+                   
+                    break;
+                }
+
+                if (actionResult == ResultOfAction.FailToMove || actionResult == ResultOfAction.FailToAttack)
                 {
                     break;
                 }
             }
+            Console.WriteLine("Check: " + check);
 
-            return hasMovedOrAttacked;
+            return actionResult == ResultOfAction.SuccessAction || actionResult == ResultOfAction.SuccessMove;
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Models.States.Unit;
 using PaterniLab2.Requests;
 using PaterniLab2.Requests.Units;
 using PaterniLab2.Tools;
@@ -177,7 +178,7 @@ namespace PaterniLab2.Services.Behaviour
                 }
 
                 if (decision == 4) {
-                    _owner.SetState(new InactiveState());
+                    _owner.SetState(new UnectiveState());
                     return false;
 
                 }

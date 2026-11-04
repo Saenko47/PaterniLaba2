@@ -25,7 +25,6 @@ namespace PaterniLab2.Models.Base.Unit
         public int x { get; private set; }
         public int y { get; private set; }
 
-        public Vector2Int Position => new Vector2Int(x, y);
 
         protected UnitStats stats = new UnitStats();
 
@@ -38,16 +37,19 @@ namespace PaterniLab2.Models.Base.Unit
 
         public BaseWeapon weapon { get; protected set; }
 
+        public Vector2Int Position => new Vector2Int(x, y);
         public WeaponType weaponType => weapon.weaponType;
         public int health => stats.health;
         public int armor => stats.armor;
         public int avoidChance => stats.avoidChance;
+        public int damageMultiplayer => stats.damageMultiplayer;
+        public int damage => weapon.damage + damageMultiplayer;
+
         public int amountOfMoves => stats.amountOfMoves;
         public int amountOfBattleMoves => stats.amountOfBattleMoves;
-        public int damageMultiplayer => stats.damageMultiplayer;
-        public int damage => weapon.damage + damageMultiplayer; 
 
         public abstract string color { get;  }
+        public bool isCanMove => stats.amountOfMoves > 0 || stats.amountOfBattleMoves > 0;
 
 
         private List<StatusEffectObj> statusEffects = new List<StatusEffectObj>();
@@ -75,7 +77,10 @@ namespace PaterniLab2.Models.Base.Unit
             _state?.OnEnter(this);
         }
 
-        public void RenewState() => SetState(new ActiveState());
+        public void PrepareUnitForNewTurn() {
+            stats.ResetMoves();
+            SetState(new ActiveState());
+        } 
 
         public bool MakeMove(TableContext context) 
         {
@@ -84,7 +89,18 @@ namespace PaterniLab2.Models.Base.Unit
             return _state.MakeMove(context, this);
         }
 
-       
+        public void DecreamentMoves(ResultOfAction result)
+        {
+            switch (result)
+            {
+                case ResultOfAction.SuccessMove:
+                    stats.DecreamentMoves();
+                    break;
+                case ResultOfAction.SuccessAction:
+                    stats.DecreamentBattleMoves();
+                    break;
+            }
+        }
 
         protected void ReconsiderInventory()
         {
