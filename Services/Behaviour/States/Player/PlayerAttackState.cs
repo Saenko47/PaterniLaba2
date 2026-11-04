@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using static PaterniLab2.Tools.Enums;
 
-namespace PaterniLab2.IDK.States.Player
+namespace PaterniLab2.Services.Behaviour.States.Player
 {
     internal class PlayerAttackState : IFSNState
     {

@@ -26,10 +26,10 @@ namespace PaterniLab2
             
             IRender render = new RenderTable(testTable);
 
-            IGameManager gameManager = new GameManager(testTable, render);
+            IGameManager gameManager = new NewGameManager(new SetTable(testTable), new CombatGenerator(render, testTable));
             try
             {
-                gameManager.StartGame();
+                gameManager.StartGame(null);
             }
             catch (Exception ex)
             {

@@ -1,4 +1,4 @@
-﻿using PaterniLab2.IDK.States.Player;
+﻿using PaterniLab2.Services.Behaviour.States.Player;
 using PaterniLab2.Interfaces;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Models.States.Unit;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using static PaterniLab2.Tools.Enums;
 
-namespace PaterniLab2.IDK
+namespace PaterniLab2.Services.Behaviour
 {
     internal class PlayerUnitBehaviourFSN : IBehaviour
     {

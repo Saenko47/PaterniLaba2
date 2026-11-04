@@ -1,5 +1,5 @@
-﻿using PaterniLab2.IDK.States;
-using PaterniLab2.IDK.States.AI;
+﻿using PaterniLab2.Services.Behaviour.States;
+using PaterniLab2.Services.Behaviour.States.AI;
 using PaterniLab2.Interfaces;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Text;
 using static PaterniLab2.Tools.Enums;
 
-namespace PaterniLab2.IDK
+namespace PaterniLab2.Services.Behaviour
 {
     internal class AiUnitBehaviourFSN:IBehaviour
     {

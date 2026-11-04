@@ -92,5 +92,12 @@ namespace PaterniLab2.Tools
             Awaiting
         }
 
+        public enum CellFillingType 
+        { 
+            None,
+        Unit,
+        Tree
+        }
+
     }
 }
