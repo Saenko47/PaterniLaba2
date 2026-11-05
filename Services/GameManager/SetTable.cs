@@ -1,4 +1,6 @@
 ﻿using PaterniLab2.Interfaces;
+using PaterniLab2.Interfaces.GameManager;
+using PaterniLab2.Interfaces.Unit;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Models.Units;
 using PaterniLab2.Requests.Table;
@@ -17,9 +19,13 @@ namespace PaterniLab2.Services.GameManager
     {
 
         private readonly ITable _table;
-        public SetTable(ITable table) 
+        private readonly IBehaviour _aiBehavior;
+        private readonly IBehaviour _playerBehavior;
+        public SetTable(ITable table, IBehaviour aiBehaviour, IBehaviour playerBehavior) 
         {
             _table = table;
+            _aiBehavior = aiBehaviour;
+            _playerBehavior = playerBehavior;
         }
 
         private void ShowUnitsBeforeFigth(List<BaseUnit> units)
@@ -32,10 +38,8 @@ namespace PaterniLab2.Services.GameManager
 
         private void SetBehaviorForTeam(List<BaseUnit> units, bool isAi)
         {
-            AiUnitBehaviourFSN aiBeha = new AiUnitBehaviourFSN(new AiMoveHandler(new Move()), new Attack(new DamageCalculator()), new FindUnit());
-            PlayerUnitBehaviourFSN humanBeha = new PlayerUnitBehaviourFSN(new HumanKeyboardMoveInput(new Move()), new Attack(new DamageCalculator()), new FindUnit());
-
-            IBehaviour beha = isAi ? aiBeha : humanBeha;
+        
+            IBehaviour beha = isAi ? _aiBehavior : _playerBehavior;
 
             foreach (var unit in units) unit.SetBehaviour(beha);
         }

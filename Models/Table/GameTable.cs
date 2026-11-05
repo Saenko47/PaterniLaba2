@@ -1,4 +1,5 @@
 ﻿using PaterniLab2.Interfaces;
+using PaterniLab2.Interfaces.Placement;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Models.Units;
 using PaterniLab2.Requests.Table;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Numerics;
 using System.Text;
+using System.Xml;
 
 namespace PaterniLab2.Models.Table
 {
@@ -76,8 +78,12 @@ namespace PaterniLab2.Models.Table
 
         public UnitOnTheBoardByRace FirstPlacementOfUnits(CreateGameRequest req)
         {
+            if (req.amountOfRacesOnBoard < 2 && req.amountOfRacesOnBoard > 4) throw new Exception("Not correct amount of races on board");
+            if (req.reqs.Sum(a => a.entireAmount) > frames.X * frames.Y) throw new Exception("To many units!!!");
+
             int count = req.amountOfRacesOnBoard;
             bool isTwo = count <= 2;
+
             _placeRaceOnBoard.SetMode(isTwo);
 
           

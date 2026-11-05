@@ -1,4 +1,5 @@
 ﻿using PaterniLab2.Interfaces;
+using PaterniLab2.Interfaces.Placement;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Models.Table;
 using PaterniLab2.Models.Units;

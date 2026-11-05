@@ -1,4 +1,5 @@
 ﻿using PaterniLab2.Interfaces;
+using PaterniLab2.Interfaces.GameManager;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Models.Units;
 using PaterniLab2.Requests;

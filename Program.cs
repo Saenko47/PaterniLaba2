@@ -1,8 +1,13 @@
 ﻿using PaterniLab2.Factories.Units;
 using PaterniLab2.Interfaces;
+using PaterniLab2.Interfaces.GameManager;
+using PaterniLab2.Interfaces.Placement;
 using PaterniLab2.Models.Table;
 using PaterniLab2.Requests.Table;
+using PaterniLab2.Services.AttackAndDamageProccesing;
+using PaterniLab2.Services.Behaviour;
 using PaterniLab2.Services.GameManager;
+using PaterniLab2.Services.MoveHandlers;
 using PaterniLab2.Services.Placement;
 using PaterniLab2.Services.Render;
 using PaterniLab2.Tools;
@@ -26,7 +31,10 @@ namespace PaterniLab2
             
             IRender render = new RenderTable(testTable);
 
-            IGameManager gameManager = new NewGameManager(new SetTable(testTable), new CombatGenerator(render, testTable));
+            AiUnitBehaviour aiBeha = new AiUnitBehaviour(new AiMoveHandler(new Move()), new Attack(new DamageCalculator()), new FindUnit());
+            PlayerUnitBehaviour humanBeha = new PlayerUnitBehaviour(new HumanKeyboardMoveInput(new Move()), new Attack(new DamageCalculator()), new FindUnit());
+
+            IGameManager gameManager = new GameManager(new SetTable(testTable, aiBeha, humanBeha), new CombatGenerator(render, testTable));
             try
             {
                 gameManager.StartGame(null);
