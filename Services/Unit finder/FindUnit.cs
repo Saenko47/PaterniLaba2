@@ -24,15 +24,11 @@ namespace PaterniLab2.Tools
                 {
                     if (unit == req.unitThatLooking) continue;
 
-                    // Проверка по расе: совпадают ли расы
                     bool isComrade = (unit.race == req.unitThatLooking.race);
 
-                    // Если ищем товарищей, а расы разные — пропускаем
                     if (req.isLookingForComrades && !isComrade) continue;
-                    // Если ищем НЕ товарищей (врагов), а расы одинаковые — пропускаем
                     if (!req.isLookingForComrades && isComrade) continue;
 
-                    // Манхэттенское расстояние («крест»)
                     int distance = Math.Abs(unit.x - startX) + Math.Abs(unit.y - startY);
 
                     if (distance <= req.rangeOfFindings)
@@ -54,12 +50,10 @@ namespace PaterniLab2.Tools
                 {
                     if (unit == req.unitThatLooking) continue;
 
-                    // Проверка по расе
                     bool isComrade = (unit.race == req.unitThatLooking.race);
                     if (req.isLookingForComrades && !isComrade) continue;
                     if (!req.isLookingForComrades && isComrade) continue;
 
-                    // Квадрат евклидова расстояния («круг»)
                     int dx = unit.x - startX;
                     int dy = unit.y - startY;
                     int distanceSquared = (dx * dx) + (dy * dy);

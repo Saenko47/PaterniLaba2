@@ -78,27 +78,36 @@ namespace PaterniLab2.Models.Table
 
         public UnitOnTheBoardByRace FirstPlacementOfUnits(CreateGameRequest req)
         {
-            if (req.amountOfRacesOnBoard < 2 && req.amountOfRacesOnBoard > 4) throw new Exception("Not correct amount of races on board");
-            if (req.reqs.Sum(a => a.entireAmount) > frames.X * frames.Y) throw new Exception("To many units!!!");
+          
+            if (req.amountOfRacesOnBoard < 2 || req.amountOfRacesOnBoard > 4)
+                throw new Exception("Not correct amount of races on board");
+
+            if (req.reqs.Where(r => r != null).Sum(a => a.entireAmount) > frames.X * frames.Y)
+                throw new Exception("Too many units!!!");
 
             int count = req.amountOfRacesOnBoard;
             bool isTwo = count <= 2;
 
             _placeRaceOnBoard.SetMode(isTwo);
 
-          
             List<Army> placedArmiesList = new List<Army>();
-
-            for (int k = 0; k < count; ++k)
+            var aiRequests = req.reqs.Where(r => r != null && r.isAi);
+            foreach (var aiReq in aiRequests)
             {
-                
-                if (req.reqs[k] != null)
+                var army = _placeRaceOnBoard.Place(aiReq, aiReq.isHandlyPlacement, _board);
+                if (army != null)
                 {
-                    var army = _placeRaceOnBoard.Place(req.reqs[k], req.reqs[k].isHandlyPlacement, _board);
-                    if (army != null)
-                    {
-                        placedArmiesList.Add(army);
-                    }
+                    placedArmiesList.Add(army);
+                }
+            }
+
+            var humanRequests = req.reqs.Where(r => r != null && !r.isAi);
+            foreach (var humanReq in humanRequests)
+            {
+                var army = _placeRaceOnBoard.Place(humanReq, humanReq.isHandlyPlacement, _board);
+                if (army != null)
+                {
+                    placedArmiesList.Add(army);
                 }
             }
 

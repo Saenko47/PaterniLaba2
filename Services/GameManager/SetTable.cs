@@ -58,7 +58,7 @@ namespace PaterniLab2.Services.GameManager
                     race = Race.Human,
                     raceAmountFly = 0,
                     raceAmountRide = 0,
-                    raceMeleeAmount = 2,
+                    raceMeleeAmount = 5,
                     raceRangeAmount = 0,
                     isAi = false,
                     isHandlyPlacement = false,
