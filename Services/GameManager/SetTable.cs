@@ -21,11 +21,13 @@ namespace PaterniLab2.Services.GameManager
         private readonly ITable _table;
         private readonly IBehaviour _aiBehavior;
         private readonly IBehaviour _playerBehavior;
+        
         public SetTable(ITable table, IBehaviour aiBehaviour, IBehaviour playerBehavior) 
         {
             _table = table;
             _aiBehavior = aiBehaviour;
             _playerBehavior = playerBehavior;
+          
         }
 
         private void ShowUnitsBeforeFigth(List<BaseUnit> units)
@@ -43,7 +45,7 @@ namespace PaterniLab2.Services.GameManager
 
             foreach (var unit in units) unit.SetBehaviour(beha);
         }
-
+       
 
 
         public List<Army> Set(CreateGameRequest req) 
@@ -52,7 +54,7 @@ namespace PaterniLab2.Services.GameManager
             {
                 reqs = new PlaceOnBoardRequest[]
                     {
-
+                        
                     new PlaceOnBoardRequest
                     {
                     race = Race.Human,
@@ -62,7 +64,7 @@ namespace PaterniLab2.Services.GameManager
                     raceRangeAmount = 0,
                     isAi = false,
                     isHandlyPlacement = false,
-
+                    
                     },
 
 

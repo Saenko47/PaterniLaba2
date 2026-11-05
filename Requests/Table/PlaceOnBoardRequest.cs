@@ -1,6 +1,8 @@
-﻿using System;
+﻿using PaterniLab2.Models.Base.Unit;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using PaterniLab2.Models.Units;
 using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Requests.Table
@@ -16,7 +18,7 @@ namespace PaterniLab2.Requests.Table
         public bool isAi { get; set; }
         public bool isHandlyPlacement { get; set; }
 
-        public Action RenderPlacement { get; set; } = null!;
+        
 
         public int entireAmount => raceMeleeAmount + raceRangeAmount;
         public bool isRamainToPlace => entireAmount > 0;
