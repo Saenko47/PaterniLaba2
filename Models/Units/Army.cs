@@ -1,5 +1,6 @@
 ﻿using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
+using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,7 +24,7 @@ namespace PaterniLab2.Models.Units
 
         public bool HasUnits => _units != null && _units.Count > 0;
 
-        public event Action<BaseUnit>? OnUnitHit;
+        
 
         public Army() { }
 
@@ -36,13 +37,9 @@ namespace PaterniLab2.Models.Units
             SubscribeToUnitEvents(units);
         }
 
-        private void HandleUnitHitRender(BaseUnit unit)
+        private void HandleUnitHighlith(List<RequestOnHighlihtUnit> req)
         {
-            if (unit.isAlive)
-            {
-                
-                OnUnitHit?.Invoke(unit);
-            }
+            UpdateRender.Instance.SetHighlight(req);
         }
 
         private void SubscribeToUnitEvents(List<BaseUnit> units)
@@ -80,11 +77,11 @@ namespace PaterniLab2.Models.Units
                 }
                 RemoveUnit(unit);
             }
-            
-            OnUnitHit?.Invoke(unit);
 
+            var req = new RequestOnHighlihtUnit() 
+            { position = unit.Position, highlightType = HighlightType.AttacedUnit };
 
-
+            HandleUnitHighlith(new List<RequestOnHighlihtUnit> { req });
 
         }
 

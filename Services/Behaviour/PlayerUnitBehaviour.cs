@@ -10,6 +10,7 @@ using static PaterniLab2.Tools.Enums;
 using PaterniLab2.Interfaces.Unit;
 using PaterniLab2.Interfaces.Attack;
 using PaterniLab2.Interfaces.Commands;
+using PaterniLab2.Singltons;
 
 namespace PaterniLab2.Services.Behaviour
 {
@@ -66,7 +67,13 @@ namespace PaterniLab2.Services.Behaviour
 
             while (owner.isCanMakeSomething)
             {
+                
+
+                
+             
                 ShowDecision();
+                var req = new RequestOnHighlihtUnit() { position = owner.Position, highlightType = HighlightType.ActiveUnit };
+                UpdateRender.Instance.Render(context.armies, new List<RequestOnHighlihtUnit> { req});
 
                 // Безопасное чтение целого числа через ReadLine
                 string input = Console.ReadLine();
@@ -97,7 +104,7 @@ namespace PaterniLab2.Services.Behaviour
                 {
                     Console.WriteLine("Action failed. Try another action.");
                 }
-                context.updateRender(null); // Clear highlights after turn ends
+                
             }
 
            

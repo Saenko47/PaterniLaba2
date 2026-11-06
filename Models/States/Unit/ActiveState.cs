@@ -1,6 +1,7 @@
 ﻿using PaterniLab2.Interfaces.Unit;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
+using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +16,11 @@ namespace PaterniLab2.Models.States.Unit
         public bool MakeMove(TableContext context, BaseUnit unit) 
         {
             if (context == null || unit == null || unit.behaviour == null) throw new Exception("null context or unit");
+
+            var req = new RequestOnHighlihtUnit()
+            { position = unit.Position, highlightType = HighlightType.ActiveUnit };
+
+            UpdateRender.Instance.Render(context.armies,new List<RequestOnHighlihtUnit> { req });
 
             bool isSucces = unit.behaviour.MakeMove(context, unit);
             if (!isSucces) 

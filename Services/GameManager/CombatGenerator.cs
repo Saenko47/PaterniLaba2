@@ -3,6 +3,7 @@ using PaterniLab2.Interfaces.GameManager;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Models.Units;
 using PaterniLab2.Requests;
+using PaterniLab2.Singltons;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;
@@ -13,15 +14,13 @@ namespace PaterniLab2.Services.GameManager
 {
     internal class CombatGenerator:ICombatGenerator
     {
-        private readonly IRender _render;
         private readonly ITable _table;
         private List<Army> _armies;
 
         public event Action<BaseUnit>? OnSomeoneDie;
 
-        public CombatGenerator(IRender render,ITable table) 
-        {
-            _render = render;
+        public CombatGenerator(ITable table)
+        { 
             
             _table = table;
 
@@ -30,18 +29,11 @@ namespace PaterniLab2.Services.GameManager
         public void InitializeArmies(List<Army> armies) 
         {
             _armies = armies;
-            foreach (var army in armies)
-            {
-                army.OnUnitHit += HandleArmyHighlightRequest;
-            }
+            
 
         }
 
-        private void HandleArmyHighlightRequest(BaseUnit request)
-        {
-            var req = new RequestOnHighlihtUnit { position = request.Position, highlightType = HighlightType.AttacedUnit };
-            _render.Render(_armies, new List<RequestOnHighlihtUnit>{ req });
-        }
+       
 
         private bool CheckGameOver(out string message)
         {
@@ -78,14 +70,16 @@ namespace PaterniLab2.Services.GameManager
             {
                 if (CheckGameOver(out string winMessage))
                 {
-                    _render.Render(_armies);
+                   
                     Console.WriteLine($"\n{winMessage}");
                     return;
                 }
 
+                Render();
+
                 while (!CheckIfAllInArmiesMakeMove())
                 {
-
+                   
 
                     int indexOfCurrentArmy = armyIndex % _armies.Count;
                     var currentArmyToMove = _armies[indexOfCurrentArmy];
@@ -103,34 +97,27 @@ namespace PaterniLab2.Services.GameManager
                     Console.WriteLine(isLock);
                     if (!isLock) break;
                     armyIndex++;
-
+                    
                 }
 
                 foreach (var army in _armies) army.PrepareForNewRound();
             }
         }
 
-        private void Render(List<RequestOnHighlihtUnit>? highlightRequests = null)
+        private void Render()
         {
 
             List<(string name, int count)> unitsNameAndCounts = _armies.Select(a => (name: a._race.ToString(), count: a._units.Count)).ToList();
 
             foreach (var army in unitsNameAndCounts) Console.WriteLine($"Name:{army.name}, amount: {army.count}");
 
-            _render.Render(_armies, highlightRequests);
+            UpdateRender.Instance.Render(_armies);
         }
 
         private bool ProcessMove(BaseUnit unit)
         {
             Console.Clear();
-            _render.Render(_armies,new List<RequestOnHighlihtUnit>
-                {
-                    new RequestOnHighlihtUnit
-                    {
-                        position = unit.Position,
-                        highlightType = HighlightType.ActiveUnit
-                    }
-                });
+           
 
             Console.WriteLine($"\nХодит юнит: {unit.race} [ID: {unit.id}] на позиции ({unit.x}, {unit.y})");
 
@@ -139,10 +126,9 @@ namespace PaterniLab2.Services.GameManager
                 framesOfTable = _table.GetFrames(),
                 armies = _armies,
                 isCellFree = _table.IsSellFree,
-                onUnitDeath = OnSomeoneDie,
                 onMove = _table.MoveUnit,
 
-                updateRender = Render
+                
             });
         }
         private bool InterateToMove(Army teamThatMove)

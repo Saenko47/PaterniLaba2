@@ -7,6 +7,7 @@ using PaterniLab2.Requests.Table;
 using PaterniLab2.Services.AttackAndDamageProccesing;
 using PaterniLab2.Services.Behaviour;
 using PaterniLab2.Services.MoveHandlers;
+using PaterniLab2.Singltons;
 using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
@@ -88,6 +89,8 @@ namespace PaterniLab2.Services.GameManager
             foreach (var army in res.placedArmies) SetBehaviorForTeam(army._units, army._isAi);
 
             foreach (var army in res.placedArmies) ShowUnitsBeforeFigth(army._units);
+
+            UpdateRender.Instance.Render(res.placedArmies);
 
 
             return res.placedArmies;

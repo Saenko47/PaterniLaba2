@@ -15,13 +15,12 @@ namespace PaterniLab2.Requests
 
         public List<Army> armies { get; set; } = null!;
 
-        public Action<BaseUnit> onUnitDeath { get; set; } = null!;
 
         public Func<int, int, bool> isCellFree { get; set; } = null!;
 
         public Action<Vector2Int, Vector2Int> onMove { get; set; } = null!;
 
-        public Action<List<RequestOnHighlihtUnit>?> updateRender { get; set; } = null!;
+       
        
 
     }

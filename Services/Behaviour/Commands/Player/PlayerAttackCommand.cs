@@ -3,6 +3,7 @@ using PaterniLab2.Interfaces.Commands;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
 using PaterniLab2.Requests.Units;
+using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -43,7 +44,8 @@ namespace PaterniLab2.Services.Behaviour.States.Player
                     highlightType = highlightType
                 });
             }
-            context.updateRender(highlightRequests);
+          
+            UpdateRender.Instance.Render(context.armies, highlightRequests);
         }
 
         private void ShowUnitsToAttack(List<BaseUnit> targets)
@@ -70,6 +72,7 @@ namespace PaterniLab2.Services.Behaviour.States.Player
 
             ShowUnitsToAttack(availableTargets);
             HighlightTargetUnits(context, availableTargets, HighlightType.TargetUnit);
+            
 
             Console.Write("Выберите номер цели: ");
 

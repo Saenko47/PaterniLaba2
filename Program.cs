@@ -10,6 +10,7 @@ using PaterniLab2.Services.GameManager;
 using PaterniLab2.Services.MoveHandlers;
 using PaterniLab2.Services.Placement;
 using PaterniLab2.Services.Render;
+using PaterniLab2.Singltons;
 using PaterniLab2.Tools;
 using Spectre.Console;
 using static PaterniLab2.Tools.Enums;
@@ -30,11 +31,12 @@ namespace PaterniLab2
            GameTable testTable = new GameTable(4, 4, placementManager);
             
             IRender render = new RenderTable(testTable);
+            UpdateRender.Instance.SetRender(render);
 
             AiUnitBehaviour aiBeha = new AiUnitBehaviour(new AiMoveHandler(new Move()), new Attack(new DamageCalculator()), new FindUnit());
             PlayerUnitBehaviour humanBeha = new PlayerUnitBehaviour(new HumanKeyboardMoveInput(new Move()), new Attack(new DamageCalculator()), new FindUnit());
 
-            IGameManager gameManager = new GameManager(new SetTable(testTable, aiBeha, humanBeha), new CombatGenerator(render, testTable));
+            IGameManager gameManager = new GameManager(new SetTable(testTable, aiBeha, humanBeha), new CombatGenerator(testTable));
             try
             {
                 gameManager.StartGame(null);
