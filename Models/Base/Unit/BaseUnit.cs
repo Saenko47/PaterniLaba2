@@ -2,6 +2,7 @@
 using PaterniLab2.Models.States.Unit;
 using PaterniLab2.Requests;
 using PaterniLab2.Requests.Units;
+using PaterniLab2.Singltons;
 using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
@@ -202,7 +203,7 @@ namespace PaterniLab2.Models.Base.Unit
         public void TakeDamage(int damage)
         {
             stats.ModifyHealth(-damage);
-            Console.WriteLine($"{race} took {damage} damage. Remaining health: {health}");
+            GlobalInputOutput.Instance.AddTextDataToBuffer($"{race} took {damage} damage. Remaining health: {health}");
             if (OnUnitHit != null)
             {
                 OnUnitHit?.Invoke(this);

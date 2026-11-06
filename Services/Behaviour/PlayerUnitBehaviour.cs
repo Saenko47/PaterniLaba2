@@ -72,14 +72,13 @@ namespace PaterniLab2.Services.Behaviour
                 
              
                 ShowDecision();
-                var req = new RequestOnHighlihtUnit() { position = owner.Position, highlightType = HighlightType.ActiveUnit };
-                UpdateRender.Instance.Render(context.armies, new List<RequestOnHighlihtUnit> { req});
 
                 // Безопасное чтение целого числа через ReadLine
-                string input = Console.ReadLine();
+                string input = GlobalInputOutput.Instance.Read(context.armies,"Yor Choise:");
                 if (!int.TryParse(input, out int decision) || decision < 1 || decision > 4)
                 {
-                    Console.WriteLine("Invalid decision. Please choose a number from 1 to 4.");
+                    GlobalInputOutput.Instance.AddTextDataToBuffer("Try again");
+                    GlobalInputOutput.Instance.Execute();
                     continue;
                 }
 
@@ -102,7 +101,8 @@ namespace PaterniLab2.Services.Behaviour
 
                 if (actionResult == ResultOfAction.FailToAttack || actionResult == ResultOfAction.FailToMove)
                 {
-                    Console.WriteLine("Action failed. Try another action.");
+                    GlobalInputOutput.Instance.AddTextDataToBuffer("Action failed. Try another action.");
+                    GlobalInputOutput.Instance.Execute();
                 }
                 
             }

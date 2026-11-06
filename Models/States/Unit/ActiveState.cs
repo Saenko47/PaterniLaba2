@@ -20,12 +20,12 @@ namespace PaterniLab2.Models.States.Unit
             var req = new RequestOnHighlihtUnit()
             { position = unit.Position, highlightType = HighlightType.ActiveUnit };
 
-            UpdateRender.Instance.Render(context.armies,new List<RequestOnHighlihtUnit> { req });
+            GlobalInputOutput.Instance.SetHighlight(new List<RequestOnHighlihtUnit> { req });
 
             bool isSucces = unit.behaviour.MakeMove(context, unit);
             if (!isSucces) 
             {
-                Console.WriteLine("Do it later");
+                GlobalInputOutput.Instance.AddTextDataToBuffer("Do it later");
                 unit.SetState(new DelayedState());
                 return false;
             }

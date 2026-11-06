@@ -31,7 +31,7 @@ namespace PaterniLab2
            GameTable testTable = new GameTable(4, 4, placementManager);
             
             IRender render = new RenderTable(testTable);
-            UpdateRender.Instance.SetRender(render);
+            GlobalInputOutput.Instance.SetRender(render);
 
             AiUnitBehaviour aiBeha = new AiUnitBehaviour(new AiMoveHandler(new Move()), new Attack(new DamageCalculator()), new FindUnit());
             PlayerUnitBehaviour humanBeha = new PlayerUnitBehaviour(new HumanKeyboardMoveInput(new Move()), new Attack(new DamageCalculator()), new FindUnit());

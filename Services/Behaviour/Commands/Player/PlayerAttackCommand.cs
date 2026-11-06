@@ -45,18 +45,18 @@ namespace PaterniLab2.Services.Behaviour.States.Player
                 });
             }
           
-            UpdateRender.Instance.Render(context.armies, highlightRequests);
+            GlobalInputOutput.Instance.SetHighlight(highlightRequests);
         }
 
         private void ShowUnitsToAttack(List<BaseUnit> targets)
         {
             if (targets == null || targets.Count == 0) return;
 
-            Console.WriteLine("\n=== Доступные цели для атаки ===");
+            GlobalInputOutput.Instance.AddTextDataToBuffer("\n=== Доступные цели для атаки ===");
             for (int k = 0; k < targets.Count; k++)
             {
                 
-                Console.WriteLine($"{k + 1}. {targets[k].race} на позиции {targets[k].Position} (HP: {targets[k].health})");
+                GlobalInputOutput.Instance.AddTextDataToBuffer($"{k + 1}. {targets[k].race} на позиции {targets[k].Position} (HP: {targets[k].health})");
             }
         }
 
@@ -76,8 +76,8 @@ namespace PaterniLab2.Services.Behaviour.States.Player
 
             Console.Write("Выберите номер цели: ");
 
-            
-            string input = Console.ReadLine();
+
+            string input = GlobalInputOutput.Instance.Read(context.armies, "\n Выберите номер цели: ");
             if (!int.TryParse(input, out int selectedTargetIndex) || selectedTargetIndex < 1 || selectedTargetIndex > availableTargets.Count)
             {
                 Console.WriteLine("Неверный выбор цели!");

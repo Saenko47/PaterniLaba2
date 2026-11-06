@@ -1,5 +1,6 @@
 ﻿using PaterniLab2.Interfaces.Unit;
 using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,9 +18,11 @@ namespace PaterniLab2.Tools
         }
         public bool Move(BaseUnit _owner,Vector2Int bounds, Func<int, int, bool> isCellFree, Action<Vector2Int, Vector2Int> onMove)
         {
-            Console.WriteLine("Введите направление (W/A/S/D):");
-            char key = char.ToUpper(Console.ReadKey(true).KeyChar);
 
+            GlobalInputOutput.Instance.AddTextDataToBuffer("Введите направление (W/A/S/D):");
+            string input = GlobalInputOutput.Instance.Read();
+            char key = char.ToUpper(Convert.ToChar(input));
+          
             // Переводим нажатие клавиши в вызов конкретного метода из IMove
             return key switch
             {

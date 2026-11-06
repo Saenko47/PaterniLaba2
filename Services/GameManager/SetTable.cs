@@ -35,7 +35,7 @@ namespace PaterniLab2.Services.GameManager
         {
             foreach (var unit in units)
             {
-                Console.WriteLine(unit);
+                GlobalInputOutput.Instance.AddTextDataToBuffer(unit.ToString());
             }
         }
 
@@ -90,7 +90,7 @@ namespace PaterniLab2.Services.GameManager
 
             foreach (var army in res.placedArmies) ShowUnitsBeforeFigth(army._units);
 
-            UpdateRender.Instance.Render(res.placedArmies);
+            GlobalInputOutput.Instance.Execute(res.placedArmies);
 
 
             return res.placedArmies;

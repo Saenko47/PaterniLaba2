@@ -60,7 +60,7 @@ namespace PaterniLab2.Singltons
         public string Read(List<Army> armies = null,string beforeReadline = null) 
         {
             Execute(armies);
-            if (beforeReadline != null) Console.WriteLine(beforeReadline);
+            if (beforeReadline != null) Console.Write(beforeReadline);
             string res = Console.ReadLine();
             return res;
         }

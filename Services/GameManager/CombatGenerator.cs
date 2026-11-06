@@ -97,7 +97,9 @@ namespace PaterniLab2.Services.GameManager
                     Console.WriteLine(isLock);
                     if (!isLock) break;
                     armyIndex++;
-                    
+
+                    Render();
+
                 }
 
                 foreach (var army in _armies) army.PrepareForNewRound();
@@ -109,9 +111,9 @@ namespace PaterniLab2.Services.GameManager
 
             List<(string name, int count)> unitsNameAndCounts = _armies.Select(a => (name: a._race.ToString(), count: a._units.Count)).ToList();
 
-            foreach (var army in unitsNameAndCounts) Console.WriteLine($"Name:{army.name}, amount: {army.count}");
+            foreach (var army in unitsNameAndCounts) GlobalInputOutput.Instance.AddTextDataToBuffer($"Name:{army.name}, amount: {army.count}");
 
-            UpdateRender.Instance.Render(_armies);
+            GlobalInputOutput.Instance.Execute(_armies);
         }
 
         private bool ProcessMove(BaseUnit unit)

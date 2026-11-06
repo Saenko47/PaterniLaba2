@@ -1,6 +1,7 @@
 ﻿using PaterniLab2.Interfaces.Unit;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
+using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,7 +15,7 @@ namespace PaterniLab2.Models.States.Unit
 
         public bool MakeMove(TableContext context, BaseUnit unit)
         {
-            Console.WriteLine("Unit is unective!!!");
+            GlobalInputOutput.Instance.AddTextDataToBuffer("Unit is unective!!!");
             return false;
 
         }

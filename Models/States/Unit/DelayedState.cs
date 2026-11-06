@@ -1,6 +1,7 @@
 ﻿using PaterniLab2.Interfaces.Unit;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
+using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,7 +21,7 @@ namespace PaterniLab2.Models.States.Unit
             bool isSucces = unit.behaviour.MakeMove(context, unit);
             if (!isSucces)
             {
-                Console.WriteLine("Do it later");
+                GlobalInputOutput.Instance.AddTextDataToBuffer("Do it later");
 
                 return false;
             }
