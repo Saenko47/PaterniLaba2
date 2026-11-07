@@ -74,8 +74,8 @@ namespace PaterniLab2.Services.GameManager
                     Console.WriteLine($"\n{winMessage}");
                     return;
                 }
-
-                Render();
+                Console.ReadLine();
+             
 
                 while (!CheckIfAllInArmiesMakeMove())
                 {
@@ -88,8 +88,8 @@ namespace PaterniLab2.Services.GameManager
                         armyIndex++;
                         continue;
                     }
-                    Console.WriteLine($"\nНажмите Enter, чтобы сделать ход");
-                    Console.ReadLine();
+               
+                  
 
 
                     bool isLock = InterateToMove(currentArmyToMove);
@@ -98,7 +98,8 @@ namespace PaterniLab2.Services.GameManager
                     if (!isLock) break;
                     armyIndex++;
 
-                    Render();
+                    GlobalInputOutput.Instance.Read(_armies, $"\nНажмите Enter, чтобы сделать ход");
+
 
                 }
 

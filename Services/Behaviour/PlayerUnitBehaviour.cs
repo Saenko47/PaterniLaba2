@@ -85,6 +85,7 @@ namespace PaterniLab2.Services.Behaviour
                 switch (decision)
                 {
                     case 1:
+                       
                         actionResult = TryMove(context, owner); // Исправлено: вызываем движение
                         break;
                     case 2:

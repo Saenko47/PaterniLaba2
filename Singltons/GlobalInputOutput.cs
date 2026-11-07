@@ -53,7 +53,7 @@ namespace PaterniLab2.Singltons
         public void Execute(List<Army> armies = null) 
         {
             ShowTextData();
-            Render(armies);
+            if(armies != null) Render(armies);
 
         }
 
@@ -62,7 +62,17 @@ namespace PaterniLab2.Singltons
             Execute(armies);
             if (beforeReadline != null) Console.Write(beforeReadline);
             string res = Console.ReadLine();
+
             return res;
+        }
+
+        public ConsoleKeyInfo ReadKey(List<Army> armies = null, string beforeReadline = null)
+        {
+            Execute(armies);
+            if (beforeReadline != null) Console.Write(beforeReadline);
+
+            // true — чтобы символ не дублировался автоматически в консоли
+            return Console.ReadKey(true);
         }
 
     }

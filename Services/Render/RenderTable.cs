@@ -134,13 +134,15 @@ namespace PaterniLab2.Services.Render
         }
 
     
-        public void Render(List<Army> armies, List<RequestOnHighlihtUnit> highlightRequests = null)
+        public Table Render(List<Army> armies, List<RequestOnHighlihtUnit> highlightRequests = null)
         {
 
             var buffer = CreateGridBuffer(armies, highlightRequests);
             var table = BuildTable(buffer);
           
             AnsiConsole.Write(table);
+
+            return table;
             
             
         }
