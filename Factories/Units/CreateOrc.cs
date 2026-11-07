@@ -3,6 +3,7 @@ using PaterniLab2.Models.Base;
 using PaterniLab2.Models.Units;
 using PaterniLab2.Models.Weapons.Orcs;
 using PaterniLab2.Requests.Units;
+using PaterniLab2.Services.LeaderGenerator;
 using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
@@ -15,13 +16,13 @@ namespace PaterniLab2.Factories.Units
     {
       protected override OrcUnit CreateMeleeUnit(int id, MoveType move)
         {
-            var newOrc =  new OrcUnit(id, move,new BattleAxe(), new Inventory(3));
+            var newOrc =  new OrcUnit(id, move,new BattleAxe(), new Inventory(3), new OrcLeaderGenerator());
           
             return newOrc;
         }
         protected override OrcUnit CreatRangeUnit(int id, MoveType move)
         {
-            var newOrc = new OrcUnit(id, move, new Sling(), new Inventory(3));
+            var newOrc = new OrcUnit(id, move, new Sling(), new Inventory(3), new OrcLeaderGenerator());
            
             return newOrc;
         }

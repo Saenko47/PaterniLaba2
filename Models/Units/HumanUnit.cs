@@ -2,6 +2,7 @@
 using PaterniLab2.Models.Base;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Models.Items.Humans;
+using PaterniLab2.Services.LeaderGenerator;
 using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
@@ -18,8 +19,8 @@ namespace PaterniLab2.Models.Units
         private const int AVOID_CHANCE = 5;
         public override Race race  => Race.Human;
 
-        public HumanUnit(int id, MoveType moveType, BaseWeapon weapon, IInventory inventory)
-            : base(id, moveType, weapon, inventory)
+        public HumanUnit(int id, MoveType moveType, BaseWeapon weapon, IInventory inventory, BaseLeaderGenerator baseLeaderGenerator)
+            : base(id, moveType, weapon, inventory, baseLeaderGenerator)
         {
             stats.ModifyHealth(HEALTH_BUFF);
             stats.ModifyAvoidChance(AVOID_CHANCE);

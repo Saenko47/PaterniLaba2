@@ -46,18 +46,7 @@ namespace PaterniLab2.Services.Placement
 
         protected void ChooseLeader(BaseUnit unitToLeader)
         {
-            switch (unitToLeader.race)
-            {
-                case Race.Human:
-                    HumanLeader.Instance.Elect(unitToLeader);
-                    break;
-                case Race.Elf:
-                    ElfLeader.Instance.Elect(unitToLeader);
-                    break;
-                case Race.Orc:
-                    OrcLeader.Instance.Elect(unitToLeader);
-                    break;
-            }
+            unitToLeader.ElectAsLeader();
         }
 
         public abstract Army PaceUnitsOnTheBoard(PlaceOnBoardRequest req, Cell[,] table);

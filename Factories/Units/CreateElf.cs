@@ -3,6 +3,7 @@ using PaterniLab2.Models.Base;
 using PaterniLab2.Models.Units;
 using PaterniLab2.Models.Weapons.Elf;
 using PaterniLab2.Requests.Units;
+using PaterniLab2.Services.LeaderGenerator;
 using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
@@ -16,13 +17,13 @@ namespace PaterniLab2.Factories.Units
       protected override ElfUnit CreateMeleeUnit(int id, MoveType move)
         {
            
-            var newElf = new ElfUnit(id, move, new Rapier(), new Inventory(3));
+            var newElf = new ElfUnit(id, move, new Rapier(), new Inventory(3), new ElfLeaderGenerator());
             
             return newElf;
         }
         protected override ElfUnit CreatRangeUnit(int id, MoveType move)
         {
-            var newElf = new ElfUnit(id, move, new LongBow(), new Inventory(3));
+            var newElf = new ElfUnit(id, move, new LongBow(), new Inventory(3), new ElfLeaderGenerator());
            
             return newElf;
         }

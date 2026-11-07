@@ -42,18 +42,7 @@ namespace PaterniLab2.Tools
 
         private void ChooseLeader(BaseUnit unitToLeader) 
         {
-            switch (unitToLeader.race) 
-            { 
-            case Race.Human:
-               HumanLeader.Instance.Elect(unitToLeader);
-                    break;
-            case Race.Elf:
-                    ElfLeader.Instance.Elect(unitToLeader);
-                    break;
-            case Race.Orc:
-                    OrcLeader.Instance.Elect(unitToLeader);
-                    break;
-            }
+            
         }
 
         public List<BaseUnit> PlaceOnBoard(PlaceOnBoardRequest req, Cell[,] table)

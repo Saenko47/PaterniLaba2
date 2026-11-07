@@ -2,6 +2,7 @@
 using PaterniLab2.Models.States.Unit;
 using PaterniLab2.Requests;
 using PaterniLab2.Requests.Units;
+using PaterniLab2.Services.LeaderGenerator;
 using PaterniLab2.Singltons;
 using PaterniLab2.Tools;
 using System;
@@ -36,6 +37,8 @@ namespace PaterniLab2.Models.Base.Unit
 
         internal IBehaviour behaviour;
 
+        private BaseLeaderGenerator _leaderSelector;
+
         public BaseWeapon weapon { get; protected set; }
 
         public Vector2Int Position => new Vector2Int(x, y);
@@ -61,12 +64,13 @@ namespace PaterniLab2.Models.Base.Unit
         public Action<BaseUnit> OnUnitHit { get; set; } = null!;
 
 
-        public BaseUnit(int id, MoveType moveType, BaseWeapon weapons, IInventory inventory)
+        public BaseUnit(int id, MoveType moveType, BaseWeapon weapons, IInventory inventory, BaseLeaderGenerator baseLeaderGenerator)
         {
             this.id = id;
             this.moveType = moveType;
             this.weapon = weapons;
             this.inventory = inventory;
+            _leaderSelector = baseLeaderGenerator;
 
             SetState(new ActiveState());
           
@@ -197,7 +201,7 @@ namespace PaterniLab2.Models.Base.Unit
         }
         public void ElectAsLeader()
         {
-            isLeader = true;
+            _leaderSelector.Elect(this);
         }
 
         public void TakeDamage(int damage)

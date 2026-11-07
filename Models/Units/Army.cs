@@ -39,11 +39,7 @@ namespace PaterniLab2.Models.Units
             SubscribeToUnitEvents(units);
         }
 
-        private void HandleUnitHighlith(List<RequestOnHighlihtUnit> req)
-        {
-            UpdateRender.Instance.SetHighlight(req);
-        }
-
+       
         private void SubscribeToUnitEvents(List<BaseUnit> units)
         {
             foreach (var unit in units)
@@ -81,10 +77,7 @@ namespace PaterniLab2.Models.Units
                 OnUnitDies?.Invoke(unit);
             }
 
-            var req = new RequestOnHighlihtUnit() 
-            { position = unit.Position, highlightType = HighlightType.AttacedUnit };
-
-            HandleUnitHighlith(new List<RequestOnHighlihtUnit> { req });
+            
 
         }
 
