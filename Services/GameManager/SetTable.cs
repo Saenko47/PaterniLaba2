@@ -46,7 +46,21 @@ namespace PaterniLab2.Services.GameManager
 
             foreach (var unit in units) unit.SetBehaviour(beha);
         }
-       
+
+        private void UnitDiesHandler(BaseUnit unit)
+        {
+            GlobalInputOutput.Instance.AddTextDataToBuffer($"unit {unit.race} dies!!!");
+
+            _table.ClearCell(unit.Position.X, unit.Position.Y);
+        }
+
+        private void SetDeathhanderForArmies(List<Army> armies) 
+        {
+            foreach (var army in armies) army.OnUnitDies += UnitDiesHandler;
+
+
+        }
+
 
 
         public List<Army> Set(CreateGameRequest req) 
@@ -89,6 +103,9 @@ namespace PaterniLab2.Services.GameManager
             foreach (var army in res.placedArmies) SetBehaviorForTeam(army._units, army._isAi);
 
             foreach (var army in res.placedArmies) ShowUnitsBeforeFigth(army._units);
+
+            SetDeathhanderForArmies(res.placedArmies);
+           
 
             GlobalInputOutput.Instance.Execute(res.placedArmies);
 

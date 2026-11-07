@@ -24,6 +24,8 @@ namespace PaterniLab2.Models.Units
 
         public bool HasUnits => _units != null && _units.Count > 0;
 
+        public Action<BaseUnit> OnUnitDies;
+
         
 
         public Army() { }
@@ -76,6 +78,7 @@ namespace PaterniLab2.Models.Units
                     KillLeader();
                 }
                 RemoveUnit(unit);
+                OnUnitDies?.Invoke(unit);
             }
 
             var req = new RequestOnHighlihtUnit() 

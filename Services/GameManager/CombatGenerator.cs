@@ -151,7 +151,8 @@ namespace PaterniLab2.Services.GameManager
         {
             return _armies.All(a => a.IsAllMakeMoves());
         }
-        
+
+     
     }
 
 }

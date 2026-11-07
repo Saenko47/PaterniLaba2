@@ -204,6 +204,8 @@ namespace PaterniLab2.Models.Base.Unit
         {
             stats.ModifyHealth(-damage);
             GlobalInputOutput.Instance.AddTextDataToBuffer($"{race} took {damage} damage. Remaining health: {health}");
+            var req = new RequestOnHighlihtUnit { position = Position, highlightType = HighlightType.AttacedUnit };
+            GlobalInputOutput.Instance.SetHighlight(new List<RequestOnHighlihtUnit> { req });
             if (OnUnitHit != null)
             {
                 OnUnitHit?.Invoke(this);

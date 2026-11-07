@@ -21,7 +21,7 @@ namespace PaterniLab2.Services.Behaviour.States.Player
         {
             var moveResult = _move.Move(actionContext.owner, context.framesOfTable, context.isCellFree, context.onMove) ?
                 ResultOfAction.SuccessMove : ResultOfAction.FailToMove;
-            actionContext.owner.DecreamentMoves(moveResult);
+            if(moveResult != ResultOfAction.FailToMove) actionContext.owner.DecreamentMoves(moveResult);
             return moveResult;
         }
     }
