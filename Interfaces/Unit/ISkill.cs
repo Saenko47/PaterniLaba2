@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PaterniLab2.Interfaces
+namespace PaterniLab2.Interfaces.Unit
 {
     internal interface ISkill
     {
-        void ApplySkill(BaseUnit caster, BaseUnit target);
+        public bool PerformSkill(BaseUnit owner, List<BaseUnit> targets);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PaterniLab2.Models.Base;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,8 +9,7 @@ namespace PaterniLab2.Interfaces.Unit
     {
         void AddSkill(ISkill skill);
 
-        void RemoveSkill(ISkill skill);
-
+        void ShowSkills();
         IEnumerable<ISkill> GetSkills();
     }
 }
