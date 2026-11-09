@@ -12,6 +12,8 @@ namespace PaterniLab2.Requests
 
         public List<BaseUnit>? target { get; set; }
         public Func<ReqiestOnFindingUnit, List<BaseUnit>?>? targetFinder { get; set; }
+        
+        public BaseSkill? skillToCast { get; set; }
         public Func<BaseUnit, List<BaseUnit>, bool>? actionExecutionStrategy { get; set; }
     }
 }

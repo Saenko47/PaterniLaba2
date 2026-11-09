@@ -56,6 +56,12 @@ namespace PaterniLab2.Models.Units
             _units.AddRange(units);
             SubscribeToUnitEvents(units);
         }
+        public void AddToTheArmy(BaseUnit unit) 
+        {
+            if (unit == null) return;
+            _units.Add(unit);
+            SubscribeToUnitEvents(new List<BaseUnit>() { unit });
+        }
 
         public void RemoveUnit(BaseUnit unit) 
         {

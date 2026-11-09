@@ -1,5 +1,6 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Interfaces.Unit;
+using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace PaterniLab2.Models.Base
     internal class SkillContainer: ISkillContainer
     {
 
-        private Dictionary<int, ISkill> skills { get; set; } = new Dictionary<int, ISkill>();
+        private Dictionary<int, BaseSkill> skills { get; set; } = new Dictionary<int, BaseSkill>();
 
         private int maxSkills;
 
@@ -20,7 +21,7 @@ namespace PaterniLab2.Models.Base
         }
 
         public int amountOfSkills => skills.Count;
-        public void AddSkill(ISkill skill)
+        public void AddSkill(BaseSkill skill)
         {
             if (skill == null || skills.ContainsValue(skill) || skills.Count >= maxSkills)
                 return;
@@ -39,13 +40,13 @@ namespace PaterniLab2.Models.Base
             }
         }
 
-        public ISkill GetSkillByKey(int key) 
+        public BaseSkill GetSkillByKey(int key) 
         {
             return skills[key];
         }
        
 
-        public IEnumerable<ISkill> GetSkills()
+        public IEnumerable<BaseSkill> GetSkills()
         {
             foreach (var skill in skills) yield return skill.Value;
         }

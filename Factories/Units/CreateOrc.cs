@@ -16,13 +16,13 @@ namespace PaterniLab2.Factories.Units
     {
       protected override OrcUnit CreateMeleeUnit(int id, MoveType move)
         {
-            var newOrc =  new OrcUnit(id, move,new BattleAxe(), new Inventory(3), new OrcLeaderGenerator());
+            var newOrc =  new OrcUnit(id, move,new BattleAxe(), new Inventory(3), new SkillContainer(3), new OrcLeaderGenerator());
           
             return newOrc;
         }
         protected override OrcUnit CreatRangeUnit(int id, MoveType move)
         {
-            var newOrc = new OrcUnit(id, move, new Sling(), new Inventory(3), new OrcLeaderGenerator());
+            var newOrc = new OrcUnit(id, move, new Sling(), new Inventory(3), new SkillContainer(3), new OrcLeaderGenerator());
            
             return newOrc;
         }

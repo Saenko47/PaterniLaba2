@@ -81,6 +81,7 @@ namespace PaterniLab2.Tools
             MoveableCell,
             AttackableCell,
             AttacedUnit,
+            CastSkillOnUnit
         }
 
         public enum ResultOfAction

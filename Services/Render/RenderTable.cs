@@ -31,7 +31,9 @@ namespace PaterniLab2.Services.Render
                 case HighlightType.TargetUnit:
                     return "on olive";  
                 case HighlightType.AttacedUnit:
-                    return "on red";     
+                    return "on red";
+                case HighlightType.CastSkillOnUnit:
+                    return "on blue";
                 default:
                     return "on grey";
             }

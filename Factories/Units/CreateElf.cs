@@ -17,13 +17,13 @@ namespace PaterniLab2.Factories.Units
       protected override ElfUnit CreateMeleeUnit(int id, MoveType move)
         {
            
-            var newElf = new ElfUnit(id, move, new Rapier(), new Inventory(3), new ElfLeaderGenerator());
+            var newElf = new ElfUnit(id, move, new Rapier(), new Inventory(3), new SkillContainer(3), new ElfLeaderGenerator());
             
             return newElf;
         }
         protected override ElfUnit CreatRangeUnit(int id, MoveType move)
         {
-            var newElf = new ElfUnit(id, move, new LongBow(), new Inventory(3), new ElfLeaderGenerator());
+            var newElf = new ElfUnit(id, move, new LongBow(), new Inventory(3), new SkillContainer(3), new ElfLeaderGenerator());
            
             return newElf;
         }

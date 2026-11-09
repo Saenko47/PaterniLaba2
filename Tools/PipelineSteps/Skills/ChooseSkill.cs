@@ -1,6 +1,8 @@
 ﻿using PaterniLab2.Interfaces;
+using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
 using PaterniLab2.Singltons;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,9 +21,9 @@ namespace PaterniLab2.Tools.PipelineSteps.Skills
                 return false;
             }
 
-            ISkill skillToCast = actionContext.owner.skillContainer.GetSkillByKey(selectedSkill);
+            BaseSkill skillToCast = actionContext.owner.skillContainer.GetSkillByKey(selectedSkill);
 
-            actionContext.actionExecutionStrategy = skillToCast.PerformSkill;
+            actionContext.skillToCast = skillToCast;
             return true;
         }
     }

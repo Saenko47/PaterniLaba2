@@ -1,5 +1,6 @@
 ﻿using PaterniLab2.Models.Base;
 using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Models.Skills;
 using PaterniLab2.Models.Weapons.Humans;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,8 @@ namespace PaterniLab2.Services.LeaderGenerator
         {
             unitToElect.GiveWeaponToUnit(_weaponOfLeader);
             unitToElect.isLeader = true;
+            unitToElect.skillContainer.AddSkill(new HealSkill());
+            unitToElect.skillContainer.AddSkill(new FireballSkill());
         }
     }
 }

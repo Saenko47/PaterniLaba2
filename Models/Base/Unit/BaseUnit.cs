@@ -64,12 +64,13 @@ namespace PaterniLab2.Models.Base.Unit
         public Action<BaseUnit> OnUnitHit { get; set; } = null!;
 
 
-        public BaseUnit(int id, MoveType moveType, BaseWeapon weapons, IInventory inventory, BaseLeaderGenerator baseLeaderGenerator)
+        public BaseUnit(int id, MoveType moveType, BaseWeapon weapons, IInventory inventory,ISkillContainer skillContainer, BaseLeaderGenerator baseLeaderGenerator)
         {
             this.id = id;
             this.moveType = moveType;
             this.weapon = weapons;
             this.inventory = inventory;
+            this.skillContainer = skillContainer;
             _leaderSelector = baseLeaderGenerator;
 
             SetState(new ActiveState());
@@ -201,6 +202,11 @@ namespace PaterniLab2.Models.Base.Unit
         }
         public void ElectAsLeader()
         {
+            if (_leaderSelector == null)
+            {
+                // Можно выбросить понятное исключение или залогировать ошибку
+                throw new InvalidOperationException($"Leader selector is not initialized for unit {id} ({race})!");
+            }
             _leaderSelector.Elect(this);
         }
 

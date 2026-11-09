@@ -27,6 +27,7 @@ namespace PaterniLab2.Services.Behaviour
             _find = findToAttack;
             _moveState = new PlayerMoveCommand(move);
             _attackState = new NewPlayerAttackCommand(attack);
+            _castingSpellState = new CastingSpellCommand();
             _castingSpellState = null;
         }
 
@@ -62,6 +63,20 @@ namespace PaterniLab2.Services.Behaviour
             }
         }
 
+        private ResultOfAction TryCast(TableContext context, BaseUnit owner) 
+        {
+            if (owner.isCanAttack) // Используем проверку очков боя
+            {
+
+                return _castingSpellState.Enter(context, new ActionContext { owner = owner, targetFinder = _find.Find });
+            }
+            else
+            {
+                Console.WriteLine("You cannot cast. No battle moves left.");
+                return ResultOfAction.FailToAttack;
+            }
+        }
+
         public bool MakeMove(TableContext context, BaseUnit owner)
         {
             var actionResult = ResultOfAction.Awaiting;
@@ -93,9 +108,8 @@ namespace PaterniLab2.Services.Behaviour
                         actionResult = TryAttack(context, owner); // Исправлено: сохраняем в actionResult
                         break;
                     case 3:
-                        // Process cast spell decision
-                        Console.WriteLine("Spells are not implemented yet.");
-                        continue;
+                        actionResult = TryCast(context, owner);
+                        break;
                     case 4:
                         owner.SetState(new UnectiveState());
                         return actionResult == ResultOfAction.SuccessAction || actionResult == ResultOfAction.SuccessMove; // End turn
