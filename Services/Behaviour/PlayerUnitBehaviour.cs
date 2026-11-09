@@ -11,6 +11,7 @@ using PaterniLab2.Interfaces.Unit;
 using PaterniLab2.Interfaces.Attack;
 using PaterniLab2.Interfaces.Commands;
 using PaterniLab2.Singltons;
+using PaterniLab2.Services.Behaviour.Commands.Player;
 
 namespace PaterniLab2.Services.Behaviour
 {
@@ -25,7 +26,7 @@ namespace PaterniLab2.Services.Behaviour
         {
             _find = findToAttack;
             _moveState = new PlayerMoveCommand(move);
-            _attackState = new PlayerAttackCommand(attack);
+            _attackState = new NewPlayerAttackCommand(attack);
             _castingSpellState = null;
         }
 
