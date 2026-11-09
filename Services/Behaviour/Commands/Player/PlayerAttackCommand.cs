@@ -9,93 +9,93 @@ using System.Collections.Generic;
 using System.Text;
 using static PaterniLab2.Tools.Enums;
 
-namespace PaterniLab2.Services.Behaviour.States.Player
-{
-    internal class PlayerAttackCommand : UnitCommand
-    {
-        private readonly IAttack _attack;
+//namespace PaterniLab2.Services.Behaviour.States.Player
+//{
+    //internal class PlayerAttackCommand : UnitCommand
+    //{
+    //    private readonly IAttack _attack;
 
-        public PlayerAttackCommand(IAttack attack)
-        {
-            _attack = attack;
-        }
+    //    public PlayerAttackCommand(IAttack attack)
+    //    {
+    //        _attack = attack;
+    //    }
 
 
 
-        private List<BaseUnit> GetAvailableTargets(TableContext context, ActionContext actionContext)
-        {
-            return actionContext.targetFinder?.Invoke(new ReqiestOnFindingUnit
-            {
-                strategysToFind = actionContext.owner.weapon.strategysToFind,
-                armies = context.armies,
-                isLookingForComrades = false,
-                rangeOfFindings = actionContext.owner.weapon.range,
-                unitThatLooking = actionContext.owner
-            }) ?? new List<BaseUnit>();
-        }
-        private void HighlightTargetUnits(TableContext context, List<BaseUnit> units, HighlightType highlightType)
-        {
-            var highlightRequests = new List<RequestOnHighlihtUnit>();
-            foreach (var unit in units)
-            {
-                highlightRequests.Add(new RequestOnHighlihtUnit
-                {
-                    position = unit.Position,
-                    highlightType = highlightType
-                });
-            }
+    //    private List<BaseUnit> GetAvailableTargets(TableContext context, ActionContext actionContext)
+    //    {
+    //        return actionContext.targetFinder?.Invoke(new ReqiestOnFindingUnit
+    //        {
+    //            strategysToFind = actionContext.owner.weapon.strategysToFind,
+    //            armies = context.armies,
+    //            isLookingForComrades = false,
+    //            rangeOfFindings = actionContext.owner.weapon.range,
+    //            unitThatLooking = actionContext.owner
+    //        }) ?? new List<BaseUnit>();
+    //    }
+    //    private void HighlightTargetUnits(TableContext context, List<BaseUnit> units, HighlightType highlightType)
+    //    {
+    //        var highlightRequests = new List<RequestOnHighlihtUnit>();
+    //        foreach (var unit in units)
+    //        {
+    //            highlightRequests.Add(new RequestOnHighlihtUnit
+    //            {
+    //                position = unit.Position,
+    //                highlightType = highlightType
+    //            });
+    //        }
           
-            GlobalInputOutput.Instance.SetHighlight(highlightRequests);
-        }
+    //        GlobalInputOutput.Instance.SetHighlight(highlightRequests);
+    //    }
 
-        private void ShowUnitsToAttack(List<BaseUnit> targets)
-        {
-            if (targets == null || targets.Count == 0) return;
+    //    private void ShowUnitsToAttack(List<BaseUnit> targets)
+    //    {
+    //        if (targets == null || targets.Count == 0) return;
 
-            GlobalInputOutput.Instance.AddTextDataToBuffer("\n=== Доступные цели для атаки ===");
-            for (int k = 0; k < targets.Count; k++)
-            {
+    //        GlobalInputOutput.Instance.AddTextDataToBuffer("\n=== Доступные цели для атаки ===");
+    //        for (int k = 0; k < targets.Count; k++)
+    //        {
                 
-                GlobalInputOutput.Instance.AddTextDataToBuffer($"{k + 1}. {targets[k].race} на позиции {targets[k].Position} (HP: {targets[k].health})");
-            }
-        }
+    //            GlobalInputOutput.Instance.AddTextDataToBuffer($"{k + 1}. {targets[k].race} на позиции {targets[k].Position} (HP: {targets[k].health})");
+    //        }
+    //    }
 
-        public ResultOfAction Enter(TableContext context, ActionContext actionContext)
-        {
-            if (actionContext.targetFinder == null)
-            {
-                Console.WriteLine("Нет доступных целей для атаки!");
-                return ResultOfAction.FailToAttack;
-            }
+    //    public ResultOfAction Enter(TableContext context, ActionContext actionContext)
+    //    {
+    //        if (actionContext.targetFinder == null)
+    //        {
+    //            Console.WriteLine("Нет доступных целей для атаки!");
+    //            return ResultOfAction.FailToAttack;
+    //        }
 
-            var availableTargets = GetAvailableTargets(context, actionContext);
+    //        var availableTargets = GetAvailableTargets(context, actionContext);
 
-            ShowUnitsToAttack(availableTargets);
-            HighlightTargetUnits(context, availableTargets, HighlightType.TargetUnit);
+    //        ShowUnitsToAttack(availableTargets);
+    //        HighlightTargetUnits(context, availableTargets, HighlightType.TargetUnit);
             
 
-            Console.Write("Выберите номер цели: ");
+    //        Console.Write("Выберите номер цели: ");
 
 
-            string input = GlobalInputOutput.Instance.Read(context.armies, "\n Выберите номер цели: ");
-            if (!int.TryParse(input, out int selectedTargetIndex) || selectedTargetIndex < 1 || selectedTargetIndex > availableTargets.Count)
-            {
-                Console.WriteLine("Неверный выбор цели!");
-                return ResultOfAction.FailToAttack;
-            }
+    //        string input = GlobalInputOutput.Instance.Read(context.armies, "\n Выберите номер цели: ");
+    //        if (!int.TryParse(input, out int selectedTargetIndex) || selectedTargetIndex < 1 || selectedTargetIndex > availableTargets.Count)
+    //        {
+    //            Console.WriteLine("Неверный выбор цели!");
+    //            return ResultOfAction.FailToAttack;
+    //        }
 
            
-            var targetEnemy = availableTargets[selectedTargetIndex - 1];
+    //        var targetEnemy = availableTargets[selectedTargetIndex - 1];
 
-            bool isSuccess = _attack.AttackUnit(actionContext.owner, targetEnemy);
-            var attackRes = isSuccess ? ResultOfAction.SuccessAction : ResultOfAction.FailToAttack;
+    //        bool isSuccess = _attack.AttackUnit(actionContext.owner, targetEnemy);
+    //        var attackRes = isSuccess ? ResultOfAction.SuccessAction : ResultOfAction.FailToAttack;
 
-            actionContext.owner.DecreamentMoves(attackRes);
+    //        actionContext.owner.DecreamentMoves(attackRes);
 
           
            
 
-            return attackRes;
-        }
-    }
-}
+//    //        return attackRes;
+//    //    }
+//    }
+//}

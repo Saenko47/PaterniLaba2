@@ -18,15 +18,15 @@ namespace PaterniLab2.Services.AttackAndDamageProccesing
         }
 
 
-        public bool AttackUnit(BaseUnit attacker, BaseUnit defender) 
+        public bool AttackUnit(BaseUnit attacker, List<BaseUnit> defenders) 
         {
-            if (defender == null || attacker == null) return false;
-            
+            if (defenders == null || attacker == null) return false;
 
-            int damage = _damageCalculator.CalculateDamage(attacker, defender);
-
-            defender.TakeDamage(damage);
-
+            foreach (var defender in defenders) {
+                int damage = _damageCalculator.CalculateDamage(attacker, defender);
+                defender.TakeDamage(damage);
+            }
+           
             return true;
         }
     }

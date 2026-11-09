@@ -32,7 +32,7 @@ namespace PaterniLab2.Services.Behaviour.Commands.Player
 
         public ResultOfAction Enter(TableContext tableContext, ActionContext actionContext) 
         {
-            actionContext.attackExecutionStrategy = _attack.AttackUnit;
+            actionContext.actionExecutionStrategy = _attack.AttackUnit;
             var pipeline = SetAttackPipeline();
            
             var res = pipeline.StartPipeline(

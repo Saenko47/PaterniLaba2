@@ -7,6 +7,6 @@ namespace PaterniLab2.Interfaces
 {
     internal interface ISkill
     {
-        void ApplySkill(BaseUnit caster, BaseUnit target);
+        public bool PerformSkill(BaseUnit owner, List<BaseUnit> targets);
     }
 }

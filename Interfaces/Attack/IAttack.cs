@@ -9,6 +9,7 @@ namespace PaterniLab2.Interfaces.Attack
 {
     internal interface IAttack
     {
-        bool AttackUnit(BaseUnit attacker, BaseUnit defender);
+        bool AttackUnit(BaseUnit attacker, List<BaseUnit> defender);
+
     }
 }

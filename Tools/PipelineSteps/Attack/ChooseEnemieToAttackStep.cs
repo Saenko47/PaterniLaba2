@@ -1,4 +1,5 @@
 ﻿using PaterniLab2.Interfaces;
+using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
 using PaterniLab2.Singltons;
 using System;
@@ -21,8 +22,8 @@ namespace PaterniLab2.Tools.PipelineSteps.Attack
                 return false;
             }
 
-            var res = actionContext.attackExecutionStrategy?.Invoke(
-                actionContext.owner, actionContext.target[selectedTargetIndex-1]) ?? false; ;
+            var res = actionContext.actionExecutionStrategy?.Invoke(
+                actionContext.owner, new List<BaseUnit> { actionContext.target[selectedTargetIndex - 1] }) ?? false; ;
 
             return res;
 

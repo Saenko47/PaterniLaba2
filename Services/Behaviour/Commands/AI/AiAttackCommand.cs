@@ -27,7 +27,7 @@ namespace PaterniLab2.Services.Behaviour.States.AI
                 return ResultOfAction.FailToAttack;
 
             var attackRes = 
-                _attack.AttackUnit(actionContext.owner, actionContext.target[0]) ? 
+                _attack.AttackUnit(actionContext.owner, new List<BaseUnit> { actionContext.target[0] }) ? 
                 ResultOfAction.SuccessAction : ResultOfAction.FailToAttack;
 
            

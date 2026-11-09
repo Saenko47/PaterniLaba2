@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <Folder Include="IDK\" />
-    <Folder Include="Tools\PipelineSteps\Skills\" />
   </ItemGroup>
 
 </Project>
