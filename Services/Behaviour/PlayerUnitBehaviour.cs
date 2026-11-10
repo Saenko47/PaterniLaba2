@@ -28,7 +28,7 @@ namespace PaterniLab2.Services.Behaviour
             _moveState = new PlayerMoveCommand(move);
             _attackState = new NewPlayerAttackCommand(attack);
             _castingSpellState = new CastingSpellCommand();
-            _castingSpellState = null;
+            
         }
 
         private void ShowDecision()

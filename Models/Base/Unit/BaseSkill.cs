@@ -20,6 +20,7 @@ namespace PaterniLab2.Models.Base.Unit
 
         public abstract bool PerformSkill(BaseUnit owner, List<BaseUnit> targets);
 
+        
 
     }
 }

@@ -18,7 +18,7 @@ namespace PaterniLab2.Tools.PipelineSteps.Skills
             var reqsToHigligth = new List<RequestOnHighlihtUnit>();
             for (int k = 0; k < units.Count; k++)
             {
-                GlobalInputOutput.Instance.AddTextDataToBuffer($"{k + 1} - unit ");
+                GlobalInputOutput.Instance.AddTextDataToBuffer($"{k + 1} - unit on coordinates:{units[k].Position}");
                 reqsToHigligth.Add(new RequestOnHighlihtUnit { highlightType = HighlightType.CastSkillOnUnit, position = units[k].Position });
 
             }
@@ -27,13 +27,12 @@ namespace PaterniLab2.Tools.PipelineSteps.Skills
         }
         private List<BaseUnit> FindUnits(ActionContext actionContext, TableContext tableContext)
         {
+            if (actionContext == null
+                 || actionContext.parametrsToFindTarget == null
+                 || actionContext.targetFinder == null
+                 || actionContext.parametrsToFindTarget == null) throw new Exception("Problem With finding units!!!");
            
-            var reqToFind = new ReqiestOnFindingUnit { armies = tableContext.armies,
-                isLookingForComrades = actionContext.skillToCast.isPositive,
-                rangeOfFindings = actionContext.skillToCast.range,
-                strategysToFind = actionContext.skillToCast.strategysToFind,
-                unitThatLooking = actionContext.owner };
-            var unitsToCast = actionContext.targetFinder.Invoke(reqToFind);
+            var unitsToCast = actionContext.targetFinder.Invoke(actionContext.parametrsToFindTarget);
 
             
 
@@ -50,7 +49,7 @@ namespace PaterniLab2.Tools.PipelineSteps.Skills
                 return false;
             }
 
-            actionContext.target = new List<BaseUnit>() { units[selectedTargetIndex] };
+            actionContext.target = new List<BaseUnit>() { units[selectedTargetIndex-1] };
             return true;
 
         }

@@ -158,10 +158,11 @@ namespace PaterniLab2.Models.Base.Unit
             int certify = isPositive ? 1 : -1;
             switch (statusEffect)
             {
-                case StatusEffect.Health: stats.ModifyHealth(value * certify); break;
-                case StatusEffect.Armor: stats.ModifyArmor(value * certify); break;
-                case StatusEffect.AvoidChance: stats.ModifyAvoidChance(value * certify); break;
-                case StatusEffect.Attack: stats.ModifyMultiplayerToDamage(value * certify); break;
+            
+                case StatusEffect.Health: OnEffect(stats.ModifyHealth, value * certify); break;
+                case StatusEffect.Armor: OnEffect(stats.ModifyArmor, value * certify); break;
+                case StatusEffect.AvoidChance: OnEffect(stats.ModifyAvoidChance, value * certify); break;
+                case StatusEffect.Attack: OnEffect(stats.ModifyMultiplayerToDamage, value * certify); break;
             }
         }
 
@@ -221,6 +222,17 @@ namespace PaterniLab2.Models.Base.Unit
                 OnUnitHit?.Invoke(this);
             }
         }
+
+        private void OnEffect(Action<int> action, int value) 
+        {
+            var highlightType = value > 0 ? HighlightType.ActiveUnit : HighlightType.AttacedUnit;
+            action?.Invoke(value);
+            GlobalInputOutput.Instance.AddTextDataToBuffer($"{race} took {damage} damage. Remaining health: {health}");
+            var req = new RequestOnHighlihtUnit { position = Position, highlightType = highlightType };
+            GlobalInputOutput.Instance.SetHighlight(new List<RequestOnHighlihtUnit> { req });
+        }
+
+       
 
         internal void Tick()
         {

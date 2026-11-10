@@ -1,5 +1,6 @@
 ﻿using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests.Units;
+using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -36,9 +37,12 @@ namespace PaterniLab2.Models.Skills
                 };
 
                 target.RecieveStatusEffect(request);
+                
             }
 
             return true;
         }
+
+      
     }
 }

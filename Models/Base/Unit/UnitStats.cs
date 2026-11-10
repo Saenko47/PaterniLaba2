@@ -1,4 +1,6 @@
 ﻿using PaterniLab2.Interfaces;
+using PaterniLab2.Requests;
+using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -21,9 +23,13 @@ namespace PaterniLab2.Models.Base.Unit
         private readonly int _baseMoves = 1;
         private readonly int _baseBattleMoves = 1;
 
-        public UnitStats() { } 
+        public UnitStats() { }
 
-        public void ModifyHealth(int amount) => health = Math.Clamp(health + amount,0, int.MaxValue);
+        public void ModifyHealth(int amount)
+        {
+            health = Math.Clamp(health + amount, 0, int.MaxValue);
+            GlobalInputOutput.Instance.AddTextDataToBuffer($"Unit has given {amount}, current hp{health}");
+        }
 
         public void ModifyAvoidChance(int amount) => avoidChance += amount;
 
@@ -43,7 +49,7 @@ namespace PaterniLab2.Models.Base.Unit
             amountOfBattleMoves = _baseBattleMoves;
         }
 
-
+       
 
         
 

@@ -1,6 +1,7 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
+using PaterniLab2.Requests.Units;
 using PaterniLab2.Singltons;
 
 using System;
@@ -23,7 +24,15 @@ namespace PaterniLab2.Tools.PipelineSteps.Skills
 
             BaseSkill skillToCast = actionContext.owner.skillContainer.GetSkillByKey(selectedSkill);
 
-            actionContext.skillToCast = skillToCast;
+            actionContext.actionExecutionStrategy = skillToCast.PerformSkill;
+            actionContext.parametrsToFindTarget =  new ReqiestOnFindingUnit
+            {
+                armies = tableContext.armies,
+                isLookingForComrades = skillToCast.isPositive,
+                rangeOfFindings = skillToCast.range,
+                strategysToFind = skillToCast.strategysToFind,
+                unitThatLooking = actionContext.owner
+            };
             return true;
         }
     }

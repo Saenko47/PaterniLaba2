@@ -11,13 +11,12 @@ namespace PaterniLab2.Tools.PipelineSteps.Skills
     {
         public bool Execute(ActionContext actionContext, TableContext tableContext)
         {
-            var reqToApplySkill = new RequestOnRecievingStatusEffect { duration = actionContext.skillToCast.duration,
-                isFrendly = actionContext.skillToCast.isPositive,
-                statusEffects = actionContext.skillToCast.statusEffect,
-                isStacking = actionContext.skillToCast.isStacking,
-                isOneTimer = actionContext.skillToCast.isOneTimer,
-                value = actionContext.skillToCast.value };
-            foreach (var t in actionContext.target) t.RecieveStatusEffect(reqToApplySkill);
+            if (actionContext == null 
+                || tableContext == null 
+                || actionContext.actionExecutionStrategy == null
+                || actionContext.owner == null 
+                || actionContext.target == null) return false;
+            actionContext.actionExecutionStrategy?.Invoke(actionContext.owner, actionContext.target);
             return true;
         }
     }
