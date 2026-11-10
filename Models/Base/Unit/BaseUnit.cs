@@ -159,10 +159,10 @@ namespace PaterniLab2.Models.Base.Unit
             switch (statusEffect)
             {
             
-                case StatusEffect.Health: OnEffect(stats.ModifyHealth, value * certify); break;
-                case StatusEffect.Armor: OnEffect(stats.ModifyArmor, value * certify); break;
-                case StatusEffect.AvoidChance: OnEffect(stats.ModifyAvoidChance, value * certify); break;
-                case StatusEffect.Attack: OnEffect(stats.ModifyMultiplayerToDamage, value * certify); break;
+                case StatusEffect.Health: OnEffect(stats.ModifyHealth, value * certify, $"{race} hp was {value * certify}"); break;
+                case StatusEffect.Armor: OnEffect(stats.ModifyArmor, value * certify, $"{race} armor was {value * certify}"); break; 
+                case StatusEffect.AvoidChance: OnEffect(stats.ModifyAvoidChance, value * certify, $"{race} avoid chance was {value * certify}"); break;
+                case StatusEffect.Attack: OnEffect(stats.ModifyMultiplayerToDamage, value * certify, $"{race} damage was {value * certify}"); break;
             }
         }
 
@@ -223,13 +223,17 @@ namespace PaterniLab2.Models.Base.Unit
             }
         }
 
-        private void OnEffect(Action<int> action, int value) 
+        private void OnEffect(Action<int> action, int value, string whatYourSayToYourBuffer) 
         {
             var highlightType = value > 0 ? HighlightType.ActiveUnit : HighlightType.AttacedUnit;
             action?.Invoke(value);
-            GlobalInputOutput.Instance.AddTextDataToBuffer($"{race} took {damage} damage. Remaining health: {health}");
+            GlobalInputOutput.Instance.AddTextDataToBuffer(whatYourSayToYourBuffer);
             var req = new RequestOnHighlihtUnit { position = Position, highlightType = highlightType };
             GlobalInputOutput.Instance.SetHighlight(new List<RequestOnHighlihtUnit> { req });
+            if (OnUnitHit != null)
+            {
+                OnUnitHit?.Invoke(this);
+            }
         }
 
        
