@@ -10,15 +10,11 @@ namespace PaterniLab2.DTO
 {
     public class ArmyDto
     {
-         Race Race { get; set; }
-         bool IsLeaderAlive { get; set; }
-         bool IsAi { get; set; }
-         int CurrentIndex { get; set; }
-         List<BaseUnitDto> Units { get; set; } = new();
-
-        ArmyDto() { }
-
-     
-
+        public string Race { get; set; }
+        public bool IsLeaderAlive { get; set; }
+        public bool IsAi { get; set; }
+        public int CurrentIndex { get; set; }
+        public List<UnitDto> Units { get; set; } = new();
+        public List<UnitDto> UnitsToMoveLater { get; set; } = new();
     }
 }
