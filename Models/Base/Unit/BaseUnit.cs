@@ -11,6 +11,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Net.WebSockets;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json.Serialization;
 using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Models.Base.Unit
@@ -61,9 +62,10 @@ namespace PaterniLab2.Models.Base.Unit
 
         private List<StatusEffectObj> statusEffects = new List<StatusEffectObj>();
 
+        [JsonIgnore]
         public Action<BaseUnit> OnUnitHit { get; set; } = null!;
 
-
+        public BaseUnit() { }
         public BaseUnit(int id, MoveType moveType, BaseWeapon weapons, IInventory inventory,ISkillContainer skillContainer, BaseLeaderGenerator baseLeaderGenerator)
         {
             this.id = id;
@@ -261,12 +263,36 @@ namespace PaterniLab2.Models.Base.Unit
 
         public virtual BaseUnit Clone()
         {
-
+          
             BaseUnit clone = (BaseUnit)this.MemberwiseClone();
 
+           
+            clone.stats = this.stats != null ? this.stats.Clone() : new UnitStats();
 
-            clone.weapon = weapon.Clone();
+     
+            clone.weapon = this.weapon != null ? (BaseWeapon)this.weapon.Clone() : null;
 
+       
+            clone.inventory = this.inventory != null ? this.inventory.Clone() : null;
+
+         
+            clone.skillContainer = this.skillContainer != null ? this.skillContainer.Clone() : null;
+
+            
+            clone.statusEffects = new List<StatusEffectObj>();
+            foreach (var effect in this.statusEffects)
+            {
+               
+                clone.statusEffects.Add(new StatusEffectObj(
+                    effect.isFrendly,
+                    effect.isStacking,
+                    effect.statusEffect,
+                    effect.turnsRamains,
+                    effect.value
+                ));
+            }
+
+          
             return clone;
         }
 

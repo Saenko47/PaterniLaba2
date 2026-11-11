@@ -16,6 +16,7 @@ namespace PaterniLab2.Models.Base.Unit
 
         public int value { get; private set; }
 
+        public StatusEffectObj() { }
         public StatusEffectObj(bool isFrendly,bool IsStacking, StatusEffect statusEffect, int turnsRamains, int value) 
         {
             this.isFrendly = isFrendly;

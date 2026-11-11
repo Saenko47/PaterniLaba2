@@ -49,9 +49,14 @@ namespace PaterniLab2.Models.Base.Unit
             amountOfBattleMoves = _baseBattleMoves;
         }
 
-       
+        public UnitStats Clone()
+        {
+            return (UnitStats)this.MemberwiseClone();
+        }
 
-        
+
+
+
 
     }
 }

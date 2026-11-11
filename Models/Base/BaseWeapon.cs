@@ -17,6 +17,7 @@ namespace PaterniLab2.Models.Base
         public StrategysToFind strategysToFind { get; protected set; } = StrategysToFind.Cross;
         public int amoutOfUnitsThatWillBeToched { get; set; } = 1;
 
+        public BaseWeapon() { }
         public BaseWeapon Clone()
         {
             return (BaseWeapon)this.MemberwiseClone();

@@ -2,8 +2,8 @@
 using PaterniLab2.Interfaces.Attack;
 using PaterniLab2.Interfaces.Commands;
 using PaterniLab2.Requests;
+using PaterniLab2.Services.Behaviour.PipelineSteps.Attack;
 using PaterniLab2.Tools;
-using PaterniLab2.Tools.PipelineSteps.Attack;
 using System;
 using System.Collections.Generic;
 using System.Numerics;

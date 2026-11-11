@@ -9,13 +9,18 @@ namespace PaterniLab2.Models
 {
     internal class GameSnippet
     {
-        public List<Army> _armies { get; private set; }
-        public Vector2Int _frames { get; private set; }
+        
+        public List<Army> Armies { get; set; }
+        
+        public Vector2Int Frames { get; set; }
+        
+        public GameSnippet() { }
 
-        public GameSnippet(List<Army> armies, Vector2Int frames) 
+       
+        public GameSnippet(List<Army> armies, Vector2Int frames)
         {
-            _armies = armies;
-            _frames = frames;
+            Armies = armies;
+            Frames = frames;
         }
     }
 }

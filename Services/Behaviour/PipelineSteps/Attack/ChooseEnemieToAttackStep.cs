@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
-namespace PaterniLab2.Tools.PipelineSteps.Attack
+namespace PaterniLab2.Services.Behaviour.PipelineSteps.Attack
 {
     internal class ChooseEnemieToAttackStep: IActionStep
     {

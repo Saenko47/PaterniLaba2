@@ -6,7 +6,7 @@ using System.Text;
 
 namespace PaterniLab2.Interfaces.Unit
 {
-    internal interface IInventory
+    internal interface IInventory: IClone<IInventory>
     {
         public void SetHelmet(BaseHelmet helmet);
 

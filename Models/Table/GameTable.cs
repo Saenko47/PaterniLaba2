@@ -73,7 +73,10 @@ namespace PaterniLab2.Models.Table
             return frames;
         }
 
-
+        public void SetTable() 
+        { 
+        
+        }
 
 
         public UnitOnTheBoardByRace FirstPlacementOfUnits(CreateGameRequest req)

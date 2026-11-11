@@ -9,6 +9,7 @@ namespace PaterniLab2.Requests.Table
 {
     internal class CreateGameRequest
     {
+        public List<Army>? armies { get; set; }
         public PlaceOnBoardRequest[] reqs = new PlaceOnBoardRequest[4];
 
        

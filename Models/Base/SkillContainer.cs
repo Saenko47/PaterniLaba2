@@ -15,6 +15,7 @@ namespace PaterniLab2.Models.Base
 
         private int maxSkills;
 
+        public SkillContainer() { }
         public SkillContainer(int maxSkills)
         {
             this.maxSkills = maxSkills;
@@ -49,6 +50,21 @@ namespace PaterniLab2.Models.Base
         public IEnumerable<BaseSkill> GetSkills()
         {
             foreach (var skill in skills) yield return skill.Value;
+        }
+
+        public virtual ISkillContainer Clone()
+        {
+            SkillContainer clone = (SkillContainer)this.MemberwiseClone();
+
+          
+            clone.skills = new Dictionary<int, BaseSkill>();
+            foreach (var kvp in this.skills)
+            {
+              
+                clone.skills.Add(kvp.Key, (BaseSkill)kvp.Value?.Clone());
+            }
+
+            return clone;
         }
     }
 }

@@ -104,6 +104,7 @@ namespace PaterniLab2.Services.GameManager
                 }
 
                 foreach (var army in _armies) army.PrepareForNewRound();
+                SaveLoadSystem.SaveGame(_armies, _table);
             }
         }
 

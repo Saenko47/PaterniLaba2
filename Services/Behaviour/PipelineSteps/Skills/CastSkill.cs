@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PaterniLab2.Tools.PipelineSteps.Skills
+namespace PaterniLab2.Services.Behaviour.PipelineSteps.Skills
 {
     internal class CastSkill:IActionStep
     {

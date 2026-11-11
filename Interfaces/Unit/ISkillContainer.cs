@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PaterniLab2.Interfaces.Unit
 {
-    internal interface ISkillContainer
+    internal interface ISkillContainer: IClone<ISkillContainer>
     {
         int amountOfSkills { get; }
         void AddSkill(BaseSkill skill);

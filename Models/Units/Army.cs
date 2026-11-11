@@ -1,14 +1,16 @@
-﻿using PaterniLab2.Models.Base.Unit;
+﻿using PaterniLab2.Interfaces.Unit;
+using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
 using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Models.Units
 {
-    internal class Army
+    internal class Army:IClone<Army>
     {
         public List<BaseUnit> _units { get; private set; }
 
@@ -24,6 +26,7 @@ namespace PaterniLab2.Models.Units
 
         public bool HasUnits => _units != null && _units.Count > 0;
 
+        [JsonIgnore]
         public Action<BaseUnit> OnUnitDies;
 
         
@@ -135,6 +138,58 @@ namespace PaterniLab2.Models.Units
         public void PrepareForNewRound() 
         {
             foreach (var unit in _units) unit.PrepareUnitForNewTurn();
-        } 
+        }
+
+        public Army Clone()
+        {
+          
+            Army clone = (Army)this.MemberwiseClone();
+
+          
+            Dictionary<BaseUnit, BaseUnit> unitMapping = new Dictionary<BaseUnit, BaseUnit>();
+
+            
+            clone._units = new List<BaseUnit>();
+            foreach (var unit in this._units)
+            {
+                if (unit != null)
+                {
+                    BaseUnit clonedUnit = unit.Clone();
+                    clone._units.Add(clonedUnit);
+                    unitMapping[unit] = clonedUnit; 
+                }
+            }
+
+         
+            clone.SubscribeToUnitEvents(clone._units);
+
+           
+            clone.unitsToMoveLater = new List<BaseUnit>();
+            if (this.unitsToMoveLater != null)
+            {
+                foreach (var unit in this.unitsToMoveLater)
+                {
+                    if (unit != null && unitMapping.ContainsKey(unit))
+                    {
+                        clone.unitsToMoveLater.Add(unitMapping[unit]);
+                    }
+                }
+            }
+
+           
+            if (this.prevMovin != null && unitMapping.ContainsKey(this.prevMovin))
+            {
+                clone.prevMovin = unitMapping[this.prevMovin];
+            }
+            else
+            {
+                clone.prevMovin = null;
+            }
+
+          
+            clone.OnUnitDies = null;
+
+            return clone;
+        }
     }
 }

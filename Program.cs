@@ -19,10 +19,50 @@ namespace PaterniLab2
 {
     internal class Program
     {
+        static CreateGameRequest ForTestPurpuses() 
+        {
+            var snippet = SaveLoadSystem.LoadGame();
+
+            var req = new Requests.Table.CreateGameRequest
+            {
+               
+                reqs = new PlaceOnBoardRequest[]
+                      {
+
+                    new PlaceOnBoardRequest
+                    {
+                    race = Race.Human,
+                    raceAmountFly = 0,
+                    raceAmountRide = 0,
+                    raceMeleeAmount = 5,
+                    raceRangeAmount = 0,
+                    isAi = false,
+                    isHandlyPlacement = false,
+
+                    },
+
+
+                    new PlaceOnBoardRequest
+                    {
+                    race = Race.Orc,
+                    raceAmountFly = 0,
+                    raceAmountRide = 0,
+                    raceMeleeAmount = 3,
+                    raceRangeAmount = 2,
+                    isAi = true,
+                    isHandlyPlacement = false,
+
+                    }
+
+                      }
+            };
+            return req;
+        }
         static void Main(string[] args)
         {
             var unitGenerator = new CreateUnitByRace(new CreateHuman(), new CreateOrc(), new CreateElf());
 
+            bool isLoad = true;
 
             IPlacementMode automatic = new PlacementMode(new AutomaticPlace2Units(unitGenerator), null);
             IPlacementMode handly = new PlacementMode(new HandlyPlace2Units(unitGenerator), null);
@@ -39,7 +79,7 @@ namespace PaterniLab2
             IGameManager gameManager = new GameManager(new SetTable(testTable, aiBeha, humanBeha), new CombatGenerator(testTable));
             try
             {
-                gameManager.StartGame(null);
+                gameManager.StartGame(ForTestPurpuses());
             }
             catch (Exception ex)
             {

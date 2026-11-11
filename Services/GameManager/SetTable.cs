@@ -62,41 +62,17 @@ namespace PaterniLab2.Services.GameManager
         }
 
 
-
         public List<Army> Set(CreateGameRequest req) 
         {
-            req = new Requests.Table.CreateGameRequest
-            {
-                reqs = new PlaceOnBoardRequest[]
-                    {
-                        
-                    new PlaceOnBoardRequest
-                    {
-                    race = Race.Human,
-                    raceAmountFly = 0,
-                    raceAmountRide = 0,
-                    raceMeleeAmount = 5,
-                    raceRangeAmount = 0,
-                    isAi = false,
-                    isHandlyPlacement = false,
-                    
-                    },
+            if (req.armies == null) return SetNewGame(req);
+            else return req.armies;
+        }
 
 
-                    new PlaceOnBoardRequest
-                    {
-                    race = Race.Orc,
-                    raceAmountFly = 0,
-                    raceAmountRide = 0,
-                    raceMeleeAmount = 3,
-                    raceRangeAmount = 2,
-                    isAi = true,
-                    isHandlyPlacement = false,
-
-                    }
-
-                    }
-            };
+       
+        private List<Army> SetNewGame(CreateGameRequest req) 
+        {
+          
 
             var res = _table.FirstPlacementOfUnits(req);
 

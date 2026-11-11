@@ -20,6 +20,7 @@ namespace PaterniLab2.Models.Base
 
         private int _jeweryMaxCount;
 
+        public Inventory() { }
         public Inventory(int jeweryMaxCount) 
         {
             _jeweryMaxCount = jeweryMaxCount;
@@ -66,6 +67,30 @@ namespace PaterniLab2.Models.Base
             {
                 if (jewery != null) yield return jewery;
             }
+        }
+
+        public IInventory Clone()
+        {
+        
+            Inventory clone = (Inventory)this.MemberwiseClone();
+
+          
+            clone._helmet = (BaseHelmet)_helmet?.Clone();
+            clone._plate = (BasePlate)_plate?.Clone();
+            clone._leggins = (BaseLeggins)_leggins?.Clone();
+            clone._boots = (BaseBoots)_boots?.Clone();
+
+          
+            clone._jewery = new List<BaseJewery>();
+            foreach (var jewery in this._jewery)
+            {
+                if (jewery != null)
+                {
+                    clone._jewery.Add((BaseJewery)jewery.Clone());
+                }
+            }
+
+            return clone;
         }
     }
 }

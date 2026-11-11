@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using static PaterniLab2.Tools.Enums;
 
-namespace PaterniLab2.Tools.PipelineSteps.Skills
+namespace PaterniLab2.Services.Behaviour.PipelineSteps.Skills
 {
     internal class ChooseTargetCast: IActionStep
     {
