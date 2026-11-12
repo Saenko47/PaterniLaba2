@@ -8,6 +8,7 @@ namespace PaterniLab2.Models.Items.Orcs
 {
     internal class OrcsBoots:BaseBoots
     {
+        public override int Id => 3;
         private const int ARMOR_BUFF = 2;
         public OrcsBoots()
         {

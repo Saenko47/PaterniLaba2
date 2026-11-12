@@ -8,6 +8,7 @@ namespace PaterniLab2.Models.Base.Items
 {
     internal abstract class BaseItem
     {
+        public abstract int Id { get; protected set; }
         public abstract ItemType itemType { get; }
         public Dictionary<StatusEffect, int> buffs { get; protected set; } = new();
         public BaseItem() { }

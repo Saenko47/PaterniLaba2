@@ -8,6 +8,7 @@ namespace PaterniLab2.Models.Items.Humans
 {
     internal class HumanBoots:BaseBoots
     {
+        public override int Id => 2;
         private const int ARMOR_BUFF = 2;
         public HumanBoots()
         {

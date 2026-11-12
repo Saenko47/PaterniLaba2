@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="IDK\**" />
+    <EmbeddedResource Remove="IDK\**" />
+    <None Remove="IDK\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Services\MoveHandlers\HumanMoveHandler.cs" />
   </ItemGroup>
 
@@ -17,7 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Factories\SkillFactory\" />
-    <Folder Include="IDK\" />
+    <Folder Include="Factories\Items\" />
   </ItemGroup>
 
 </Project>

@@ -8,6 +8,7 @@ namespace PaterniLab2.Models.Items.Elfs
 {
     internal class ElfHelmet:BaseHelmet
     {
+        public override int Id => 1;
         private const int ARMOR_BUFF = 5;
         public ElfHelmet() 
         {

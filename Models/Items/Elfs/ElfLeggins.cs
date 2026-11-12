@@ -8,6 +8,7 @@ namespace PaterniLab2.Models.Items.Elfs
 {
     internal class ElfLeggins:BaseLeggins
     {
+        public override int Id => 1;
         private const int ARMOR_BUFF = 5;
         public ElfLeggins() 
         {

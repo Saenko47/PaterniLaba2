@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PaterniLab2.Interfaces.Factory
+namespace PaterniLab2.Interfaces.Factory.Units
 {
-    internal interface ICreateHuman
+    internal interface ICreateOrc
     {
-        HumanUnit CreateHumanUnit(CreateUnitRequest request);
+        OrcUnit CreateOrcUnit(CreateUnitRequest request);
     }
 }

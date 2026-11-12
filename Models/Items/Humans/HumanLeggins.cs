@@ -8,6 +8,7 @@ namespace PaterniLab2.Models.Items.Humans
 {
     internal class HumanLeggins:BaseLeggins
     {
+        public override int Id => 2;
         private const int ARMOR_BUFF = 5;
         public HumanLeggins() 
         {

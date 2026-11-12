@@ -9,7 +9,5 @@ namespace PaterniLab2.DTO
         public string SkillId { get; set; }
 
       
-        public int CustomValue { get; set; }
-        public int Duration { get; set; }
     }
 }

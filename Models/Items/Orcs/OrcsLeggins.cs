@@ -8,6 +8,7 @@ namespace PaterniLab2.Models.Items.Orcs
 {
     internal class OrcsLeggins:BaseLeggins
     {
+        public override int Id => 3;
         private const int ARMOR_BUFF = 5;
         public OrcsLeggins() 
         {
