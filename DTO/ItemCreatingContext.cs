@@ -7,10 +7,10 @@ namespace PaterniLab2.DTO
 {
     public class ItemCreatingContext
     {
-        int _id;
-        ItemType _itemType;
+         public int _id { get; set; }
+         public ItemType _itemType { get; set; }
 
-        ItemCreatingContext(int id, ItemType itemType)
+        public ItemCreatingContext(int id, ItemType itemType)
         {
             _id = id;
             _itemType = itemType;

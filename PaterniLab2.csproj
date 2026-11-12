@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <Folder Include="Factories\SkillFactory\" />
-    <Folder Include="Factories\Items\" />
   </ItemGroup>
 
 </Project>

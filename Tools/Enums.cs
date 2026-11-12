@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PaterniLab2.Tools
 {
-    internal static class Enums
+    public static class Enums
     {
         public enum Race
         {
