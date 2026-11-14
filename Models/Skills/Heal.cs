@@ -18,6 +18,7 @@ namespace PaterniLab2.Models.Skills
         public override int duration => 0; // Для одноразовых эффектов длительность не нужна
 
         public override StrategysToFind strategysToFind => StrategysToFind.Circle; // Поиск союзников
+        public override int id => 1;
         public override StatusEffect statusEffect => StatusEffect.Health;
 
         public override bool PerformSkill(BaseUnit owner, List<BaseUnit> targets)

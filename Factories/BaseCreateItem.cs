@@ -32,7 +32,7 @@ namespace PaterniLab2.Factories
         }
 
         // Метод создания предмета на основе типа снаряжения и контекста
-        public T CreateItemByType(ItemType itemType, ItemCreatingContext context)
+        public T CreateItemByType(ItemType itemType, ItemDto context)
         {
             BaseItem createdItem = itemType switch
             {

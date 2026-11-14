@@ -9,6 +9,7 @@ namespace PaterniLab2.Models.Base.Unit
 {
     internal abstract class BaseSkill:IClone<BaseSkill>
     {
+        public abstract int id { get; }
         public abstract bool isPositive { get; }
         public abstract int value { get; }
         public abstract int range { get; }

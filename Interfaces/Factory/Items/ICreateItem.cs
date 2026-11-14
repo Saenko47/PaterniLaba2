@@ -8,6 +8,6 @@ namespace PaterniLab2.Interfaces.Factory.Items
 {
     internal interface ICreateItem<T> where T: BaseItem
     {
-        T CreateItem(ItemCreatingContext context);
+        T CreateItem(ItemDto context);
     }
 }

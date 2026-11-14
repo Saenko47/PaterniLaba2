@@ -12,7 +12,7 @@ namespace PaterniLab2.Factories.Items
 {
     internal class CreateHelmet : ICreateItem<BaseHelmet>
     {
-        public BaseHelmet CreateItem(ItemCreatingContext context)
+        public BaseHelmet CreateItem(ItemDto context)
         {
             switch (context._id) 
             {
