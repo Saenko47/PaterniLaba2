@@ -8,6 +8,7 @@ namespace PaterniLab2.Interfaces.Unit
 {
     internal interface IInventory: IClone<IInventory>
     {
+
         public void SetHelmet(BaseHelmet helmet);
 
 
@@ -21,8 +22,9 @@ namespace PaterniLab2.Interfaces.Unit
 
 
         public void AddJewery(BaseJewery jewery);
+        void SetItem(BaseItem itemToSet);
+        public int GetMaxJewery();
 
-        public void RemoveJewery(BaseJewery jewery);
         IEnumerable<BaseItem> GetAllEquippedItems();
 
 

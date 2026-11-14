@@ -1,5 +1,6 @@
 ﻿using PaterniLab2.DTO;
 using PaterniLab2.Interfaces.Factory.Items;
+using PaterniLab2.Interfaces.Unit;
 using PaterniLab2.Models.Base.Items;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Factories
 {
-    internal class BaseCreateItem<T> where T: BaseItem
+    internal class BaseCreateItem:IItemCreator
     {
         private readonly ICreateItem<BaseBoots> _createBoots;
         private readonly ICreateItem<BaseLeggins> _createLeggins;
@@ -32,25 +33,25 @@ namespace PaterniLab2.Factories
         }
 
         // Метод создания предмета на основе типа снаряжения и контекста
-        public T CreateItemByType(ItemType itemType, ItemDto context)
+        public BaseItem CreateItemByType( ItemDto context)
         {
-            BaseItem createdItem = itemType switch
+            BaseItem createdItem = context._itemType switch
             {
                 ItemType.Boots => _createBoots?.CreateItem(context),
                 ItemType.Leggings => _createLeggins?.CreateItem(context),
                 ItemType.Chestplate => _createPlate?.CreateItem(context),
                 ItemType.Helmet => _createHelmet?.CreateItem(context),
                 ItemType.Jewery => _createJewery?.CreateItem(context),
-                _ => throw new ArgumentOutOfRangeException(nameof(itemType), $"Unknown item type: {itemType}")
+                _ => throw new ArgumentOutOfRangeException(nameof(context._itemType), $"Unknown item type: {context._itemType}")
             };
 
             // Проверяем и приводим к типу T, если это необходимо
-            if (createdItem is T resultItem)
+            if (createdItem is BaseItem resultItem)
             {
                 return resultItem;
             }
 
-            throw new InvalidOperationException($"Created item does not match type {typeof(T).Name}");
+            throw new InvalidOperationException($"Created item does not match type {typeof(BaseItem).Name}");
         }
 
 

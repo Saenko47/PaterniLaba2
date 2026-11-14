@@ -3,6 +3,7 @@ using PaterniLab2.Models.Base.Items;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Models.Base
 {
@@ -51,9 +52,9 @@ namespace PaterniLab2.Models.Base
         {
             if (_jewery.Count() < _jeweryMaxCount) _jewery.Add(jewery);
         }
-        public void RemoveJewery(BaseJewery jewery) 
-        { 
-        //Under Constraction...
+        public int GetMaxJewery() 
+        {
+            return _jeweryMaxCount;
         }
 
         public IEnumerable<BaseItem> GetAllEquippedItems()
@@ -68,6 +69,20 @@ namespace PaterniLab2.Models.Base
                 if (jewery != null) yield return jewery;
             }
         }
+
+        public void SetItem(BaseItem itemToSet) 
+        {
+            switch (itemToSet.itemType) 
+            {
+                case ItemType.Boots: SetBoot((BaseBoots)itemToSet); break;
+                case ItemType.Chestplate: SetPlate((BasePlate)itemToSet); break;
+                case ItemType.Leggings: SetLeggins((BaseLeggins)itemToSet);break;
+                case ItemType.Helmet: SetHelmet((BaseHelmet)itemToSet); break;
+                case ItemType.Jewery:AddJewery((BaseJewery)itemToSet);break;
+                default: throw new Exception("Thres no such ietmType!!!");
+            }
+        }
+
 
         public IInventory Clone()
         {

@@ -8,7 +8,7 @@ using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Factories
 {
-    internal class BaseCreateSkill
+    internal class BaseCreateSkill:ISkillCreator
     {
         private readonly ICreateSkill _createHeathSkill;
         private readonly ICreateSkill _createArmorSkill;

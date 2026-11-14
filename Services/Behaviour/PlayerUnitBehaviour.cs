@@ -17,6 +17,7 @@ namespace PaterniLab2.Services.Behaviour
 {
     internal class PlayerUnitBehaviour : IBehaviour
     {
+        public BehaviourType behaviourType => BehaviourType.Player;
         private readonly UnitCommand _moveState;
         private readonly UnitCommand _attackState;
         private readonly UnitCommand _castingSpellState;

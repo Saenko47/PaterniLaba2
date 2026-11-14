@@ -29,7 +29,7 @@ namespace PaterniLab2.Models.Base.Unit
         public int y { get; private set; }
 
 
-        protected UnitStats stats = new UnitStats();
+        public UnitStats stats { get; protected set; } = new UnitStats();
 
         public MoveType moveType { get; protected set; } 
 
@@ -60,7 +60,7 @@ namespace PaterniLab2.Models.Base.Unit
         public bool isCanAttack => stats.amountOfBattleMoves > 0;
         public bool isCanMove => stats.amountOfMoves > 0;
 
-        private List<StatusEffectObj> statusEffects = new List<StatusEffectObj>();
+        public List<StatusEffectObj> statusEffects { get; private set; } = new List<StatusEffectObj>();
 
         [JsonIgnore]
         public Action<BaseUnit> OnUnitHit { get; set; } = null!;

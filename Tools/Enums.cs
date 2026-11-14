@@ -99,6 +99,11 @@ namespace PaterniLab2.Tools
         Unit,
         Tree
         }
+        public enum BehaviourType 
+        { 
+        Player,
+        Ai
+        }
 
     }
 }

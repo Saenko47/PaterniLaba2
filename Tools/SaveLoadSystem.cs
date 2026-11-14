@@ -1,6 +1,7 @@
 ﻿using PaterniLab2.Interfaces;
 using PaterniLab2.Models;
 using PaterniLab2.Models.Units;
+using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +21,9 @@ internal static class SaveLoadSystem
 
     public static void SaveGame(List<Army> armysToSave, ITable table)
     {
-        GameSnippet gameSnippet = new GameSnippet(armysToSave, table.GetFrames());
+        var armyStringfy = new ArmyStringify();
+        var armyDtos = armysToSave.Select(a => armyStringfy.ArmyToDto(a)).ToList();
+        GameSnippet gameSnippet = new GameSnippet(armyDtos, table.GetFrames());
 
         try
         {
