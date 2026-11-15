@@ -22,10 +22,11 @@ namespace PaterniLab2
         static CreateGameRequest ForTestPurpuses() 
         {
             var snippet = SaveLoadSystem.LoadGame();
+            var armyGenerator = new FromJsonToArmy();
 
             var req = new Requests.Table.CreateGameRequest
             {
-               
+                armies = armyGenerator.ConvertFromJsonToArmy(snippet.Armies),
                 reqs = new PlaceOnBoardRequest[]
                       {
 

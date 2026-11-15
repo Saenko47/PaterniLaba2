@@ -68,6 +68,7 @@ namespace PaterniLab2.Tools
             SetUnitInventory(unitDto.Inventory.items, unit.inventory);
             SetUnitSkills(unitDto.SkillContainer.skills, unit.skillContainer);
             unit.SetBehaviour(SetBehaviourForUnit(unitDto.behaviourType));
+            unit.SetPosition(unitDto.X, unitDto.Y);
             return unit;
 
            
