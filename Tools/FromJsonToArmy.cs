@@ -7,6 +7,7 @@ using PaterniLab2.Models.Units;
 using PaterniLab2.Services.AttackAndDamageProccesing;
 using PaterniLab2.Services.Behaviour;
 using PaterniLab2.Services.MoveHandlers;
+using PaterniLab2.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,30 +17,22 @@ namespace PaterniLab2.Tools
 {
     internal class FromJsonToArmy
     {
-        private FromJsonToUnit SetCreator() 
+        private readonly IFromJsonToUnit _fromJsonToUnit;
+
+        public FromJsonToArmy(IFromJsonToUnit fromJsonToUnit) 
         {
-            var unitGenerator = new CreateUnitByRace(new CreateHuman(), new CreateOrc(), new CreateElf());
-            var itemGenerator = new BaseCreateItem(new CreateBoots(), new CreateLeggins(), new CreateChestPlate(), new CreateHelmet(), new CreateJewery());
-            var skillCreator = new BaseCreateSkill(new CreateHealthSkill(), new CreateArmorSkill(), new CreateAvoidChanceSkill(), new CreateAttackSkill());
-            var stateCreator = new BaseCreateUnitState();
-
-            AiUnitBehaviour aiBeha = new AiUnitBehaviour(new AiMoveHandler(new Move()), new Attack(new DamageCalculator()), new FindUnit());
-            PlayerUnitBehaviour humanBeha = new PlayerUnitBehaviour(new HumanKeyboardMoveInput(new Move()), new Attack(new DamageCalculator()), new FindUnit());
-
-            var unitFromJsonCreator = new FromJsonToUnit(unitGenerator, itemGenerator,skillCreator, aiBeha, humanBeha);
-
-            return unitFromJsonCreator;
+            _fromJsonToUnit = fromJsonToUnit;
         }
+     
 
         public List<Army> ConvertFromJsonToArmy(List<ArmyDto> armieDtos) 
         {
-            var unitGenerator = SetCreator();
 
             List<Army> armiesFromJson = new List<Army>();
 
             foreach (var armyDto in armieDtos) 
             {
-                var units = armyDto.Units.Select(u => unitGenerator.ConvertFromJsonToUnit(u)).ToList();
+                var units = armyDto.Units.Select(u => _fromJsonToUnit.ConvertFromJsonToUnit(u)).ToList();
                 var race = armyDto.Race;
                 var isAi = armyDto.IsAi;
 
