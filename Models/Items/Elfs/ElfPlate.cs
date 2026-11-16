@@ -8,10 +8,11 @@ namespace PaterniLab2.Models.Items.Elfs
 {
     internal class ElfPlate:BasePlate
     {
+        public override int Id => 1;
         private const int ARMOR_BUFF = 10;
         public ElfPlate()
         {
-            base.buffs.Add(ItemBuffType.Armor, ARMOR_BUFF);
+            base.buffs.Add(StatusEffect.Armor, ARMOR_BUFF);
         }
     }
 }

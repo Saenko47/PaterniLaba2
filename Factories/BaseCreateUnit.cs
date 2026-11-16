@@ -1,4 +1,5 @@
 ﻿using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Singltons;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,14 +12,16 @@ namespace PaterniLab2.Factories
 
         public T CreateUnit(WeaponType type, MoveType moveType) 
         {
-            if (type == WeaponType.Melee) return CreateMeleeUnit(moveType);
-            else if (type == WeaponType.Range) return CreatRangeUnit(moveType);
+            int id = UnitsIdCreator.CreateAndReturnId();
+
+            if (type == WeaponType.Melee) return CreateMeleeUnit(id,moveType);
+            else if (type == WeaponType.Range) return CreatRangeUnit(id,moveType);
 
             throw new Exception();
         }
 
-        protected abstract T CreateMeleeUnit(MoveType move);
+        protected abstract T CreateMeleeUnit(int id,MoveType move);
 
-        protected abstract T CreatRangeUnit(MoveType move);
+        protected abstract T CreatRangeUnit(int id,MoveType move);
     }
 }

@@ -8,10 +8,11 @@ namespace PaterniLab2.Models.Items.Orcs
 {
     internal class OrcPlate:BasePlate
     {
+        public override int Id => 3;
         private const int ARMOR_BUFF = 10;
         public OrcPlate()
         {
-            base.buffs.Add(ItemBuffType.Armor, ARMOR_BUFF);
+            base.buffs.Add(StatusEffect.Armor, ARMOR_BUFF);
         }
     }
 }

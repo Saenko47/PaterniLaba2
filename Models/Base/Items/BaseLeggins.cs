@@ -8,6 +8,7 @@ namespace PaterniLab2.Models.Base.Items
 {
     internal class BaseLeggins:BaseItem
     {
+        public override int Id { get; protected set; }
         public override ItemType itemType => ItemType.Leggings;
     }
 }

@@ -1,8 +1,9 @@
-﻿using PaterniLab2.Interfaces;
+﻿using PaterniLab2.Interfaces.Unit;
 using PaterniLab2.Models.Base.Items;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Models.Base
 {
@@ -20,6 +21,7 @@ namespace PaterniLab2.Models.Base
 
         private int _jeweryMaxCount;
 
+        public Inventory() { }
         public Inventory(int jeweryMaxCount) 
         {
             _jeweryMaxCount = jeweryMaxCount;
@@ -50,9 +52,9 @@ namespace PaterniLab2.Models.Base
         {
             if (_jewery.Count() < _jeweryMaxCount) _jewery.Add(jewery);
         }
-        public void RemoveJewery(BaseJewery jewery) 
-        { 
-        //Under Constraction...
+        public int GetMaxJewery() 
+        {
+            return _jeweryMaxCount;
         }
 
         public IEnumerable<BaseItem> GetAllEquippedItems()
@@ -66,6 +68,44 @@ namespace PaterniLab2.Models.Base
             {
                 if (jewery != null) yield return jewery;
             }
+        }
+
+        public void SetItem(BaseItem itemToSet) 
+        {
+            switch (itemToSet.itemType) 
+            {
+                case ItemType.Boots: SetBoot((BaseBoots)itemToSet); break;
+                case ItemType.Chestplate: SetPlate((BasePlate)itemToSet); break;
+                case ItemType.Leggings: SetLeggins((BaseLeggins)itemToSet);break;
+                case ItemType.Helmet: SetHelmet((BaseHelmet)itemToSet); break;
+                case ItemType.Jewery:AddJewery((BaseJewery)itemToSet);break;
+                default: throw new Exception("Thres no such ietmType!!!");
+            }
+        }
+
+
+        public IInventory Clone()
+        {
+        
+            Inventory clone = (Inventory)this.MemberwiseClone();
+
+          
+            clone._helmet = (BaseHelmet)_helmet?.Clone();
+            clone._plate = (BasePlate)_plate?.Clone();
+            clone._leggins = (BaseLeggins)_leggins?.Clone();
+            clone._boots = (BaseBoots)_boots?.Clone();
+
+          
+            clone._jewery = new List<BaseJewery>();
+            foreach (var jewery in this._jewery)
+            {
+                if (jewery != null)
+                {
+                    clone._jewery.Add((BaseJewery)jewery.Clone());
+                }
+            }
+
+            return clone;
         }
     }
 }

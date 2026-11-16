@@ -7,4 +7,18 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="IDK\**" />
+    <EmbeddedResource Remove="IDK\**" />
+    <None Remove="IDK\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Services\MoveHandlers\HumanMoveHandler.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Spectre.Console" Version="0.57.2" />
+  </ItemGroup>
+
 </Project>

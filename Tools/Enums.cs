@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PaterniLab2.Tools
 {
-    internal static class Enums
+    public static class Enums
     {
         public enum Race
         {
@@ -30,7 +30,8 @@ namespace PaterniLab2.Tools
         {
             Health,
             Armor,
-            AvoidChance
+            AvoidChance,
+            Damage
         }
         public enum ItemType
         {
@@ -42,6 +43,67 @@ namespace PaterniLab2.Tools
             
         }
 
+        public enum StatusEffect
+        { 
+        Health,
+        Armor,
+        AvoidChance,
+        Attack
+        }
+        public enum StrategysToFind 
+        { 
+        Cross,
+        Circle
+        }
+
+        public enum UnitStateEnum
+        { 
+        Active,
+        Unactive,
+        Delayed,
+        Stuned
+        }
+
+        public enum UnitTypeToPlace 
+        { 
+        Melee,
+        CavalryMelee,
+        Range,
+        CavalryRange,
+
+        }
+
+        public enum HighlightType
+        {
+            ActiveUnit,
+            TargetUnit,
+            AttackableUnit,
+            MoveableCell,
+            AttackableCell,
+            AttacedUnit,
+            CastSkillOnUnit
+        }
+
+        public enum ResultOfAction
+        {
+            SuccessMove,
+            SuccessAction,
+            FailToMove,
+            FailToAttack,
+            Awaiting
+        }
+
+        public enum CellFillingType 
+        { 
+            None,
+        Unit,
+        Tree
+        }
+        public enum BehaviourType 
+        { 
+        Player,
+        Ai
+        }
 
     }
 }

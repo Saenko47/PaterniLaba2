@@ -7,6 +7,6 @@ namespace PaterniLab2.Interfaces
 {
     internal interface IItem
     {
-        Dictionary<ItemBuffType, int> Buffs { get; }
+        Dictionary<BuffType, int> Buffs { get; }
     }
 }

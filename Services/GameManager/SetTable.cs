@@ -1,0 +1,92 @@
+﻿using PaterniLab2.Interfaces;
+using PaterniLab2.Interfaces.GameManager;
+using PaterniLab2.Interfaces.Unit;
+using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Models.Units;
+using PaterniLab2.Requests.Table;
+using PaterniLab2.Services.AttackAndDamageProccesing;
+using PaterniLab2.Services.Behaviour;
+using PaterniLab2.Services.MoveHandlers;
+using PaterniLab2.Singltons;
+using PaterniLab2.Tools;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using static PaterniLab2.Tools.Enums;
+
+namespace PaterniLab2.Services.GameManager
+{
+    internal class SetTable:ISetTable
+    {
+
+        private readonly ITable _table;
+        private readonly IBehaviour _aiBehavior;
+        private readonly IBehaviour _playerBehavior;
+        
+        public SetTable(ITable table, IBehaviour aiBehaviour, IBehaviour playerBehavior) 
+        {
+            _table = table;
+            _aiBehavior = aiBehaviour;
+            _playerBehavior = playerBehavior;
+          
+        }
+
+        private void ShowUnitsBeforeFigth(List<BaseUnit> units)
+        {
+            foreach (var unit in units)
+            {
+                GlobalInputOutput.Instance.AddTextDataToBuffer(unit.ToString());
+            }
+        }
+
+        private void SetBehaviorForTeam(List<BaseUnit> units, bool isAi)
+        {
+        
+            IBehaviour beha = isAi ? _aiBehavior : _playerBehavior;
+
+            foreach (var unit in units) unit.SetBehaviour(beha);
+        }
+
+        private void UnitDiesHandler(BaseUnit unit)
+        {
+            GlobalInputOutput.Instance.AddTextDataToBuffer($"unit {unit.race} dies!!!");
+
+            _table.ClearCell(unit.Position.X, unit.Position.Y);
+        }
+
+        private void SetDeathhanderForArmies(List<Army> armies) 
+        {
+            foreach (var army in armies) army.OnUnitDies += UnitDiesHandler;
+
+
+        }
+
+
+        public List<Army> Set(CreateGameRequest req) 
+        {
+            if (req.armies == null) return SetNewGame(req);
+            else return req.armies;
+        }
+
+
+       
+        private List<Army> SetNewGame(CreateGameRequest req) 
+        {
+          
+
+            var res = _table.FirstPlacementOfUnits(req);
+
+            foreach (var army in res.placedArmies) SetBehaviorForTeam(army._units, army._isAi);
+
+            foreach (var army in res.placedArmies) ShowUnitsBeforeFigth(army._units);
+
+            SetDeathhanderForArmies(res.placedArmies);
+           
+
+            GlobalInputOutput.Instance.Execute(res.placedArmies);
+
+
+            return res.placedArmies;
+        }
+    }
+}

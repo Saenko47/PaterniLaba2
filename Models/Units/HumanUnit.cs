@@ -1,7 +1,8 @@
-﻿using PaterniLab2.Interfaces;
+﻿using PaterniLab2.Interfaces.Unit;
 using PaterniLab2.Models.Base;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Models.Items.Humans;
+using PaterniLab2.Services.LeaderGenerator;
 using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
@@ -13,15 +14,16 @@ namespace PaterniLab2.Models.Units
     //Human will have this buffs:  additional health,  additional avoid chance 
     internal class HumanUnit: BaseUnit
     {
+        public override string color => "blue";
         private const int HEALTH_BUFF = 35;
         private const int AVOID_CHANCE = 5;
         public override Race race  => Race.Human;
 
-        public HumanUnit(int armor, MoveType moveType, BaseWeapon weapon, IInventory inventory)
-            : base(armor, moveType, weapon, inventory)
+        public HumanUnit(int id, MoveType moveType, BaseWeapon weapon, IInventory inventory, ISkillContainer skillContainer, BaseLeaderGenerator baseLeaderGenerator)
+            : base(id, moveType, weapon, inventory, skillContainer, baseLeaderGenerator)
         {
-            health += HEALTH_BUFF;
-            avaidChance += AVOID_CHANCE;
+            stats.ModifyHealth(HEALTH_BUFF);
+            stats.ModifyAvoidChance(AVOID_CHANCE);
             base.inventory.SetBoot(new HumanBoots());
             ReconsiderInventory();
         }

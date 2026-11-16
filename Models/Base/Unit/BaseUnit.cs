@@ -1,43 +1,118 @@
-﻿using PaterniLab2.Interfaces;
+﻿using PaterniLab2.Interfaces.Unit;
+using PaterniLab2.Models.States.Unit;
+using PaterniLab2.Requests;
+using PaterniLab2.Requests.Units;
+using PaterniLab2.Services.LeaderGenerator;
+using PaterniLab2.Singltons;
+using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Net.WebSockets;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json.Serialization;
 using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Models.Base.Unit
 {
     internal abstract class BaseUnit:IClone<BaseUnit>
     {
+        public abstract Race race { get; }
+        public bool isLeader { get; set; } = false;
+
+        public IUnitState _state { get; private set; }
+
+        public int id { get; private set; }
 
         public int x { get; private set; }
         public int y { get; private set; }
-        public abstract Race race { get; }
-       
 
-        public int health { get; protected set; } = 100;
-        public int avaidChance { get; protected set; } = 5;
-        public int armor { get; protected set; }
-        public MoveType moveType { get; protected set; }
 
-        public bool isLeader { get; set; } = false;
+        public UnitStats stats { get; protected set; } = new UnitStats();
+
+        public MoveType moveType { get; protected set; } 
 
         public IInventory inventory { get; private set; }
-        public ISkillContainer skillContainer { get; private set; }
+        public ISkillContainer skillContainer { get; private set; } //under constraction
+
+        internal IBehaviour behaviour;
+
+        private BaseLeaderGenerator _leaderSelector;
 
         public BaseWeapon weapon { get; protected set; }
+
+        public Vector2Int Position => new Vector2Int(x, y);
         public WeaponType weaponType => weapon.weaponType;
+        public int health => stats.health;
+        public int armor => stats.armor;
+        public int avoidChance => stats.avoidChance;
+        public int damageMultiplayer => stats.damageMultiplayer;
+        public int damage => weapon.damage + damageMultiplayer;
 
-        
-        
+      
 
-        public BaseUnit(int armor, MoveType moveType, BaseWeapon weapons, IInventory inventory)
+        public abstract string color { get;  }
+
+        public bool isAlive => health > 0;
+
+        public bool isCanMakeSomething => stats.amountOfMoves > 0 && stats.amountOfBattleMoves > 0;
+        public bool isCanAttack => stats.amountOfBattleMoves > 0;
+        public bool isCanMove => stats.amountOfMoves > 0;
+
+        public List<StatusEffectObj> statusEffects { get; private set; } = new List<StatusEffectObj>();
+
+        [JsonIgnore]
+        public Action<BaseUnit> OnUnitHit { get; set; } = null!;
+
+        public BaseUnit() { }
+        public BaseUnit(int id, MoveType moveType, BaseWeapon weapons, IInventory inventory,ISkillContainer skillContainer, BaseLeaderGenerator baseLeaderGenerator)
         {
-           
-            this.armor = armor;
+            this.id = id;
             this.moveType = moveType;
             this.weapon = weapons;
             this.inventory = inventory;
+            this.skillContainer = skillContainer;
+            _leaderSelector = baseLeaderGenerator;
+
+            SetState(new ActiveState());
+          
+        }
+
+        public void SetBehaviour(IBehaviour behaviour) 
+        {
+            this.behaviour = behaviour;
+        }
+        public void SetState(IUnitState state)
+        {
+            _state?.OnExit(this);
+            _state = state;
+            _state?.OnEnter(this);
+        }
+
+        public void PrepareUnitForNewTurn() {
+            stats.ResetMoves();
+            SetState(new ActiveState());
+        } 
+
+        public bool MakeMove(TableContext context) 
+        {
+            if (behaviour == null) throw new Exception("Behaviour is null!!");
+            
+            return _state.MakeMove(context, this);
+        }
+
+        public void DecreamentMoves(ResultOfAction result)
+        {
+            switch (result)
+            {
+                case ResultOfAction.SuccessMove:
+                    stats.DecreamentMoves();
+                    break;
+                case ResultOfAction.SuccessAction:
+                    stats.DecreamentBattleMoves();
+                    break;
+            }
         }
 
         protected void ReconsiderInventory()
@@ -50,26 +125,59 @@ namespace PaterniLab2.Models.Base.Unit
 
                 foreach (var buff in item.buffs)
                 {
-                    ApplyBuff(buff.Key, buff.Value);
+                    ApplyStatusEffect(buff.Key, buff.Value, true);
                 }
             }
         }
 
-
-        public void ApplyBuff(BuffType buffType, int value)
+        public void RecieveStatusEffect(RequestOnRecievingStatusEffect newStatusEffect) 
         {
-            switch (buffType)
+            if (newStatusEffect == null) return;
+
+            var copyOfStatusEffect = statusEffects.FirstOrDefault(sE => sE.statusEffect == newStatusEffect.statusEffects);
+
+            if (copyOfStatusEffect != null)
             {
-                case BuffType.Health:
-                    health += value;
-                    break;
-                case BuffType.Armor:
-                    armor += value;
-                    break;
-                case BuffType.AvoidChance:
-                    avaidChance += value; 
-                    break;
+                copyOfStatusEffect.AddTurns(newStatusEffect.duration);
+                return;
             }
+
+            if (newStatusEffect.isOneTimer)
+            {
+                ApplyStatusEffect(newStatusEffect.statusEffects, newStatusEffect.value, newStatusEffect.isFrendly);
+                return;
+            }
+
+            var newStatusEffectObj = new StatusEffectObj(newStatusEffect.isFrendly,newStatusEffect.isStacking, newStatusEffect.statusEffects, newStatusEffect.duration, newStatusEffect.value);
+
+            ApplyStatusEffect(newStatusEffect.statusEffects, newStatusEffect.value, newStatusEffect.isFrendly);
+
+            statusEffects.Add(newStatusEffectObj);
+        }
+
+        private void ApplyStatusEffect(StatusEffect statusEffect, int value, bool isPositive)
+        {
+            int certify = isPositive ? 1 : -1;
+            switch (statusEffect)
+            {
+            
+                case StatusEffect.Health: OnEffect(stats.ModifyHealth, value * certify, $"{race} hp was {value * certify}"); break;
+                case StatusEffect.Armor: OnEffect(stats.ModifyArmor, value * certify, $"{race} armor was {value * certify}"); break; 
+                case StatusEffect.AvoidChance: OnEffect(stats.ModifyAvoidChance, value * certify, $"{race} avoid chance was {value * certify}"); break;
+                case StatusEffect.Attack: OnEffect(stats.ModifyMultiplayerToDamage, value * certify, $"{race} damage was {value * certify}"); break;
+            }
+        }
+
+        private void EndStatusEffect(StatusEffectObj statusEffectToDelete) 
+        {
+            if (statusEffectToDelete == null) return;
+
+            if (statusEffectToDelete.statusEffect != StatusEffect.Health) {
+                ApplyStatusEffect(statusEffectToDelete.statusEffect, statusEffectToDelete.value, !statusEffectToDelete.isFrendly);
+            } 
+
+            statusEffects.Remove(statusEffectToDelete);
+
         }
 
         public void SetPosition(int x, int y)
@@ -77,17 +185,7 @@ namespace PaterniLab2.Models.Base.Unit
             this.x = x;
             this.y = y;
         }
-
-        public virtual BaseUnit Clone()
-        {
-           
-            BaseUnit clone = (BaseUnit)this.MemberwiseClone();
-
-
-            clone.weapon = weapon.Clone();
-
-            return clone;
-        }
+        
 
         public void GiveWeaponToUnit(BaseWeapon newWeapon) 
         {
@@ -96,25 +194,107 @@ namespace PaterniLab2.Models.Base.Unit
                 weapon = newWeapon;
             }
         } 
+
+        public void PutOnTheHorse()
+        {
+            if (moveType == MoveType.Walk)
+            {
+                moveType = MoveType.Cavalry;
+                stats.ModifyMoves(2);
+            }
+        }
         public void ElectAsLeader()
         {
-            isLeader = true;
+            if (_leaderSelector == null)
+            {
+                // Можно выбросить понятное исключение или залогировать ошибку
+                throw new InvalidOperationException($"Leader selector is not initialized for unit {id} ({race})!");
+            }
+            _leaderSelector.Elect(this);
         }
 
-        public void TakeDamage(int amount) 
+        public void TakeDamage(int damage)
         {
-            this.health -= amount;
-            Console.WriteLine($"{race} took {amount} damage. Remaining health: {health}");
+            stats.ModifyHealth(-damage);
+            GlobalInputOutput.Instance.AddTextDataToBuffer($"{race} took {damage} damage. Remaining health: {health}");
+            var req = new RequestOnHighlihtUnit { position = Position, highlightType = HighlightType.AttacedUnit };
+            GlobalInputOutput.Instance.SetHighlight(new List<RequestOnHighlihtUnit> { req });
+            if (OnUnitHit != null)
+            {
+                OnUnitHit?.Invoke(this);
+            }
+        }
+
+        private void OnEffect(Action<int> action, int value, string whatYourSayToYourBuffer) 
+        {
+            var highlightType = value > 0 ? HighlightType.ActiveUnit : HighlightType.AttacedUnit;
+            action?.Invoke(value);
+            GlobalInputOutput.Instance.AddTextDataToBuffer(whatYourSayToYourBuffer);
+            var req = new RequestOnHighlihtUnit { position = Position, highlightType = highlightType };
+            GlobalInputOutput.Instance.SetHighlight(new List<RequestOnHighlihtUnit> { req });
+            if (OnUnitHit != null)
+            {
+                OnUnitHit?.Invoke(this);
+            }
+        }
+
+       
+
+        internal void Tick()
+        {
+            foreach (var statusEffect in statusEffects) 
+            {
+                if (statusEffect.turnsRamains <= 0) EndStatusEffect(statusEffect);
+
+                if(statusEffect.isStacking) ApplyStatusEffect(statusEffect.statusEffect, statusEffect.value, statusEffect.isFrendly);
+
+                statusEffect.DecreamentTunsRamain();
+            }
         }
 
         public override string ToString()
         {
             string equippedStr = string.Join(", ", inventory.GetAllEquippedItems().Select(item => item));
 
-            return $"Race: {race}, Health: {health}, Avoid Chance: {avaidChance}, Armor: {armor}, Move Type: {moveType}, Weapon: [{weapon}]\nX: {x}, Y: {y}" +
+            return $"Id:{id}, Race: {race}, Health: {health}, Avoid Chance: {avoidChance}, Armor: {armor}, Move Type: {moveType}, Weapon: [{weapon}]\nX: {x}, Y: {y}" +
                 $"\n Items:{equippedStr}";
         }
 
+
+        public virtual BaseUnit Clone()
+        {
+          
+            BaseUnit clone = (BaseUnit)this.MemberwiseClone();
+
+           
+            clone.stats = this.stats != null ? this.stats.Clone() : new UnitStats();
+
+     
+            clone.weapon = this.weapon != null ? (BaseWeapon)this.weapon.Clone() : null;
+
+       
+            clone.inventory = this.inventory != null ? this.inventory.Clone() : null;
+
+         
+            clone.skillContainer = this.skillContainer != null ? this.skillContainer.Clone() : null;
+
+            
+            clone.statusEffects = new List<StatusEffectObj>();
+            foreach (var effect in this.statusEffects)
+            {
+               
+                clone.statusEffects.Add(new StatusEffectObj(
+                    effect.isFrendly,
+                    effect.isStacking,
+                    effect.statusEffect,
+                    effect.turnsRamains,
+                    effect.value
+                ));
+            }
+
+          
+            return clone;
+        }
 
     }
 }

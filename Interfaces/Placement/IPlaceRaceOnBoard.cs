@@ -1,0 +1,14 @@
+﻿using PaterniLab2.Models.Base.Unit;
+using PaterniLab2.Models.Table;
+using PaterniLab2.Requests.Table;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace PaterniLab2.Interfaces.Placement
+{
+    internal interface IPlaceRaceOnBoard
+    {
+        List<BaseUnit> PlaceOnBoard(PlaceOnBoardRequest req, Cell[,] table);
+    }
+}

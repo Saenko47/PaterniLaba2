@@ -8,10 +8,11 @@ namespace PaterniLab2.Models.Items.Humans
 {
     internal class HumanHelmet:BaseHelmet
     {
+        public override int Id => 2;
         private const int ARMOR_BUFF = 5;
         public HumanHelmet() 
         {
-            base.buffs.Add(ItemBuffType.Armor, ARMOR_BUFF);
+            base.buffs.Add(StatusEffect.Armor, ARMOR_BUFF);
         }
     }
 }

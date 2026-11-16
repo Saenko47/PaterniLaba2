@@ -3,6 +3,8 @@ using PaterniLab2.Models.Base;
 using PaterniLab2.Models.Units;
 using PaterniLab2.Models.Weapons.Elf;
 using PaterniLab2.Requests.Units;
+using PaterniLab2.Services.LeaderGenerator;
+using PaterniLab2.Tools;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,13 +14,18 @@ namespace PaterniLab2.Factories.Units
 {
     internal class CreateElf:BaseCreateUnit<ElfUnit>
     {
-      protected override ElfUnit CreateMeleeUnit(MoveType move)
+      protected override ElfUnit CreateMeleeUnit(int id, MoveType move)
         {
-            return new ElfUnit(10, move, new Rapier(), new Inventory(3));
+           
+            var newElf = new ElfUnit(id, move, new Rapier(), new Inventory(3), new SkillContainer(3), new ElfLeaderGenerator());
+            
+            return newElf;
         }
-        protected override ElfUnit CreatRangeUnit(MoveType move)
+        protected override ElfUnit CreatRangeUnit(int id, MoveType move)
         {
-            return new ElfUnit(5, move, new LongBow(), new Inventory(3));
+            var newElf = new ElfUnit(id, move, new LongBow(), new Inventory(3), new SkillContainer(3), new ElfLeaderGenerator());
+           
+            return newElf;
         }
     }
 }

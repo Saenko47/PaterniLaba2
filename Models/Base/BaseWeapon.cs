@@ -1,4 +1,4 @@
-﻿using PaterniLab2.Interfaces;
+﻿using PaterniLab2.Interfaces.Unit;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,7 +14,10 @@ namespace PaterniLab2.Models.Base
 
         public abstract int range { get; protected set; }
         public int radiusOfAttack { get; protected set; } = 0;
+        public StrategysToFind strategysToFind { get; protected set; } = StrategysToFind.Cross;
+        public int amoutOfUnitsThatWillBeToched { get; set; } = 1;
 
+        public BaseWeapon() { }
         public BaseWeapon Clone()
         {
             return (BaseWeapon)this.MemberwiseClone();
