@@ -11,7 +11,7 @@ using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.Tools
 {
-    internal class FromJsonToUnit
+    internal class FromJsonToUnit:IFromJsonToUnit
     {
         private readonly ICreateUnitByRace _createUnitByRace;
         private readonly IItemCreator _itemCreator;

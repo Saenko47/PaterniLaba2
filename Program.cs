@@ -71,27 +71,34 @@ namespace PaterniLab2
             
 
 
-            bool isLoad = true;
+           
 
             IPlacementMode automatic = new PlacementMode(new AutomaticPlace2Units(unitGenerator), null);
             IPlacementMode handly = new PlacementMode(new HandlyPlace2Units(unitGenerator), null);
             IPlacementManager placementManager = new PlacementManager(automatic, handly);
 
-           GameTable testTable = new GameTable(4, 4, placementManager);
+           
             
-            IRender render = new RenderTable(testTable);
-            GlobalInputOutput.Instance.SetRender(render);
+           
 
             AiUnitBehaviour aiBeha = new AiUnitBehaviour(new AiMoveHandler(new Move()), new Attack(new DamageCalculator()), new FindUnit());
             PlayerUnitBehaviour humanBeha = new PlayerUnitBehaviour(new HumanKeyboardMoveInput(new Move()), new Attack(new DamageCalculator()), new FindUnit());
 
             var unitFromJsonCreator = new FromJsonToUnit(unitGenerator, itemGenerator, skillCreator, aiBeha, humanBeha);
+            var armyFromJson = new FromJsonToArmy(unitFromJsonCreator);
+
+            ICreatorCreateGameRequest creator = new CreatorCreateGameRequest(placementManager, armyFromJson);
+
+            var requestOnStartGame = creator.Create(); 
+
+            IRender render = new RenderTable(requestOnStartGame.table);
+            GlobalInputOutput.Instance.SetRender(render);
 
 
-            IGameManager gameManager = new GameManager(new SetTable(testTable, aiBeha, humanBeha), new CombatGenerator(testTable));
+            IGameManager gameManager = new GameManager(new SetTable(requestOnStartGame.table, aiBeha, humanBeha), new CombatGenerator(requestOnStartGame.table));
             try
             {
-                gameManager.StartGame(ForTestPurpuses());
+                gameManager.StartGame(requestOnStartGame);
             }
             catch (Exception ex)
             {

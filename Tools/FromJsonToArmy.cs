@@ -15,7 +15,7 @@ using System.Text;
 
 namespace PaterniLab2.Tools
 {
-    internal class FromJsonToArmy
+    internal class FromJsonToArmy:IFromJsonToArmy
     {
         private readonly IFromJsonToUnit _fromJsonToUnit;
 
