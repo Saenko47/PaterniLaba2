@@ -11,7 +11,10 @@ namespace PaterniLab2.Tools
     internal class FindUnit:IFindUnit
     {
 
-       
+        private List<BaseUnit> FindYourself(ReqiestOnFindingUnit req) 
+        {
+            return new List<BaseUnit>() { req.unitThatLooking };
+        }
             private List<BaseUnit> FindByCross(ReqiestOnFindingUnit req)
             {
                 var foundUnits = new List<BaseUnit>();
@@ -71,6 +74,8 @@ namespace PaterniLab2.Tools
             {
                 switch (req.strategysToFind)
                 {
+                case StrategysToFind.Yourself:
+                        return FindYourself(req);
                     case StrategysToFind.Circle:
                         return FindInCircle(req);
                     case StrategysToFind.Cross:

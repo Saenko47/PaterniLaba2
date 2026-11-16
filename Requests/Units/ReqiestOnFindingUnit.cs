@@ -11,6 +11,7 @@ namespace PaterniLab2.Requests.Units
     {
         public BaseUnit unitThatLooking { get; set; } = null!;
         public List<Army> armies { get; set; } = null!;
+       
 
         public bool isLookingForComrades { get; set; }
         

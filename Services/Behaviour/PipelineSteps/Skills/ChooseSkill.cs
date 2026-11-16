@@ -13,10 +13,12 @@ namespace PaterniLab2.Services.Behaviour.PipelineSteps.Skills
     {
         public bool Execute(ActionContext actionContext, TableContext tableContext)
         {
-            var decision = GlobalInputOutput.Instance.Read(tableContext.armies, "Choose enemy to attack:");
+            var decision = GlobalInputOutput.Instance.Read(tableContext.armies, "Choose skill to cast:");
             if (!int.TryParse(decision, out int selectedSkill)
-                || selectedSkill < 0 || selectedSkill > actionContext.owner.skillContainer.amountOfSkills)
+     || selectedSkill < 0
+     || selectedSkill >= actionContext.owner.skillContainer.amountOfSkills)
             {
+                
                 GlobalInputOutput.Instance.AddTextDataToBuffer("Action Failed!!!");
                 return false;
             }

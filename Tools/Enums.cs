@@ -52,6 +52,7 @@ namespace PaterniLab2.Tools
         }
         public enum StrategysToFind 
         { 
+            Yourself,
         Cross,
         Circle
         }

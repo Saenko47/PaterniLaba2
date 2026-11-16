@@ -162,7 +162,7 @@ namespace PaterniLab2.Models.Base.Unit
             {
             
                 case StatusEffect.Health: OnEffect(stats.ModifyHealth, value * certify, $"{race} hp was {value * certify}"); break;
-                case StatusEffect.Armor: OnEffect(stats.ModifyArmor, value * certify, $"{race} armor was {value * certify}"); break; 
+                case StatusEffect.Armor: OnEffect(stats.ModifyArmor, value * certify, $"{race} armor before {armor}"); GlobalInputOutput.Instance.AddTextDataToBuffer($"armor after:{armor}"); break; 
                 case StatusEffect.AvoidChance: OnEffect(stats.ModifyAvoidChance, value * certify, $"{race} avoid chance was {value * certify}"); break;
                 case StatusEffect.Attack: OnEffect(stats.ModifyMultiplayerToDamage, value * certify, $"{race} damage was {value * certify}"); break;
             }

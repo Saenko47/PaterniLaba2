@@ -1,6 +1,7 @@
 ﻿using PaterniLab2.Interfaces.Factory;
 using PaterniLab2.Models.Base;
 using PaterniLab2.Models.Items.Humans;
+using PaterniLab2.Models.Skills;
 using PaterniLab2.Models.Units;
 using PaterniLab2.Models.Weapons.Humans;
 using PaterniLab2.Requests.Units;
@@ -21,6 +22,7 @@ namespace PaterniLab2.Factories.Units
         {
 
             var newHuman = new HumanUnit(id,move, new StraigthSword(), new Inventory(3), new SkillContainer(3), new HumanLeaderGenerator());
+            newHuman.skillContainer.AddSkill(new Guard());
           
             return newHuman;
         }

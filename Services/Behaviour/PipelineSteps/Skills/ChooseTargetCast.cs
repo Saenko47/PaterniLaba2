@@ -41,7 +41,7 @@ namespace PaterniLab2.Services.Behaviour.PipelineSteps.Skills
 
         private bool ChooseTarget(ActionContext actionContext, TableContext tableContext, List<BaseUnit> units)
         {
-            var decision = GlobalInputOutput.Instance.Read(tableContext.armies, "Choose enemy to cast:");
+            var decision = GlobalInputOutput.Instance.Read(tableContext.armies, "Choose unit to cast:");
             if (!int.TryParse(decision, out int selectedTargetIndex)
                 || selectedTargetIndex < 1 || selectedTargetIndex > units.Count)
             {
@@ -56,8 +56,12 @@ namespace PaterniLab2.Services.Behaviour.PipelineSteps.Skills
         public bool Execute(ActionContext actionContext, TableContext tableContext) 
         {
             var units = FindUnits(actionContext, tableContext);
+            if (actionContext.parametrsToFindTarget.strategysToFind == StrategysToFind.Yourself)
+            {
+                return true;
+            }
             ShowTargets(units);
-            return ChooseTarget( actionContext,  tableContext, units);
+            return ChooseTarget(actionContext, tableContext, units);
         }
     }
 }
