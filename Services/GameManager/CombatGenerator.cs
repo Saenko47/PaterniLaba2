@@ -29,6 +29,7 @@ namespace PaterniLab2.Services.GameManager
         public void InitializeArmies(List<Army> armies) 
         {
             _armies = armies;
+           
             
 
         }
@@ -59,7 +60,7 @@ namespace PaterniLab2.Services.GameManager
             message = string.Empty;
             return false;
         }
-
+      
         public void GenerateCombat()
         {
             if (_armies == null || _armies.Count < 0) return;
@@ -68,17 +69,12 @@ namespace PaterniLab2.Services.GameManager
 
             while (true)
             {
-                if (CheckGameOver(out string winMessage))
-                {
-                   
-                    Console.WriteLine($"\n{winMessage}");
-                    return;
-                }
-                Console.ReadLine();
+               
              
 
                 while (!CheckIfAllInArmiesMakeMove())
                 {
+
                    
 
                     int indexOfCurrentArmy = armyIndex % _armies.Count;
@@ -94,6 +90,13 @@ namespace PaterniLab2.Services.GameManager
 
                     bool isLock = InterateToMove(currentArmyToMove);
 
+                    if (CheckGameOver(out string winMessage))
+                    {
+
+                        Console.WriteLine($"\n{winMessage}");
+                        return;
+                    }
+
                     Console.WriteLine(isLock);
                     if (!isLock) break;
                     armyIndex++;
@@ -108,15 +111,7 @@ namespace PaterniLab2.Services.GameManager
             }
         }
 
-        private void Render()
-        {
-
-            List<(string name, int count)> unitsNameAndCounts = _armies.Select(a => (name: a._race.ToString(), count: a._units.Count)).ToList();
-
-            foreach (var army in unitsNameAndCounts) GlobalInputOutput.Instance.AddTextDataToBuffer($"Name:{army.name}, amount: {army.count}");
-
-            GlobalInputOutput.Instance.Execute(_armies);
-        }
+     
 
         private bool ProcessMove(BaseUnit unit)
         {

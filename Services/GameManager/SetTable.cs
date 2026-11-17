@@ -61,7 +61,6 @@ namespace PaterniLab2.Services.GameManager
 
         }
 
-
         public List<Army> Set(CreateGameRequest req) 
         {
             if (req.armies == null) return SetNewGame(req);
