@@ -15,7 +15,7 @@ namespace PaterniLab2.Services.Behaviour.PipelineSteps.Skills
                 || tableContext == null 
                 || actionContext.actionExecutionStrategy == null
                 || actionContext.owner == null 
-                || actionContext.target == null) return false;
+               ) return false;
             actionContext.actionExecutionStrategy?.Invoke(actionContext.owner, actionContext.target);
             return true;
         }

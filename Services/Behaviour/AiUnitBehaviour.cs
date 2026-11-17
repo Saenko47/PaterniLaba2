@@ -16,6 +16,7 @@ namespace PaterniLab2.Services.Behaviour
 {
     internal class AiUnitBehaviour:IBehaviour
     {
+        public BehaviourType behaviourType => BehaviourType.Ai;
         private readonly UnitCommand _moveState;
         private readonly UnitCommand _attackState;
         private readonly UnitCommand _castingSpellState;

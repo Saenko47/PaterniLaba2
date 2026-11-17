@@ -12,7 +12,7 @@ namespace PaterniLab2.Factories.Items
 {
     internal class CreateLeggins:ICreateItem<BaseLeggins>
     {
-        public BaseLeggins CreateItem(ItemCreatingContext context) 
+        public BaseLeggins CreateItem(ItemDto context) 
         {
             switch (context._id) 
             {

@@ -12,7 +12,7 @@ namespace PaterniLab2.Factories.Items
 {
     internal class CreateBoots:ICreateItem<BaseBoots>
     {
-        public BaseBoots CreateItem(ItemCreatingContext context) 
+        public BaseBoots CreateItem(ItemDto context) 
         {
             switch (context._id) 
             {

@@ -24,6 +24,17 @@ namespace PaterniLab2.Models.Base.Unit
         private readonly int _baseBattleMoves = 1;
 
         public UnitStats() { }
+        public UnitStats(int health, int avoidChance, int armor, int damageMultiplayer, int amountOfMoves, int amountOfBattleMoves)
+        {
+            this.health = health;
+            this.avoidChance = avoidChance;
+            this.armor = armor;
+
+            this.damageMultiplayer = damageMultiplayer;
+
+            this.amountOfMoves = amountOfMoves;
+            this.amountOfBattleMoves = amountOfBattleMoves;
+        }
 
         public void ModifyHealth(int amount)
         {

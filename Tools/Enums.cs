@@ -52,6 +52,7 @@ namespace PaterniLab2.Tools
         }
         public enum StrategysToFind 
         { 
+            Yourself,
         Cross,
         Circle
         }
@@ -98,6 +99,11 @@ namespace PaterniLab2.Tools
             None,
         Unit,
         Tree
+        }
+        public enum BehaviourType 
+        { 
+        Player,
+        Ai
         }
 
     }
