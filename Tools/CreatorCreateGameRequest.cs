@@ -99,13 +99,11 @@ namespace PaterniLab2.Tools
                 GlobalInputOutput.Instance.AddTextDataToBuffer($"Enter Ride amount for {selectedRace}:");
                 int.TryParse(GlobalInputOutput.Instance.Read(), out int ride);
 
-                GlobalInputOutput.Instance.AddTextDataToBuffer($"Enter Fly amount for {selectedRace}:");
-                int.TryParse(GlobalInputOutput.Instance.Read(), out int fly);
+           
 
                 placeReq.raceMeleeAmount = melee;
                 placeReq.raceRangeAmount = range;
                 placeReq.raceAmountRide = ride;
-                placeReq.raceAmountFly = fly;
 
                 // Выбор: управляется ли раса ИИ
                 GlobalInputOutput.Instance.AddTextDataToBuffer($"Is {selectedRace} controlled by AI? (1 - Yes, 0 - No):");
@@ -122,7 +120,7 @@ namespace PaterniLab2.Tools
             }
 
             // Проверка и пропорциональное ограничение юнитов
-            int totalRequestedUnits = createdReqs.Sum(r => r.entireAmount + r.raceAmountRide + r.raceAmountFly);
+            int totalRequestedUnits = createdReqs.Sum(r => r.entireAmount);
 
             if (totalRequestedUnits > maxAllowedCells && totalRequestedUnits > 0)
             {
@@ -135,7 +133,7 @@ namespace PaterniLab2.Tools
                     req.raceMeleeAmount = (int)(req.raceMeleeAmount * scale);
                     req.raceRangeAmount = (int)(req.raceRangeAmount * scale);
                     req.raceAmountRide = (int)(req.raceAmountRide * scale);
-                    req.raceAmountFly = (int)(req.raceAmountFly * scale);
+                  
                 }
             }
 
@@ -144,6 +142,9 @@ namespace PaterniLab2.Tools
             {
                 reqsArray[i] = createdReqs[i];
             }
+
+            Console.WriteLine(reqsArray[0].raceAmountRide);
+            Console.WriteLine(reqsArray[1].raceAmountRide);
 
             return reqsArray;
         }

@@ -69,6 +69,7 @@ namespace PaterniLab2.Tools
             SetUnitSkills(unitDto.SkillContainer.skills, unit.skillContainer);
             unit.SetBehaviour(SetBehaviourForUnit(unitDto.behaviourType));
             unit.SetPosition(unitDto.X, unitDto.Y);
+            if (unitDto.IsLeader) unit.ElectAsLeader();
             return unit;
 
            

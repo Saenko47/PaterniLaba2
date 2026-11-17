@@ -22,9 +22,14 @@ namespace PaterniLab2.Models.Base
         }
 
         public int amountOfSkills => skills.Count;
+
+        private bool IsUnitHaveThisSkill(BaseSkill skill) 
+        {
+            return skills.Values.Any(sv => sv.statusEffect == skill.statusEffect && sv.id == skill.id);
+        }
         public void AddSkill(BaseSkill skill)
         {
-            if (skill == null || skills.ContainsValue(skill) || skills.Count >= maxSkills)
+            if (skill == null || IsUnitHaveThisSkill(skill) || skills.Count >= maxSkills)
                 return;
 
             skills.Add(skills.Count, skill);

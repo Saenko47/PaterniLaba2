@@ -103,17 +103,17 @@ namespace PaterniLab2.Services.Behaviour
                 {
                     case 1:
                        
-                        actionResult = TryMove(context, owner); // Исправлено: вызываем движение
+                        actionResult = TryMove(context, owner); 
                         break;
                     case 2:
-                        actionResult = TryAttack(context, owner); // Исправлено: сохраняем в actionResult
+                        actionResult = TryAttack(context, owner); 
                         break;
                     case 3:
                         actionResult = TryCast(context, owner);
                         break;
                     case 4:
                         owner.SetState(new UnectiveState());
-                        return actionResult == ResultOfAction.SuccessAction || actionResult == ResultOfAction.SuccessMove; // End turn
+                        return actionResult == ResultOfAction.SuccessAction || actionResult == ResultOfAction.SuccessMove; 
                 }
 
                 if (actionResult == ResultOfAction.FailToAttack || actionResult == ResultOfAction.FailToMove)
