@@ -26,7 +26,8 @@ namespace PaterniLab2.Services.Behaviour.Commands.Player
         {
             IActionStep firtStep = new ShowEnemiesStep();
             IActionStep secondStep = new ChooseEnemieToAttackStep();
-            List<IActionStep> steps = new List<IActionStep>() { firtStep, secondStep};
+            IActionStep thirsdStep = new AttackUnit();
+            List<IActionStep> steps = new List<IActionStep>() { firtStep, secondStep, thirsdStep };
             return new ActionPipeline(steps);
         }
 

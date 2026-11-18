@@ -22,10 +22,12 @@ namespace PaterniLab2.Services.Behaviour.PipelineSteps.Attack
                 return false;
             }
 
-            var res = actionContext.actionExecutionStrategy?.Invoke(
-                actionContext.owner, new List<BaseUnit> { actionContext.target[selectedTargetIndex - 1] }) ?? false; ;
+            
 
-            return res;
+            actionContext.target = new List<BaseUnit> { actionContext.target[selectedTargetIndex - 1] };
+
+
+            return true;
 
 
             
