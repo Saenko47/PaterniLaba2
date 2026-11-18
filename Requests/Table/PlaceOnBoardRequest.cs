@@ -14,7 +14,7 @@ namespace PaterniLab2.Requests.Table
         public int raceMeleeAmount { get; set; }
         public int raceRangeAmount { get; set; }
         public int raceAmountRide { get; set; }
-        public int raceAmountFly { get; set; }
+     
         public bool isAi { get; set; }
         public bool isHandlyPlacement { get; set; }
 

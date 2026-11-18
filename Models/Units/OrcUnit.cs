@@ -14,6 +14,7 @@ namespace PaterniLab2.Models.Units
     {
         public override string color => "red";
         private const int HEALTH_BUFF = 80;
+        protected override int cavalryMultiplier => 1;
 
         public override Race race => Race.Orc;
         public OrcUnit(int id, MoveType moveType, BaseWeapon weapon, IInventory inventory, ISkillContainer skillContainer, BaseLeaderGenerator baseLeaderGenerator)

@@ -17,10 +17,7 @@ namespace PaterniLab2.Models.States.Unit
         {
             if (context == null || unit == null || unit.behaviour == null) throw new Exception("null context or unit");
 
-            var req = new RequestOnHighlihtUnit()
-            { position = unit.Position, highlightType = HighlightType.ActiveUnit };
-
-            GlobalInputOutput.Instance.SetHighlight(new List<RequestOnHighlihtUnit> { req });
+           
 
             bool isSucces = unit.behaviour.MakeMove(context, unit);
             if (!isSucces) 

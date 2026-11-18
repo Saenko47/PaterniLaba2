@@ -84,10 +84,13 @@ namespace PaterniLab2.Services.Behaviour
 
             while (owner.isCanMakeSomething)
             {
-                
+                var req = new RequestOnHighlihtUnit()
+                { position = owner.Position, highlightType = HighlightType.ActiveUnit };
 
-                
-             
+                GlobalInputOutput.Instance.SetHighlight(new List<RequestOnHighlihtUnit> { req });
+
+
+
                 ShowDecision();
 
                 // Безопасное чтение целого числа через ReadLine

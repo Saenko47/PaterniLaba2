@@ -24,6 +24,8 @@ namespace PaterniLab2.Models.Base.Unit
         private readonly int _baseBattleMoves = 1;
 
         public UnitStats() { }
+
+       
         public UnitStats(int health, int avoidChance, int armor, int damageMultiplayer, int amountOfMoves, int amountOfBattleMoves)
         {
             this.health = health;
@@ -49,6 +51,7 @@ namespace PaterniLab2.Models.Base.Unit
         public void ModifyMultiplayerToDamage(int amount) => damageMultiplayer += amount;
 
         public void ModifyMoves(int amount) => Math.Max(0,amountOfMoves += amount);
+       
 
         public void ModifyBattleMoves(int amount) => Math.Max(0, amountOfBattleMoves += amount);
         public void DecreamentMoves() => amountOfMoves = Math.Max(0, amountOfMoves - 1);

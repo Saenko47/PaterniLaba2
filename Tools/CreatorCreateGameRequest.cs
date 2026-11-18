@@ -75,7 +75,7 @@ namespace PaterniLab2.Tools
                 GlobalInputOutput.Instance.AddTextDataToBuffer("0. Human");
                 GlobalInputOutput.Instance.AddTextDataToBuffer("1. Elf");
                 GlobalInputOutput.Instance.AddTextDataToBuffer("2. Orc");
-                GlobalInputOutput.Instance.AddTextDataToBuffer("3. Dwarf");
+               
 
                 Race selectedRace = Race.Human; // Дефолт
                 if (int.TryParse(GlobalInputOutput.Instance.Read(), out int raceIndex) && Enum.IsDefined(typeof(Race), raceIndex))

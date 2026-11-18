@@ -14,6 +14,7 @@ namespace PaterniLab2.Models.Units
     {
         public override string color => "green";
         private const int AVOID_CHANCE = 20;
+        protected override int cavalryMultiplier => 2;
         public override Race race => Race.Elf;
         public ElfUnit(int id, MoveType moveType, BaseWeapon weapon, IInventory inventory, ISkillContainer skillContainer, BaseLeaderGenerator baseLeaderGenerator)
             : base(id, moveType, weapon, inventory, skillContainer, baseLeaderGenerator)

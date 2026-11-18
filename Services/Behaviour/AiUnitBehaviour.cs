@@ -1,16 +1,17 @@
-﻿using PaterniLab2.Services.Behaviour.States;
-using PaterniLab2.Services.Behaviour.States.AI;
+﻿using PaterniLab2.Interfaces.Attack;
+using PaterniLab2.Interfaces.Commands;
+using PaterniLab2.Interfaces.Unit;
 using PaterniLab2.Models.Base.Unit;
 using PaterniLab2.Requests;
 using PaterniLab2.Requests.Units;
+using PaterniLab2.Services.Behaviour.States;
+using PaterniLab2.Services.Behaviour.States.AI;
+using PaterniLab2.Singltons;
 using Spectre.Console.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using static PaterniLab2.Tools.Enums;
-using PaterniLab2.Interfaces.Unit;
-using PaterniLab2.Interfaces.Attack;
-using PaterniLab2.Interfaces.Commands;
 
 namespace PaterniLab2.Services.Behaviour
 {
@@ -38,7 +39,12 @@ namespace PaterniLab2.Services.Behaviour
             bool check = false;
             while (owner.isCanMakeSomething)
             {
-               check = true;
+                var req = new RequestOnHighlihtUnit()
+                { position = owner.Position, highlightType = HighlightType.ActiveUnit };
+
+                GlobalInputOutput.Instance.SetHighlight(new List<RequestOnHighlihtUnit> { req });
+
+                check = true;
                 List<BaseUnit> units = _find.Find(new ReqiestOnFindingUnit
                 {
                     strategysToFind = owner.weapon.strategysToFind,

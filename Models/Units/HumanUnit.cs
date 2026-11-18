@@ -18,6 +18,7 @@ namespace PaterniLab2.Models.Units
         private const int HEALTH_BUFF = 35;
         private const int AVOID_CHANCE = 5;
         public override Race race  => Race.Human;
+        protected override int cavalryMultiplier => 1;
 
         public HumanUnit(int id, MoveType moveType, BaseWeapon weapon, IInventory inventory, ISkillContainer skillContainer, BaseLeaderGenerator baseLeaderGenerator)
             : base(id, moveType, weapon, inventory, skillContainer, baseLeaderGenerator)

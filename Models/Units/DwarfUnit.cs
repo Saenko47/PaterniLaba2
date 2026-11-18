@@ -16,6 +16,7 @@ namespace PaterniLab2.Models.Units
         private const int ARMOR_BUFF = 20;
         private const int HEALTH_BUFF = 20;
         public override Race race => Race.Dwarf;
+        protected override int cavalryMultiplier => 0;
         public DwarfUnit(int id, MoveType moveType, BaseWeapon weapon, IInventory inventory,ISkillContainer skillContainer, BaseLeaderGenerator baseLeaderGenerator)
             : base(id, moveType, weapon, inventory, skillContainer, baseLeaderGenerator)
         {

@@ -29,9 +29,12 @@ namespace PaterniLab2.Models.Base.Unit
         public int y { get; private set; }
 
 
+        public MoveType moveType { get; protected set; }
+        protected abstract int cavalryMultiplier { get; }
+
         public UnitStats stats { get; protected set; } = new UnitStats();
 
-        public MoveType moveType { get; protected set; } 
+       
 
         public IInventory inventory { get; private set; }
         public ISkillContainer skillContainer { get; private set; } //under constraction
@@ -74,6 +77,8 @@ namespace PaterniLab2.Models.Base.Unit
             this.inventory = inventory;
             this.skillContainer = skillContainer;
             _leaderSelector = baseLeaderGenerator;
+
+            if (moveType == MoveType.Cavalry) stats.ModifyMoves(cavalryMultiplier);
 
             SetState(new ActiveState());
           

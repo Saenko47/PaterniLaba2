@@ -13,14 +13,32 @@ namespace PaterniLab2.Services.Placement
     internal class AutomaticPlace2Units: BasePlacementOfUnits
     {
         public AutomaticPlace2Units(ICreateUnitByRace createUnitByRace) : base(createUnitByRace) { }
-        
+
 
         private BaseUnit? AutomaticChooseUnitToPlace(PlaceOnBoardRequest req)
         {
             BaseUnit? unitToPlace = null;
-            if (req.raceMeleeAmount > 0)
+
+            // Ставим кавалерию в первую очередь, если она есть
+            if (req.raceAmountRide > 0)
             {
-                unitToPlace =  ChooseUnitToPlace(UnitTypeToPlace.Melee, req);
+                if (req.raceMeleeAmount > 0)
+                {
+                    unitToPlace = ChooseUnitToPlace(UnitTypeToPlace.CavalryMelee, req);
+                }
+                else if (req.raceRangeAmount > 0)
+                {
+                    unitToPlace = ChooseUnitToPlace(UnitTypeToPlace.CavalryRange, req);
+                }
+                else
+                {
+                    throw new InvalidOperationException("There is ride amount, but no weapon available for cavalry.");
+                }
+            }
+            // Если кавалерии нет, переходим к обычной пехоте / стрелкам
+            else if (req.raceMeleeAmount > 0)
+            {
+                unitToPlace = ChooseUnitToPlace(UnitTypeToPlace.Melee, req);
             }
             else if (req.raceRangeAmount > 0)
             {
@@ -30,6 +48,7 @@ namespace PaterniLab2.Services.Placement
             {
                 throw new InvalidOperationException("No units available to place.");
             }
+
             return unitToPlace;
         }
 
