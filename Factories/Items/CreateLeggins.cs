@@ -14,7 +14,7 @@ namespace PaterniLab2.Factories.Items
     {
         public BaseLeggins CreateItem(ItemDto context) 
         {
-            switch (context._id) 
+            switch (context.Id) 
             {
                 case 1: return new ElfLeggins();
                 case 2: return new HumanLeggins();

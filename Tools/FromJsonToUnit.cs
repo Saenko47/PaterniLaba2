@@ -46,6 +46,7 @@ namespace PaterniLab2.Tools
 
         private void SetUnitInventory(List<ItemDto> itemDtos, IInventory inventory) 
         {
+            if (itemDtos == null || inventory == null) return;
             foreach (var itemDto in itemDtos) 
             {
                 var item = _itemCreator.CreateItemByType(itemDto);
@@ -60,19 +61,25 @@ namespace PaterniLab2.Tools
                 skillContainer.AddSkill(skill);
             }
         }
-       
 
-        public BaseUnit ConvertFromJsonToUnit(UnitDto unitDto) 
+
+        public BaseUnit ConvertFromJsonToUnit(UnitDto unitDto)
         {
             var unit = _createUnitByRace.CreateByRaceAndWeapon(unitDto.Race, unitDto.WeaponType, unitDto.MoveType);
-            SetUnitInventory(unitDto.Inventory.items, unit.inventory);
-            SetUnitSkills(unitDto.SkillContainer.skills, unit.skillContainer);
-            unit.SetBehaviour(SetBehaviourForUnit(unitDto.behaviourType));
-            unit.SetPosition(unitDto.X, unitDto.Y);
-            if (unitDto.IsLeader) unit.ElectAsLeader();
-            return unit;
 
-           
+            
+            SetUnitInventory(unitDto.Inventory.Items, unit.inventory);
+            SetUnitSkills(unitDto.SkillContainer.skills, unit.skillContainer);
+
+            unit.SetBehaviour(SetBehaviourForUnit(unitDto.BehaviourType));
+            unit.SetPosition(unitDto.X, unitDto.Y);
+
+            if (unitDto.IsLeader)
+            {
+                unit.ElectAsLeader();
+            }
+
+            return unit;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace PaterniLab2.Factories
         {
             ICreateSkill skillCreator;
 
-            switch (skillDto._statusEffect) 
+            switch (skillDto.statusEffect) 
             {
                 case StatusEffect.Health:
                     skillCreator = _createHeathSkill;
@@ -44,7 +44,7 @@ namespace PaterniLab2.Factories
                 default: throw new Exception("Thres no such skill!!!!!");
             
             }
-            return skillCreator.CreateSkill(skillDto._id);
+            return skillCreator.CreateSkill(skillDto.id);
         }
     }
 }

@@ -4,9 +4,8 @@ using System.Text;
 
 namespace PaterniLab2.DTO
 {
-    public class InventoryDto
-    {
-        public List<ItemDto> items { get; set; } = new List<ItemDto>();
-        public int JeweryMaxCount { get; set; }
-    }
+    public record InventoryDto(
+    List<ItemDto> Items = null,
+    int JewelryMaxCount = 0
+);
 }

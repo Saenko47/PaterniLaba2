@@ -5,12 +5,11 @@ using static PaterniLab2.Tools.Enums;
 
 namespace PaterniLab2.DTO
 {
-    public class StatusEffectObjDto
-    {
-        public bool IsFrendly { get; set; }
-        public bool IsStacking { get; set; }
-        public StatusEffect StatusEffect { get; set; }
-        public int TurnsRemains { get; set; }
-        public int Value { get; set; }
-    }
+    public record StatusEffectObjDto(
+     bool IsFrendly,
+     bool IsStacking,
+     StatusEffect StatusEffect,
+     int TurnsRemains,
+     int Value
+ );
 }

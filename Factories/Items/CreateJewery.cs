@@ -14,7 +14,7 @@ namespace PaterniLab2.Factories.Items
     {
         public BaseJewery CreateItem(ItemDto context)
         {
-            switch (context._id)
+            switch (context.Id)
             {
                 
                 default: throw new Exception("Theres no such ID!!!!");

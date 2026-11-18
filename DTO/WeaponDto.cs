@@ -4,9 +4,8 @@ using System.Text;
 
 namespace PaterniLab2.DTO
 {
-    public class WeaponDto
-    {
-        public string WeaponType { get; set; }
-        public int Damage { get; set; }
-    }
+    public record WeaponDto(
+    string WeaponType,
+    int Damage
+);
 }

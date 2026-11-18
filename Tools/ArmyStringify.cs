@@ -18,11 +18,9 @@ namespace PaterniLab2.Tools
         }
         public ArmyDto ArmyToDto(Army armyToDto) 
         {
-            ArmyDto armyDto = new ArmyDto();
+           
 
-            armyDto.IsAi = armyToDto._isAi;
-            armyDto.Race = armyToDto._race;
-            armyDto.Units = GetAllUnitsToDto(armyToDto._units);
+            ArmyDto armyDto = new ArmyDto(armyToDto._race, armyToDto._isAi, GetAllUnitsToDto(armyToDto._units));
 
             return armyDto;
             

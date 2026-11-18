@@ -5,9 +5,5 @@ using System.Text;
 
 namespace PaterniLab2.DTO
 {
-    public class SkillContainerDto
-    {
-        public int MaxSkills { get; set; }
-        public List<SkillDto> skills { get; set; } = new List<SkillDto>();
-    }
+    public record SkillContainerDto(int MaxSkills, List<SkillDto> skills);
 }

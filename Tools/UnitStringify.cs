@@ -9,82 +9,58 @@ namespace PaterniLab2.Tools
 {
     internal class UnitStringify
     {
-        private InventoryDto TranserInventoryToDto(IInventory inventory) 
-        {
-            InventoryDto inventoryDto = new InventoryDto();
-            inventoryDto.JeweryMaxCount = inventory.GetMaxJewery();
-            foreach (var item in inventory.GetAllEquippedItems()) 
-            {
-                inventoryDto.items.Add(new ItemDto(item.Id, item.itemType));
-            }
-            return inventoryDto;
-        }
+        private InventoryDto TransferInventoryToDto(IInventory inventory) =>
+            new InventoryDto(
+                Items: inventory.GetAllEquippedItems()
+                    .Select(item => new ItemDto(item.Id, item.itemType))
+                    .ToList(),
+                JewelryMaxCount: inventory.GetMaxJewery()
+            );
 
-        private SkillContainerDto TransferSkillConteinerToDto(ISkillContainer skillContainer) 
-        {
-            SkillContainerDto skillContainerDto = new SkillContainerDto();
-            skillContainerDto.MaxSkills = skillContainer.amountOfSkills;
+        private SkillContainerDto TransferSkillContainerToDto(ISkillContainer skillContainer) =>
+            new SkillContainerDto(
+                skills: skillContainer.GetSkills()
+                    .Select(skill => new SkillDto(skill.id, skill.statusEffect))
+                    .ToList(),
+                MaxSkills: skillContainer.amountOfSkills
+            );
 
-            foreach (var skill in skillContainer.GetSkills()) 
-            {
-                skillContainerDto.skills.Add(new SkillDto(skill.id, skill.statusEffect));
-            }
+        private UnitStatsDto TransferUnitStatsToDto(UnitStats stats) =>
+            new UnitStatsDto(
+                Health: stats.health,
+                AvoidChance: stats.avoidChance,
+                Armor: stats.armor,
+                DamageMultiplier: stats.damageMultiplayer,
+                AmountOfMoves: stats.amountOfMoves,
+                AmountOfBattleMoves: stats.amountOfBattleMoves
+            );
 
-            return skillContainerDto;
-        }
-        private UnitStatsDto TransferUnitStatsToDto(UnitStats stats) 
-        {
-            UnitStatsDto unitStatsDto = new UnitStatsDto
-            {
-                Health = stats.health,
-                AmountOfBattleMoves = stats.amountOfBattleMoves,
-                AmountOfMoves = stats.amountOfMoves,
-                Armor = stats.armor,
-                AvoidChance = stats.avoidChance,
-                DamageMultiplayer = stats.damageMultiplayer
-            };
-            return unitStatsDto;
-        }
+        private List<StatusEffectObjDto> TransferStatusEffectsToDto(List<StatusEffectObj> statusEffectObjs) =>
+            statusEffectObjs
+                .Select(effect => new StatusEffectObjDto(
+                    IsFrendly: effect.isFrendly,
+                    IsStacking: effect.isStacking,
+                    StatusEffect: effect.statusEffect,
+                    TurnsRemains: effect.turnsRamains,
+                    Value: effect.value
+                ))
+                .ToList();
 
-        private List<StatusEffectObjDto> TransferStatusEffectsToDto(List<StatusEffectObj> statusEffectObjs) 
-        {
-            var statusEffectObjDtos = new List<StatusEffectObjDto>();
-            foreach (var statusEffectObj in statusEffectObjs)
-            {
-                statusEffectObjDtos.Add(new StatusEffectObjDto
-                {
-                    IsFrendly = statusEffectObj.isFrendly,
-                    IsStacking = statusEffectObj.isStacking,
-                    StatusEffect = statusEffectObj.statusEffect,
-                    TurnsRemains = statusEffectObj.turnsRamains,
-                    Value = statusEffectObj.value
-                });
-            }
-            return statusEffectObjDtos;
-        }
-
-
-        public UnitDto UnitToJson(BaseUnit unitToStringify) 
-        {
-            var unitDto = new UnitDto();
-
-            unitDto.Id = unitToStringify.id;
-            unitDto.IsLeader = unitToStringify.isLeader;
-            unitDto.Race = unitToStringify.race;
-            unitDto.WeaponType = unitToStringify.weaponType;
-            unitDto.MoveType = unitToStringify.moveType;
-            unitDto.X = unitToStringify.x;
-            unitDto.Y = unitToStringify.y;
-            unitDto.state = unitToStringify._state.state;
-            unitDto.Inventory = TranserInventoryToDto(unitToStringify.inventory);
-            unitDto.SkillContainer = TransferSkillConteinerToDto(unitToStringify.skillContainer);
-            unitDto.StatusEffects = TransferStatusEffectsToDto(unitToStringify.statusEffects);
-            unitDto.Stats = TransferUnitStatsToDto(unitToStringify.stats);
-            unitDto.behaviourType = unitToStringify.behaviour.behaviourType;
-
-
-            return unitDto;
-
-        }
+        public UnitDto UnitToJson(BaseUnit unitToStringify) =>
+            new UnitDto(
+                Id: unitToStringify.id,
+                Race: unitToStringify.race,
+                IsLeader: unitToStringify.isLeader,
+                X: unitToStringify.x,
+                Y: unitToStringify.y,
+                MoveType: unitToStringify.moveType,
+                State: unitToStringify._state.state,
+                BehaviourType: unitToStringify.behaviour.behaviourType,
+                Stats: TransferUnitStatsToDto(unitToStringify.stats),
+                WeaponType: unitToStringify.weaponType,
+                Inventory: TransferInventoryToDto(unitToStringify.inventory),
+                SkillContainer: TransferSkillContainerToDto(unitToStringify.skillContainer),
+                StatusEffects: TransferStatusEffectsToDto(unitToStringify.statusEffects)
+            );
     }
 }

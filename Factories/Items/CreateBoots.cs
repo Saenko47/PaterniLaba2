@@ -14,7 +14,7 @@ namespace PaterniLab2.Factories.Items
     {
         public BaseBoots CreateItem(ItemDto context) 
         {
-            switch (context._id) 
+            switch (context.Id) 
             {
                 case 1: return new ElfBoots();
                 case 2: return new HumanBoots();

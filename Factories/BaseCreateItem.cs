@@ -35,14 +35,14 @@ namespace PaterniLab2.Factories
         // Метод создания предмета на основе типа снаряжения и контекста
         public BaseItem CreateItemByType( ItemDto context)
         {
-            BaseItem createdItem = context._itemType switch
+            BaseItem createdItem = context.ItemType switch
             {
                 ItemType.Boots => _createBoots?.CreateItem(context),
                 ItemType.Leggings => _createLeggins?.CreateItem(context),
                 ItemType.Chestplate => _createPlate?.CreateItem(context),
                 ItemType.Helmet => _createHelmet?.CreateItem(context),
                 ItemType.Jewery => _createJewery?.CreateItem(context),
-                _ => throw new ArgumentOutOfRangeException(nameof(context._itemType), $"Unknown item type: {context._itemType}")
+                _ => throw new ArgumentOutOfRangeException(nameof(context.ItemType), $"Unknown item type: {context.ItemType}")
             };
 
             // Проверяем и приводим к типу T, если это необходимо

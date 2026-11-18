@@ -14,7 +14,7 @@ namespace PaterniLab2.Factories.Items
     {
         public BasePlate CreateItem(ItemDto context)
         {
-            switch (context._id) 
+            switch (context.Id) 
             {
                 case 1: return new ElfPlate();
                 case 2: return new HumanPlate();
